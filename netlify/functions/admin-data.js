@@ -40,9 +40,11 @@ exports.handler = async (event) => {
   if (!verifyToken(token, ADMIN_JWT_SECRET)) {
     return { statusCode: 401, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Yetkisiz.' }) };
   }
-  const table = (event.queryStringParameters || {}).table;
+  // Netlify'ın redirect motoru "to" hedefindeki query string'i (?table=...) eklemiyor,
+  // bu yüzden tablo adı query string yerine gerçek path'ten (event.path) okunuyor.
+  const table = (event.queryStringParameters || {}).table || (event.path || '').split('/').filter(Boolean).pop();
   if (!ALLOWED_TABLES.includes(table)) {
-    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Geçersiz tablo: query string\'ten gelen değer "' + (table || '(boş)') + '" — beklenen: ' + ALLOWED_TABLES.join(', ') + '. netlify.toml yönlendirmesi kontrol edilmeli.' }) };
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Geçersiz tablo: path\'ten gelen değer "' + (table || '(boş)') + '" — beklenen: ' + ALLOWED_TABLES.join(', ') }) };
   }
   if (!svcKey) {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Sunucu yapılandırması eksik (SUPABASE_SERVICE_ROLE_KEY tanımlı değil). Netlify environment variables kısmına ekleyip yeniden deploy edin.' }) };

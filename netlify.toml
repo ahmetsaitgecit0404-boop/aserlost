@@ -28,23 +28,8 @@
   status = 200
 
 [[redirects]]
-  from = "/api/admin/leads"
-  to = "/.netlify/functions/admin-data?table=leads"
-  status = 200
-
-[[redirects]]
-  from = "/api/admin/contacts"
-  to = "/.netlify/functions/admin-data?table=contacts"
-  status = 200
-
-[[redirects]]
-  from = "/api/admin/tracking"
-  to = "/.netlify/functions/admin-data?table=tracking"
-  status = 200
-
-[[redirects]]
-  from = "/api/admin/login_attempts"
-  to = "/.netlify/functions/admin-data?table=login_attempts"
+  from = "/api/admin/*"
+  to = "/.netlify/functions/admin-data"
   status = 200
 
 [[redirects]]
