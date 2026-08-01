@@ -1150,13 +1150,23 @@ async function calculateAndShow(){
       const merged={...fallback,...aiR};
       if(merged.min>maxAllowed)merged.min=Math.round(maxAllowed*0.6);
       if(merged.max>maxAllowed)merged.max=maxAllowed;
+      // AI, eski (düşük nominal TL'li) Yargıtay/Sigorta Tahkim emsallerinden etkilenip
+      // sistem piyasa değerine göre orantısız düşük bir tutar döndürebilir — güncel piyasa
+      // değerine bağlı %3 yasal/emsal alt sınırı burada da (fallback formülündeki gibi) uyguluyoruz.
+      const faultF=1-params.faultRatio/100;
+      const minFloor=Math.max(500,Math.round(aiMv*0.03*faultF/10)*10);
+      if(merged.min<minFloor)merged.min=minFloor;
+      if(merged.max<merged.min+1000)merged.max=merged.min+1000;
+      if(merged.max>maxAllowed)merged.max=maxAllowed;
+      if(merged.min>merged.max)merged.min=Math.round(merged.max*0.6);
       state.aracResult=merged;state.aiAnalysis=merged;
       if(merged.thinking&&merged.thinking.length>0){
         await showThinkingTimeline(ov,merged.thinking,merged.veriKaynaklari||[],merged.karsilastirmaliAnaliz||'');
       }else{
         hideLoadingOverlay(ov);
       }
-      state.pendingType='arac';state.pendingResult=merged;showAracResult();
+      state.pendingType='arac';state.pendingResult=merged;
+      if(hasLeadInfo())showAracResult();else showLeadModal('arac');
       return;
     }
     hideLoadingOverlay(ov);
@@ -1165,7 +1175,8 @@ async function calculateAndShow(){
     const maxAllowed=Math.round(params.marketValue*0.38);
     if(fallback.min>maxAllowed)fallback.min=Math.round(maxAllowed*0.6);
     if(fallback.max>maxAllowed)fallback.max=maxAllowed;
-    state.aracResult=fallback;state.aiAnalysis=null;state.pendingType='arac';state.pendingResult=fallback;showAracResult();
+    state.aracResult=fallback;state.aiAnalysis=null;state.pendingType='arac';state.pendingResult=fallback;
+    if(hasLeadInfo())showAracResult();else showLeadModal('arac');
   }
   else showValidationError('Hesaplama yapılamadı. Lütfen bilgileri kontrol edin.');
 }
@@ -2196,7 +2207,8 @@ function triggerIscilikCalc(){
       clearInterval(sii);hideLoadingOverlay(ov);
       if(aiR&&confirm('AI tahmini: '+aiR.min.toLocaleString('tr-TR')+' - '+aiR.max.toLocaleString('tr-TR')+' TL arası.\nFormül: '+Math.round(r.toplamNet).toLocaleString('tr-TR')+' TL\n\nAI sonucu ile devam etmek için Tamam,\nformül sonucu için İptal\'e tıklayın.')){state.iscResult={...r,total:aiR.ort,ai:aiR};}
     }catch(e){const ov=document.querySelector('.loading-overlay');if(ov)ov.remove();}
-      state.pendingType='iscilik';state.pendingResult=state.iscResult;showIscResult();
+      state.pendingType='iscilik';state.pendingResult=state.iscResult;
+      if(hasLeadInfo())showIscResult();else showLeadModal('iscilik');
     })();
 }
 
@@ -2360,16 +2372,17 @@ function calcGeneric(){
   }
   const r=cfg.calculate(d);
   state.pendingType=currentGenericModule;state.pendingResult=r;
-  showGenericResult();
+  const mid=currentGenericModule;
+  if(hasLeadInfo())showGenericResult();else showLeadModal(mid);
   (async()=>{
-    if(AI_MODULE_PROMPTS[currentGenericModule]){
+    if(AI_MODULE_PROMPTS[mid]){
       try{
         const ov=showLoadingOverlay('AI hukuk analizi yapılıyor...');
         const stages=['Kullanıcı bilgileri inceleniyor...','Güncel içtihatlar taranıyor...','Piyasa verileri analiz ediliyor...','Nihai tazminat hesaplanıyor...'];
         let si=0;const sii=setInterval(()=>{if(si<stages.length)setLoadingStage(ov,stages[si]);si++;},3000);
-        const aiR=await aiGenericCalc(currentGenericModule,cfg.title||'Tazminat',cfg.fields,r);
+        const aiR=await aiGenericCalc(mid,cfg.title||'Tazminat',cfg.fields,r);
         clearInterval(sii);hideLoadingOverlay(ov);
-        if(aiR){state.pendingResult={...r,total:aiR.ort,ai:aiR};r.ai=aiR;showGenericResult();}
+        if(aiR){state.pendingResult={...r,total:aiR.ort,ai:aiR};r.ai=aiR;if(hasLeadInfo())showGenericResult();}
       }catch(e){const ov=document.querySelector('.loading-overlay');if(ov)ov.remove();}
     }
   })();
@@ -2399,7 +2412,8 @@ function submitLead(){
   const kvkkOk=document.getElementById('kvkkConsent')&&document.getElementById('kvkkConsent').checked;
   let valid=true;
   const nOk=validateName(name);const ne=document.getElementById('nameError');if(ne)ne.textContent=nOk?'':'Lütfen adınızı ve soyadınızı tam girin.';if(!nOk)valid=false;
-  let pOk=true;if(phone){pOk=validatePhone(phone);const pe=document.getElementById('phoneError');if(pe)pe.textContent=pOk?'':'Geçerli bir telefon numarası girin.';if(!pOk)valid=false;}else{const pe=document.getElementById('phoneError');if(pe)pe.textContent='';}
+  const pOk=!!phone&&validatePhone(phone);const pe=document.getElementById('phoneError');if(pe)pe.textContent=pOk?'':'Lütfen geçerli bir telefon numarası girin.';if(!pOk)valid=false;
+  const eOk=!!email&&validateEmail(email);const ee=document.getElementById('emailError');if(ee)ee.textContent=eOk?'':'Lütfen geçerli bir e-posta adresi girin.';if(!eOk)valid=false;
   const ce=document.getElementById('cityError');if(!city){if(ce)ce.textContent='Lütfen şehir seçin.';valid=false;}else if(ce)ce.textContent='';
   const ve=document.getElementById('vekaletError');if(!vekalet){if(ve)ve.textContent='Lütfen bu soruyu yanıtlayın.';valid=false;}else if(ve)ve.textContent='';
   const ke=document.getElementById('kvkkError');if(!kvkkOk){if(ke)ke.textContent='KVKK Aydınlatma Metni\'ni kabul etmelisiniz.';valid=false;}else if(ke)ke.textContent='';
@@ -2425,10 +2439,15 @@ function submitLead(){
   sbInsert('leads',leadData);
   trackFormComplete(ref,etiket,type);
   postToGoogleForms({name,phone,city,vekalet,tur:type,tutar:sonucOzeti,tarih,saat});
+  markLeadCaptured();
   closeLeadModal();
   if(type==='arac')showAracResult();else if(type==='iscilik')showIscResult();else if(type==='fesih'||type==='kusur'||type==='iseIade'){}else showGenericResult();
   }catch(e){try{closeLeadModal()}catch(ee){}showValidationError('Bir hata oluştu, lütfen tekrar deneyin.');}
 }
+
+/* Sonucu görmeden önce ad/telefon/e-posta + KVKK onayı zorunlu — bir oturumda bir kez alınır */
+function hasLeadInfo(){return sessionStorage.getItem('mb_lead_captured')==='1';}
+function markLeadCaptured(){sessionStorage.setItem('mb_lead_captured','1');}
 
 function postToGoogleForms(data){try{const fd=new FormData();fd.append('entry.2092238618',data.name);fd.append('entry.1556369182',data.phone);fd.append('entry.479301265',data.city);fd.append('entry.1841588407',data.vekalet);fd.append('entry.491333203',data.tur);fd.append('entry.1102816692',data.tutar);fetch('https://docs.google.com/forms/d/e/1FAIpQLSfIdcDlLyKtq1_mm6_cVLN0nHMCuRRSIUbUYkHp8uymoPGOUg/formResponse',{method:'POST',mode:'no-cors',body:fd}).catch(()=>{});}catch(e){}}
 function validateName(name){const p=name.trim().split(/\s+/);return p.length>=2&&p.every(x=>x.length>=2);}

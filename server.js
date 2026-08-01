@@ -35,6 +35,25 @@ function verifyAdminToken(token, secret) {
   if (!payload || typeof payload.exp !== 'number' || payload.exp < Date.now()) return null;
   return payload;
 }
+// ADMIN_PASSWORD_HASH "salt:hash" formatındaysa salted scrypt ile doğrular (GPU/rainbow-table
+// saldırılarına dirençli); eski tuzsuz SHA-256 formatıyla geriye dönük uyumluluk korunur.
+function verifyPassword(password, stored) {
+  if (typeof stored !== 'string' || !stored) return false;
+  if (stored.includes(':')) {
+    const [saltHex, hashHex] = stored.split(':');
+    if (!saltHex || !hashHex) return false;
+    try {
+      const salt = Buffer.from(saltHex, 'hex');
+      const expected = Buffer.from(hashHex, 'hex');
+      const got = crypto.scryptSync(password, salt, expected.length);
+      return got.length === expected.length && crypto.timingSafeEqual(got, expected);
+    } catch (e) { return false; }
+  }
+  const hash = crypto.createHash('sha256').update(password).digest('hex');
+  const expected = Buffer.from(stored, 'utf8');
+  const got = Buffer.from(hash, 'utf8');
+  return expected.length === got.length && crypto.timingSafeEqual(expected, got);
+}
 
 if (!GROQ_API_KEY) {
   console.error('ERROR: GROQ_KEY environment variable not set!');

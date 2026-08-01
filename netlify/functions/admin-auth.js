@@ -13,6 +13,25 @@ function signToken(payload, secret) {
   const sig = b64url(crypto.createHmac('sha256', secret).update(data).digest());
   return data + '.' + sig;
 }
+// ADMIN_PASSWORD_HASH "salt:hash" formatındaysa salted scrypt (GPU/rainbow-table saldırılarına karşı
+// çok daha dirençli) ile doğrular; eski tuzsuz SHA-256 formatıyla geriye dönük uyumluluk da korunur.
+function verifyPassword(password, stored) {
+  if (typeof stored !== 'string' || !stored) return false;
+  if (stored.includes(':')) {
+    const [saltHex, hashHex] = stored.split(':');
+    if (!saltHex || !hashHex) return false;
+    try {
+      const salt = Buffer.from(saltHex, 'hex');
+      const expected = Buffer.from(hashHex, 'hex');
+      const got = crypto.scryptSync(password, salt, expected.length);
+      return got.length === expected.length && crypto.timingSafeEqual(got, expected);
+    } catch (e) { return false; }
+  }
+  const hash = crypto.createHash('sha256').update(password).digest('hex');
+  const expected = Buffer.from(stored, 'utf8');
+  const got = Buffer.from(hash, 'utf8');
+  return expected.length === got.length && crypto.timingSafeEqual(expected, got);
+}
 
 function svcHeaders() {
   const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -70,10 +89,7 @@ exports.handler = async (event) => {
       return { statusCode: 429, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Çok fazla başarısız deneme. Lütfen 15 dakika sonra tekrar deneyin.' }) };
     }
 
-    const hash = crypto.createHash('sha256').update(password).digest('hex');
-    const expected = Buffer.from(ADMIN_PASSWORD_HASH, 'utf8');
-    const got = Buffer.from(hash, 'utf8');
-    const valid = expected.length === got.length && crypto.timingSafeEqual(expected, got);
+    const valid = verifyPassword(password, ADMIN_PASSWORD_HASH);
 
     await logAttempt(ip, valid);
 
