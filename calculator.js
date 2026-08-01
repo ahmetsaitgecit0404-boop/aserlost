@@ -651,11 +651,13 @@ function calculateDegerKaybi(params){
     });
   }
   const overlap=getOverlapFactor(Math.max(1,partIds.length)),aps=paintSum*overlap,rps=replaceSum*overlap;
-  const maxPossibleLoss=Math.round(marketValue*0.35);
+  // Değer kaybında sabit bir yasal tavan yok (2020 AYM kararı sonrası Yargıtay "gerçek zarar"
+  // ilkesini esas alır) — %45 sadece formülün uç değerlere savrulmasını önleyen pratik bir sınır.
+  const maxPossibleLoss=Math.round(marketValue*0.45);
   const damageScore=Math.min(1,(aps+rps)/40);
   const baseLossPct=damageScore*0.25;
   let lossPct=baseLossPct*km_f*age_f;
-  lossPct=Math.max(0.03,Math.min(0.35,lossPct));
+  lossPct=Math.max(0.03,Math.min(0.45,lossPct));
   let minR=Math.round(marketValue*lossPct*0.80*faultF/10)*10;
   let maxR=Math.round(marketValue*lossPct*1.10*faultF/10)*10;
   if(minR>maxR)[minR,maxR]=[maxR,minR];
@@ -986,11 +988,10 @@ KURALLAR:
 - veriKaynaklari array'inde "Şu ilan sitesi şu modeli şu fiyattan gördüm", "Yargıtay 17. HD'nin şu tarihli kararı" gibi somut referans ver
 - karsilastirmaliAnaliz alanında birden fazla veri noktasını karşılaştır ve ortalama çıkar
 - Parça başı tahmini TL toplamı mantıklı olsun
-- Değer kaybı genelde piyasa değerinin %3-%30 arasıdır
-- ASLA piyasa değerinin %40'ından fazla değer kaybı hesaplama!
+- Değer kaybında sabit bir yasal tavan YOKTUR (2020'de Anayasa Mahkemesi'nin 2918 sayılı Kanun'daki ilgili hükümleri iptal etmesiyle eski katı tablo/tavan sistemi geçersiz kaldı; Yargıtay artık somut olayda "gerçek zarar" ilkesini esas alır). Yine de gerçekçi ol: hafif/orta hasarlarda genelde %3-%20, ağır/yapısal hasar (kesme-kaynak, perte yakın) gibi istisnai durumlarda %45'e kadar çıkabilir; bunun çok üzerine (örn. aracın neredeyse tamamı değişmiş gibi) çıkma çünkü o noktada zaten pert (tam hasar) değerlendirmesi gerekir, değer kaybı değil.
 - gercekPiyasaDegeri, verilen sistem piyasa değerinden ASLA %12'den fazla sapmamalı
 - min ve max arasındaki fark, ortalamanın (ort) %25'ini aşmamalı (dar ve tutarlı bir aralık ver)
-- Örnek: piyasa değeri 1.500.000 TL ise max değer kaybı 600.000 TL olabilir
+- Örnek: piyasa değeri 1.500.000 TL ise, hafif hasarda ~45.000-300.000 TL, ağır yapısal hasarda ~450.000-650.000 TL aralığında olabilir
 - 2026 Türkiye şartlarında güncel fiyatlarla hesapla
 - Gerçekçi ve tutarlı ol, abartma`;
 
@@ -1009,7 +1010,8 @@ KURALLAR:
       const gpdCapLo=Math.round(marketValue*0.88),gpdCapHi=Math.round(marketValue*1.12);
       let gercekPiyasaDegeri=parseInt(j.gercekPiyasaDegeri)||marketValue;
       gercekPiyasaDegeri=Math.min(gpdCapHi,Math.max(gpdCapLo,gercekPiyasaDegeri));
-      const maxLossCap=Math.round(gercekPiyasaDegeri*0.35);
+      // Sabit bir yasal tavan olmadığı için bu bir yasal sınır değil, sadece AI halüsinasyonuna karşı üst güvenlik bandı
+      const maxLossCap=Math.round(gercekPiyasaDegeri*0.45);
       let minV=Math.round(j.min),maxV=Math.round(j.max);
       if(minV>maxV)[minV,maxV]=[maxV,minV];
       minV=Math.min(minV,maxLossCap);maxV=Math.min(maxV,maxLossCap);
@@ -1142,7 +1144,10 @@ async function calculateAndShow(){
     if(aiR){
       const aiMv=aiR.gercekPiyasaDegeri||params.marketValue;
       params.marketValue=aiMv;state.autoMarketValue=aiMv;
-      const maxAllowed=Math.round(aiMv*0.38);
+      // Değer kaybında sabit bir yasal tavan yok (2020 AYM kararıyla eski tavan sistemi geçersiz,
+      // Yargıtay "gerçek zarar" ilkesini esas alır) — bu sadece AI'nin uç değerlere savrulmasını
+      // önleyen pratik bir güvenlik bandı, katı bir yasal sınır değil.
+      const maxAllowed=Math.round(aiMv*0.45);
       if(aiR.min>maxAllowed)aiR.min=Math.round(maxAllowed*0.6);
       if(aiR.max>maxAllowed)aiR.max=maxAllowed;
       if(aiR.min<500)aiR.min=500;
