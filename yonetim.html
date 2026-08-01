@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Müvekkil Bilgi - Admin Panel</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'" />
+  <style>
+    :root{--bg:#0B0C10;--surface:#111318;--card:#181818;--elevated:#1A1A1A;--hover:#222;--primary:#C5A880;--primary-dark:#A88B60;--border:rgba(197,168,128,0.15);--border-mid:rgba(197,168,128,0.28);--text:#FFF;--text2:#C8C8C8;--textm:#808080;--success:#22c55e;--danger:#ef4444;--radius:12px;--font:'Inter',sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+    #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px 32px;width:100%;max-width:400px;text-align:center}
+    .login-box h1{font-size:22px;font-weight:800;margin-bottom:6px;color:var(--primary)}
+    .login-box p{font-size:13px;color:var(--textm);margin-bottom:28px}
+    .login-box input{width:100%;padding:12px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;margin-bottom:12px}
+    .login-box input:focus{border-color:var(--primary)}
+    .login-box button{width:100%;padding:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#0B0C10;border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+    .login-box button:hover{opacity:.85}
+    .login-error{color:var(--danger);font-size:12px;margin-top:8px;min-height:16px}
+
+    #adminScreen{display:none;padding:24px;max-width:1200px;margin:0 auto}
+    .admin-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+    .admin-top h1{font-size:22px;font-weight:800;color:var(--primary)}
+    .admin-top button{padding:8px 16px;background:var(--danger);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer}
+    .export-btn{background:var(--primary)!important;color:#0B0C10!important;font-weight:700!important}
+    .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+    .stat-card .num{font-size:28px;font-weight:800;color:var(--primary);display:block}
+    .stat-card .lbl{font-size:11px;font-weight:600;color:var(--textm);margin-top:4px;display:block;text-transform:uppercase;letter-spacing:.5px}
+
+    .admin-controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .admin-controls input,.admin-controls select{padding:10px 14px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none}
+    .admin-controls input{flex:1;min-width:200px}
+    .admin-controls input:focus,.admin-controls select:focus{border-color:var(--primary)}
+
+    .table-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .table-wrapper table{width:100%;border-collapse:collapse;font-size:13px}
+    .table-wrapper th{background:var(--elevated);padding:12px 14px;text-align:left;font-weight:700;color:var(--textm);font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);position:sticky;top:0}
+    .table-wrapper td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+    .table-wrapper tr:hover td{background:var(--hover)}
+    .table-wrapper .tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;background:rgba(197,168,128,0.1);color:var(--primary);border:1px solid var(--border)}
+    .table-scroll{max-height:65vh;overflow-y:auto}
+    .empty-msg{text-align:center;padding:40px;color:var(--textm);font-size:14px}
+    .export-btn{padding:8px 16px;background:var(--success);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer}
+    .export-btn:hover{opacity:.85}
+    .tab-bar{display:flex;gap:4px;margin-bottom:20px}
+    .tab-btn{padding:8px 16px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;color:var(--textm);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+    .tab-btn.active{background:var(--primary);color:#0B0C10;border-color:var(--primary)}
+    .tab-btn:hover:not(.active){border-color:var(--border-mid);color:var(--text)}
+    @media(max-width:768px){.table-wrapper{overflow-x:auto}.admin-controls{flex-direction:column}.admin-controls input{min-width:auto}}
+
+    .terminal-box{background:#0a0a0a;border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:'Courier New',monospace;font-size:12px;max-height:65vh;overflow-y:auto}
+    .term-line{padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+    .term-time{color:#666;flex-shrink:0}
+    .term-ip{color:#61dafb;flex-shrink:0}
+    .term-status{font-weight:700}
+    .term-status.ok{color:var(--success)}
+    .term-status.fail{color:var(--danger)}
+    .term-prompt{color:var(--primary)}
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h1>Müvekkil Bilgi Admin</h1>
+      <p>Yönetim paneline erişim için şifrenizi girin</p>
+      <input type="password" id="pwInput" placeholder="Şifre"/>
+      <button id="loginBtn">Giriş Yap</button>
+      <div class="login-error" id="loginErr"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminScreen">
+    <div class="admin-top">
+      <h1>Müvekkil Bilgi Admin Panel</h1>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span id="refreshIndicator" style="font-size:11px;color:var(--textm)"></span>
+        <button class="export-btn" id="exportCsvBtn">CSV İndir</button>
+        <button id="logoutBtn">Çıkış Yap</button>
+      </div>
+    </div>
+
+    <div class="admin-stats" id="adminStats"></div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="leads">Başvurular</button>
+      <button class="tab-btn" data-tab="contacts">İletişim Mesajları</button>
+      <button class="tab-btn" data-tab="calculations">Hesaplamalar</button>
+      <button class="tab-btn" data-tab="tracking">Link Takip</button>
+      <button class="tab-btn" data-tab="security">🔒 Güvenlik</button>
+    </div>
+
+    <div id="tabContent_leads" class="tab-content">
+      <div class="admin-controls">
+        <input type="text" id="searchInput" placeholder="Ara... (isim, telefon, email, şehir)"/>
+        <select id="filterType">
+          <option value="">Tüm Türler</option>
+          <option value="arac">Araç Değer Kaybı</option>
+          <option value="iscilik">İşçilik</option>
+          <option value="hasar">Hasar Bedeli</option>
+          <option value="isgucu">İş Gücü Kaybı</option>
+          <option value="sakatlik">Sürekli Sakatlık</option>
+          <option value="yoksun">Destekten Yoksun</option>
+          <option value="maddi">Maddi Hasar</option>
+          <option value="gecici">Geçici İş Göremezlik</option>
+          <option value="kalici">Kalıcı İş Göremezlik</option>
+          <option value="nafaka">Nafaka</option>
+          <option value="isKazasi">İş Kazası</option>
+          <option value="kasko">Kasko</option>
+          <option value="tuketici">Tüketici Hakları</option>
+          <option value="tapu">Tapu Harcı</option>
+          <option value="trafikCezasi">Trafik Cezası</option>
+          <option value="manevi">Manevi Tazminat</option>
+          <option value="kusur">Kusur Oranı Tespiti</option>
+          <option value="bosanma">Boşanma</option>
+          <option value="miras">Miras</option>
+          <option value="kamulastirma">Kamulaştırmasız El Atma</option>
+          <option value="mahrumiyet">Mahrumiyet</option>
+          <option value="isgucu">İş Gücü Kaybı</option>
+          <option value="iscilik">İşçilik</option>
+        </select>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-scroll" id="tableContainer">
+          <div class="empty-msg">Veri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent_contacts" class="tab-content" style="display:none">
+      <div class="admin-controls">
+        <input type="text" id="searchInput_contacts" placeholder="Ara..."/>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-scroll" id="tableContainer_contacts">
+          <div class="empty-msg">Veri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent_calculations" class="tab-content" style="display:none">
+      <div class="table-wrapper">
+        <div class="table-scroll" id="tableContainer_calculations">
+          <div class="empty-msg">Veri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent_tracking" class="tab-content" style="display:none">
+      <div class="admin-controls" style="flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%">
+          <input type="text" id="linkEtiket" placeholder="Etiket adı (örn: facebook-reklam)" style="flex:1;min-width:180px"/>
+          <button class="export-btn" id="generateLinkBtn" style="background:var(--primary);color:#0B0C10">Link Oluştur</button>
+        </div>
+      </div>
+      <div id="generatedLinkBox" style="display:none;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px">
+        <div style="font-size:11px;color:var(--textm);margin-bottom:4px">Oluşturulan Link:</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="text" id="generatedLink" readonly style="flex:1;padding:10px 14px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px"/>
+          <button class="export-btn" id="copyLinkBtn" style="white-space:nowrap">Kopyala</button>
+        </div>
+      </div>
+      <div class="admin-stats" id="trackingStats" style="margin-bottom:16px"></div>
+      <div class="table-wrapper">
+        <div class="table-scroll" id="tableContainer_tracking">
+          <div class="empty-msg">Veri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent_security" class="tab-content" style="display:none">
+      <div class="admin-stats" id="securityStats" style="margin-bottom:16px"></div>
+      <div id="securityConfigWarning" style="display:none;padding:14px 16px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius);color:#f87171;font-size:12px;margin-bottom:16px;line-height:1.6"></div>
+      <div class="terminal-box" id="securityTerminal"><div class="empty-msg">Giriş kayıtları yükleniyor...</div></div>
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+  (function(){
+    const DB='muvekkilbilgi_';
+    function ld(k){try{return JSON.parse(localStorage.getItem(DB+k)||'[]')}catch(e){return[]}}
+    function ls(k,v){try{localStorage.setItem(DB+k,JSON.stringify(v))}catch(e){}}
+
+    function escapeHtml(str){
+      if(str===null||str===undefined)return'';
+      const d=document.createElement('div');
+      d.textContent=String(str);
+      return d.innerHTML;
+    }
+
+    function playBeep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.01,a.currentTime+0.4);o.start(a.currentTime);o.stop(a.currentTime+0.4);setTimeout(()=>{const o2=a.createOscillator(),g2=a.createGain();o2.connect(g2);g2.connect(a.destination);o2.frequency.value=1100;o2.type='sine';g2.gain.setValueAtTime(0.15,a.currentTime);g2.gain.exponentialRampToValueAtTime(0.01,a.currentTime+0.3);o2.start(a.currentTime);o2.stop(a.currentTime+0.3);},200)}catch(e){}}
+    let prevCounts={leads:0,contacts:0,tracking:0};
+
+    let allLeads=[],allContacts=[],allCalcs=[],allTracking=[],allLoginAttempts=[];
+    let currentTab='leads';
+
+    const SESSION_TIMEOUT_MS=30*60*1000;
+    let sessionTimer=null;
+
+    function resetSessionTimer(){
+      if(sessionTimer)clearTimeout(sessionTimer);
+      if(isValidToken(sessionStorage.getItem('admin_token'))){
+        sessionTimer=setTimeout(doLogout,SESSION_TIMEOUT_MS);
+      }
+    }
+    document.addEventListener('click',resetSessionTimer);
+    document.addEventListener('keydown',resetSessionTimer);
+    document.addEventListener('mousemove',resetSessionTimer);
+
+    let _adminTokenExp=0;
+    function isValidToken(t){
+      if(!t||typeof t!=='string'||t.indexOf('.')===-1)return false;
+      if(_adminTokenExp&&Date.now()>_adminTokenExp){return false;}
+      return true;
+    }
+
+    function requireAuth(fn){
+      return function(){
+        if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+        return fn.apply(this,arguments);
+      };
+    }
+
+    async function doLogin(){
+      const pw=document.getElementById('pwInput').value;
+      const btn=document.getElementById('loginBtn');
+      const err=document.getElementById('loginErr');
+      if(pw.length>128){err.textContent='Geçersiz giriş.';return;}
+      btn.disabled=true;btn.style.opacity='0.7';err.textContent='';err.style.color='var(--danger)';
+      try{
+        const res=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok){
+          err.textContent=data.error||'Giriş başarısız.';
+          if(res.status===429)err.style.color='#f59e0b';
+          document.getElementById('pwInput').value='';
+          return;
+        }
+        sessionStorage.setItem('admin_token',data.token);
+        _adminTokenExp=data.expiresAt||(Date.now()+4*60*60*1000);
+        resetSessionTimer();
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('adminScreen').style.display='block';
+        loadAllData();
+      }catch(e){
+        err.textContent='Sunucuya bağlanılamadı. Lütfen tekrar deneyin.';
+      }finally{
+        btn.disabled=false;btn.style.opacity='1';
+      }
+    }
+
+    function doLogout(){
+      if(!confirm('Çıkış yapmak istediğinize emin misiniz?'))return;
+      if(sessionTimer)clearTimeout(sessionTimer);
+      sessionStorage.removeItem('admin_token');
+      _adminTokenExp=0;
+      document.getElementById('adminScreen').style.display='none';
+      document.getElementById('loginScreen').style.display='flex';
+      document.getElementById('pwInput').value='';
+      document.getElementById('loginErr').textContent='';
+    }
+
+    let lastAdminDataError='';
+    async function sbSelect(table){
+      const token=sessionStorage.getItem('admin_token');
+      if(!isValidToken(token))return null;
+      try{
+        const r=await fetch('/api/admin/'+table,{headers:{Authorization:'Bearer '+token}});
+        if(r.status===401){doLogout();return null;}
+        if(!r.ok){
+          try{const ej=await r.json();lastAdminDataError=ej.error||('HTTP '+r.status);}catch(_){lastAdminDataError='HTTP '+r.status;}
+          return null;
+        }
+        const data=await r.json();
+        return Array.isArray(data)?data:null;
+      }catch(e){lastAdminDataError='Sunucuya bağlanılamadı: '+e.message;return null;}
+    }
+
+    function switchTab(tab,btn){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      currentTab=tab;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
+      const tc=document.getElementById('tabContent_'+tab);
+      if(tc)tc.style.display='block';
+      if(tab==='tracking'){renderTracking();return;}
+      if(tab==='security'){renderSecurityLog();return;}
+      filterTable();
+    }
+    async function renderSecurityLog(){
+      const box=document.getElementById('securityTerminal');
+      const warn=document.getElementById('securityConfigWarning');
+      const stats=document.getElementById('securityStats');
+      box.innerHTML='<div class="empty-msg">Yükleniyor...</div>';
+      const data=await sbSelect('login_attempts');
+      if(data===null){
+        warn.style.display='block';
+        warn.innerHTML='⚠ Giriş kayıtları okunamadı: '+escapeHtml(lastAdminDataError||'bilinmeyen hata')+'<br/>Bu özelliğin çalışması için Supabase\'te <code>login_attempts</code> tablosunun oluşturulmuş ve <code>SUPABASE_SERVICE_ROLE_KEY</code> ortam değişkeninin tanımlanmış olması gerekir.';
+        box.innerHTML='<div class="empty-msg">Veri yok.</div>';
+        stats.innerHTML='';
+        return;
+      }
+      warn.style.display='none';
+      allLoginAttempts=data.slice().sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+      const total=allLoginAttempts.length;
+      const fails=allLoginAttempts.filter(a=>a.success===false).length;
+      const ips=new Set(allLoginAttempts.map(a=>a.ip)).size;
+      const lastOk=allLoginAttempts.find(a=>a.success===true);
+      stats.innerHTML=`
+        <div class="stat-card"><span class="num">${total}</span><span class="lbl">Toplam Deneme</span></div>
+        <div class="stat-card"><span class="num" style="color:var(--danger)">${fails}</span><span class="lbl">Başarısız Deneme</span></div>
+        <div class="stat-card"><span class="num">${ips}</span><span class="lbl">Farklı IP</span></div>
+        <div class="stat-card"><span class="num" style="font-size:14px">${lastOk?new Date(lastOk.created_at).toLocaleString('tr-TR'):'-'}</span><span class="lbl">Son Başarılı Giriş</span></div>
+      `;
+      if(!total){box.innerHTML='<div class="empty-msg">Henüz giriş denemesi kaydı yok.</div>';return;}
+      box.innerHTML=allLoginAttempts.map(a=>{
+        const ok=a.success===true;
+        const t=a.created_at?new Date(a.created_at).toLocaleString('tr-TR'):'-';
+        return `<div class="term-line"><span class="term-prompt">$</span><span class="term-time">${escapeHtml(t)}</span><span class="term-ip">IP: ${escapeHtml(a.ip||'bilinmiyor')}</span><span class="term-status ${ok?'ok':'fail'}">${ok?'✓ BAŞARILI GİRİŞ':'✕ YANLIŞ ŞİFRE'}</span></div>`;
+      }).join('');
+    }
+
+    function filterTable(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      const q=(document.getElementById('searchInput')||{}).value||'';
+      const qc=(document.getElementById('searchInput_contacts')||{}).value||'';
+      const ft=(document.getElementById('filterType')||{}).value||'';
+      let data=[];
+      if(currentTab==='leads'){
+        data=allLeads;
+        if(ft)data=data.filter(d=>(d.tur||'')===ft);
+        if(q)data=data.filter(d=>JSON.stringify(d).toLowerCase().includes(q.toLowerCase()));
+        renderTable('tableContainer',data,'leads');
+      }else if(currentTab==='contacts'){
+        data=allContacts;
+        if(qc)data=data.filter(d=>JSON.stringify(d).toLowerCase().includes(qc.toLowerCase()));
+        renderTable('tableContainer_contacts',data,'contacts');
+      }else if(currentTab==='calculations'){
+        data=allCalcs;
+        renderTable('tableContainer_calculations',data,'calculations');
+      }
+    }
+
+    function renderTable(containerId,data,mode){
+      const c=document.getElementById(containerId);
+      if(!c)return;
+      if(!data.length){c.innerHTML='<div class="empty-msg">Bu kategoride henüz veri bulunmuyor.</div>';return;}
+      const reversed=data.slice().reverse();
+      function h(v){return escapeHtml(v??'');}
+      if(mode==='leads'){
+        c.innerHTML=`<table><thead><tr><th>Tarih</th><th>Ad Soyad</th><th>Telefon</th><th>E-posta</th><th>Şehir</th><th>İlçe</th><th>Plaka</th><th>Tür</th><th>Sonuç</th><th>Vekalet</th><th>Ref</th><th>Etiket</th><th>Açıklama</th></tr></thead><tbody>${reversed.map(l=>`<tr><td>${h(l.tarih)} ${h(l.saat)}</td><td><strong>${h(l.ad)}</strong></td><td>${h(l.telefon)}</td><td>${h(l.email)}</td><td>${h(l.sehir)}</td><td>${h(l.ilce)}</td><td>${h(l.plaka)}</td><td><span class="tag">${h(l.tur)}</span></td><td>${h(l.sonuc)}</td><td>${h(l.vekalet)}</td><td style="font-size:10px;color:var(--textm)">${h(l.ref)||'-'}</td><td style="font-size:10px;color:var(--textm)">${h(l.etiket)||'-'}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">${h(l.aciklama)}</td></tr>`).join('')}</tbody></table>`;
+      }else if(mode==='contacts'){
+        c.innerHTML=`<table><thead><tr><th>Tarih</th><th>Ad Soyad</th><th>E-posta</th><th>Telefon</th><th>Konu</th><th>Mesaj</th></tr></thead><tbody>${reversed.map(m=>`<tr><td>${h(m.tarih)} ${h(m.saat)}</td><td><strong>${h(m.ad)}</strong></td><td>${h(m.email)}</td><td>${h(m.telefon)}</td><td><span class="tag">${h(m.konu)}</span></td><td style="max-width:250px">${h(m.mesaj)}</td></tr>`).join('')}</tbody></table>`;
+      }else{
+        c.innerHTML=`<table><thead><tr><th>Tarih</th><th>Tür</th><th>Sonuç</th></tr></thead><tbody>${reversed.map(x=>`<tr><td>${h(x.tarih)} ${h(x.saat)}</td><td><span class="tag">${h(x.tur)}</span></td><td>${h(x.sonuc)}</td></tr>`).join('')}</tbody></table>`;
+      }
+    }
+
+    function exportCSV(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      let data=[];
+      if(currentTab==='leads')data=allLeads;
+      else if(currentTab==='contacts')data=allContacts;
+      else if(currentTab==='calculations')data=allCalcs;
+      else if(currentTab==='tracking')data=allTracking;
+      else if(currentTab==='security')data=allLoginAttempts;
+      if(!data.length){alert('Dışa aktarılacak veri yok.');return;}
+      const headers=Object.keys(data[0]);
+      const csv=[headers.join(',')];
+      data.forEach(r=>{csv.push(headers.map(h=>'"'+String(r[h]||'').replace(/"/g,'""')+'"').join(','));});
+      const blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv;charset=utf-8;'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='muvekkilbilgi_'+currentTab+'_'+new Date().toISOString().slice(0,10)+'.csv';
+      a.click();
+    }
+
+    function renderStats(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      document.getElementById('adminStats').innerHTML=`
+        <div class="stat-card"><span class="num">${allLeads.length}</span><span class="lbl">Toplam Başvuru</span></div>
+        <div class="stat-card"><span class="num">${allContacts.length}</span><span class="lbl">İletişim Mesajı</span></div>
+        <div class="stat-card"><span class="num">${allCalcs.length}</span><span class="lbl">Hesaplama Kaydı</span></div>
+        <div class="stat-card"><span class="num">${new Set(allLeads.map(l=>l.sehir).filter(Boolean)).size}</span><span class="lbl">Farklı Şehir</span></div>
+        <div class="stat-card" id="notificationBadge" style="display:none;border-color:var(--success)"><span class="num" id="notifCount">0</span><span class="lbl">Yeni Veri</span></div>`;
+    }
+
+    function generateTrackingLink(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      const etiket=document.getElementById('linkEtiket').value.trim();
+      if(!etiket){alert('Lütfen bir etiket adı girin.');return;}
+      const ref=Math.random().toString(36).substring(2,8).toUpperCase();
+      const baseUrl=window.location.origin+window.location.pathname.replace(/\/[^/]*$/,'/')+'index.html';
+      const link=baseUrl+'?ref='+ref+'&etiket='+encodeURIComponent(etiket);
+      document.getElementById('generatedLink').value=link;
+      document.getElementById('generatedLinkBox').style.display='block';
+      const links=JSON.parse(localStorage.getItem('muvekkilbilgi_links')||'[]');
+      links.push({ref,etiket,olusturma:new Date().toLocaleString('tr-TR')});
+      localStorage.setItem('muvekkilbilgi_links',JSON.stringify(links));
+    }
+
+    function copyGeneratedLink(){
+      const i=document.getElementById('generatedLink');
+      if(!i)return;
+      i.select();
+      navigator.clipboard.writeText(i.value).catch(()=>{});
+    }
+
+    function renderTracking(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      const visits=allTracking.filter(t=>t.tip==='visit');
+      const forms=allTracking.filter(t=>t.tip==='form_complete');
+      const etiketler=[...new Set(allTracking.map(t=>t.etiket).filter(Boolean))];
+      const c=document.getElementById('tableContainer_tracking');
+      function h(v){return escapeHtml(v??'');}
+      if(!allTracking.length){
+        c.innerHTML='<div class="empty-msg">Henüz takip verisi bulunmuyor.</div>';
+      }else{
+        c.innerHTML=`<table><thead><tr><th>Tarih</th><th>Saat</th><th>Etiket</th><th>Ref</th><th>Tip</th><th>Modül</th></tr></thead><tbody>${allTracking.slice().reverse().map(t=>`<tr><td>${h(t.tarih)}</td><td>${h(t.saat)}</td><td><span class="tag">${h(t.etiket)||'-'}</span></td><td style="font-size:10px;color:var(--textm)">${h(t.ref)||'-'}</td><td>${t.tip==='visit'?'Ziyaret':'Form'}</td><td>${h(t.modul)||'-'}</td></tr>`).join('')}</tbody></table>`;
+      }
+      document.getElementById('trackingStats').innerHTML=`
+        <div class="stat-card"><span class="num">${visits.length}</span><span class="lbl">Toplam Ziyaret</span></div>
+        <div class="stat-card"><span class="num">${forms.length}</span><span class="lbl">Form Tamamlama</span></div>
+        <div class="stat-card"><span class="num">${etiketler.length}</span><span class="lbl">Farklı Etiket</span></div>
+        <div class="stat-card"><span class="num">${visits.length>0?Math.round(forms.length/visits.length*100)+'%':'0%'}</span><span class="lbl">Dönüşüm Oranı</span></div>`;
+    }
+
+    async function loadAllData(){
+      if(!isValidToken(sessionStorage.getItem('admin_token')))return;
+      allLeads=ld('leads');allContacts=ld('contacts');allCalcs=ld('calcs');allTracking=ld('tracking');
+      const ri=document.getElementById('refreshIndicator');
+      lastAdminDataError='';
+      try{
+        const [sl,sc,sc2]=await Promise.all([sbSelect('leads'),sbSelect('contacts'),sbSelect('tracking')]);
+        if(Array.isArray(sl)){allLeads=sl;ls('leads',sl);}
+        if(Array.isArray(sc)){allContacts=sc;ls('contacts',sc);}
+        if(Array.isArray(sc2)){allTracking=sc2;ls('tracking',sc2);}
+        if(sl===null||sc===null||sc2===null){
+          if(ri){ri.textContent='⚠ '+(lastAdminDataError||'Sunucudan veri okunamadı, yerel veri gösteriliyor');ri.style.color='#f59e0b';}
+        }else{
+          if(ri){ri.textContent='✓ Veritabanı bağlı';ri.style.color='';}
+        }
+      }catch(e){
+        if(ri){ri.textContent='⚠ Yerel veri (sunucu yok)';ri.style.color='#f59e0b';}
+      }
+      let newData=false;
+      if(allLeads.length>prevCounts.leads||allContacts.length>prevCounts.contacts||allTracking.length>prevCounts.tracking)newData=true;
+      prevCounts={leads:allLeads.length,contacts:allContacts.length,tracking:allTracking.length};
+      renderStats();
+      filterTable();
+      if(newData){playBeep();if(ri)ri.textContent='Son güncelleme: '+new Date().toLocaleTimeString('tr-TR');}
+    }
+
+    document.addEventListener('DOMContentLoaded',function(){
+      if(isValidToken(sessionStorage.getItem('admin_token'))){
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('adminScreen').style.display='block';
+        loadAllData();
+        setInterval(loadAllData,15000);
+      }
+      document.getElementById('loginBtn').addEventListener('click',doLogin);
+      document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+      document.getElementById('logoutBtn').addEventListener('click',doLogout);
+      document.getElementById('exportCsvBtn').addEventListener('click',exportCSV);
+      document.getElementById('generateLinkBtn').addEventListener('click',generateTrackingLink);
+      document.getElementById('copyLinkBtn').addEventListener('click',copyGeneratedLink);
+      document.querySelectorAll('.tab-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          switchTab(this.getAttribute('data-tab'),this);
+        });
+      });
+      document.getElementById('searchInput').addEventListener('input',filterTable);
+      document.getElementById('searchInput_contacts').addEventListener('input',filterTable);
+      document.getElementById('filterType').addEventListener('change',filterTable);
+    });
+  })();
+  </script>
+</body>
+</html>

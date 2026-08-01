@@ -1,0 +1,757 @@
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Müvekkil Bilgi – Tazminat Hesaplama Platformu</title>
+  <meta name="description" content="Trafik kazası araç değer kaybı, işçilik, hasar bedeli, iş gücü kaybı, sakatlık ve tazminat hesaplamalarınızı yasal mevzuata uygun, ücretsiz hesaplayın." />
+  <meta name="keywords" content="tazminat hesaplama, araç değer kaybı, işçilik tazminatı, trafik kazası, hasar bedeli, sigorta, kasko" />
+  <meta property="og:title" content="Müvekkil Bilgi – Tazminat Hesaplama Platformu" />
+  <meta property="og:description" content="Trafik kazası ve iş hukuku tazminat hesaplamalarınızı ücretsiz, anında hesaplayın." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://muvekkilbilgi.com" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://muvekkilbilgi.com" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.groq.com https://hvsxeljnyxmhiwgsqhgx.supabase.co; frame-src 'none'; object-src 'none'" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Müvekkil Bilgi",
+    "url": "https://muvekkilbilgi.com",
+    "description": "Tazminat hesaplama platformu",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web"
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- HEADER -->
+  <header class="header" id="mainHeader">
+    <div class="header-inner">
+      <div class="logo" onclick="navigate('home')" style="cursor:pointer" title="Ana Sayfa">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#C5A880"/><stop offset="100%" stop-color="#E2C992"/></linearGradient><linearGradient id="lg2" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#8B6914"/><stop offset="100%" stop-color="#C5A880"/></linearGradient><filter id="lg-s"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-opacity="0.35"/></filter></defs><rect width="40" height="40" rx="10" fill="url(#lg1)"/><circle cx="17" cy="14" r="6" fill="#fff"/><path d="M7 34v-1.5C7 24.6 11.5 19 17 19s10 5.6 10 13.5V34H7z" fill="#fff"/><circle cx="29.5" cy="29.5" r="7.2" fill="url(#lg2)" filter="url(#lg-s)"/><circle cx="29.5" cy="26.1" r="1.55" fill="#fff"/><rect x="28.1" y="28.7" width="2.8" height="6" rx="1.4" fill="#fff"/></svg>
+        </div>
+        <span class="logo-text">Müvekkil<span class="logo-accent"> Bilgi</span></span>
+      </div>
+      <nav class="nav-links" id="homeNav">
+        <a href="#modules">Hesaplama</a>
+        <a href="#blogSection">Blog</a>
+        <a href="#faq">SSS</a>
+        <a href="#contactSection">İletişim</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn-back-home" id="headerBack" style="display:none" onclick="navigate('home')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Ana Sayfa
+        </button>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()" aria-label="Menü">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <a href="#modules" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('modules')?.scrollIntoView({behavior:'smooth'}),100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg> Hesaplama</a>
+    <a href="#blogSection" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('blogSection')?.scrollIntoView({behavior:'smooth'}),100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4V4z" stroke="currentColor" stroke-width="2"/><path d="M8 8h8v2H8zm0 4h5v2H8zm0 4h8v2H8z" stroke="currentColor" stroke-width="1.5"/></svg> Blog</a>
+    <a href="#faq" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('faq')?.scrollIntoView({behavior:'smooth'}),100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M9.5 10a2.5 2.5 0 115 0c0 1.5-2.5 2.5-2.5 2.5v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg> SSS</a>
+    <a href="#contactSection" onclick="closeMobileMenu();setTimeout(()=>document.getElementById('contactSection')?.scrollIntoView({behavior:'smooth'}),100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> İletişim</a>
+  </div>
+
+  <!-- =================== SCREEN: HOME =================== -->
+  <div id="screen-home">
+
+    <!-- Hero -->
+    <section class="home-hero">
+      <div class="home-hero-content">
+        <div class="hero-badge"><span class="badge-dot"></span> Ücretsiz &amp; Anlık Hesaplama</div>
+        <h1 class="home-title">Haklarınızı Öğrenin,<br/><span class="gradient-text">Tazminatınızı Alın</span></h1>
+        <p class="home-subtitle">Trafik kazası sonrası değer kaybınızı, işçilik alacaklarınızı veya farklı tazminat türlerini Türk hukuku mevzuatına uygun olarak saniyeler içinde hesaplayın.</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-number">50.000+</span><span class="stat-label">Hesaplama</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-number">16+</span><span class="stat-label">Modül</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-number">3 dk</span><span class="stat-label">Ortalama Süre</span></div>
+        </div>
+        <div class="hero-road-anim" aria-hidden="true">
+          <svg viewBox="0 0 1000 36" preserveAspectRatio="none" class="hero-road-svg">
+            <line x1="0" y1="18" x2="1000" y2="18" class="hero-road-line"/>
+            <g class="hero-car">
+              <path d="M0 10c0-2 2-4 5-4h26l7-6h20l8 6h14c3 0 5 2 5 4v10c0 2-2 4-5 4h-3a7 7 0 1 1-14 0H27a7 7 0 1 1-14 0H5c-3 0-5-2-5-4z" fill="url(#heroCarGrad)"/>
+              <circle cx="20" cy="24" r="5.5" fill="#0B0C10" stroke="#C5A880" stroke-width="1.5"/>
+              <circle cx="65" cy="24" r="5.5" fill="#0B0C10" stroke="#C5A880" stroke-width="1.5"/>
+            </g>
+            <defs>
+              <linearGradient id="heroCarGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#C5A880"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module Cards -->
+    <section class="modules-section" id="modules">
+      <div class="section-inner">
+        <div class="section-badge">Ne Hesaplamak İstersiniz?</div>
+        <h2 class="section-title">Hesaplama Modülü Seçin</h2>
+        <div class="module-search-wrapper">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>
+          <input type="text" id="moduleSearchInput" class="module-search-input" placeholder="Ne hesaplamak istiyorsunuz? Örn: değer kaybı, kıdem, miras..." oninput="filterModules(this.value)"/>
+          <button type="button" class="module-search-clear" id="moduleSearchClear" style="display:none" onclick="document.getElementById('moduleSearchInput').value='';filterModules('');">✕</button>
+        </div>
+        <div class="modules-grid" id="modulesGrid"></div>
+      </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust-section" id="hakkimizda">
+      <div class="section-inner">
+        <div class="section-badge">Neden Müvekkil Bilgi?</div>
+        <h2 class="section-title">Güvenilir &amp; Şeffaf Hesaplama</h2>
+        <div class="methods-grid">
+          <div class="method-card"><div class="method-icon">⚖️</div><h3>Yasal Dayanak</h3><p>Hesaplamalar Türk Ticaret Kanunu, İş Kanunu ve mahkeme içtihatlarına dayanmaktadır.</p></div>
+          <div class="method-card"><div class="method-icon">🔒</div><h3>Gizlilik</h3><p>Girdiğiniz bilgiler üçüncü şahıslarla paylaşılmaz. Güvenli ve şifreli bağlantı kullanılır.</p></div>
+          <div class="method-card"><div class="method-icon">⚡</div><h3>Anlık Sonuç</h3><p>Tüm hesaplamalar cihazınızda anında gerçekleşir, bekleme süresi yoktur.</p></div>
+          <div class="method-card"><div class="method-icon">🤖</div><h3>Yapay Zeka Asistan</h3><p>7/24 Groq AI destekli hukuk asistanımızla sorularınızı anında yanıtlayın.</p></div>
+          <div class="method-card"><div class="method-icon">📱</div><h3>Mobil Uyumlu</h3><p>Telefon, tablet ve bilgisayarınızdan kolayca kullanın. Responsive tasarım.</p></div>
+          <div class="method-card"><div class="method-icon">🏆</div><h3>16+ Hesaplama Modülü</h3><p>Araç değer kaybından manevi tazminata kadar geniş kapsamlı hesaplama araçları.</p></div>
+          <div class="method-card"><div class="method-icon">📊</div><h3>Detaylı Raporlar</h3><p>Her hesaplama için adım adım detaylı breakdown ve analiz raporları.</p></div>
+          <div class="method-card"><div class="method-icon">💬</div><h3>Ücretsiz Danışmanlık</h3><p>WhatsApp ve iletişim formu üzerinden ücretsiz ön bilgilendirme desteği.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog-section" id="blogSection">
+      <div class="section-inner">
+        <div class="section-badge">Blog</div>
+        <h2 class="section-title">Güncel Yazılar</h2>
+        <div class="blog-filters" id="blogFilters"></div>
+        <div class="blog-grid" id="blogGrid"></div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonialsSection">
+      <div class="section-inner">
+        <div class="section-badge">Müşteri Yorumları</div>
+        <h2 class="section-title">Müşterilerimiz Ne Diyor?</h2>
+        <p class="section-subtitle">Binlerce vatandaşımız Müvekkil Bilgi ile hakkını aradı. İşte bazıları:</p>
+        <div class="testimonials-grid" id="testimonialsGrid"></div>
+        <div class="testimonials-cta">
+          <p>Siz de haklarınızı öğrenin, bedelini ödemeyin!</p>
+          <a href="#modules" class="btn-next" style="text-decoration:none;display:inline-flex;">Hemen Hesapla</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contactSection">
+      <div class="section-inner">
+        <div class="section-badge">İletişim</div>
+        <h2 class="section-title">Bize Ulaşın</h2>
+        <div class="contact-grid">
+          <div class="contact-form-card">
+            <h3>İletişim Formu</h3>
+            <form id="contactForm" onsubmit="submitContactForm(event)">
+              <div class="form-grid">
+                <div class="form-group"><label for="contactName">Ad Soyad *</label><input type="text" id="contactName" placeholder="Adınız Soyadınız" required/></div>
+                <div class="form-group"><label for="contactEmail">E-posta *</label><input type="email" id="contactEmail" placeholder="ornek@email.com" required/></div>
+                <div class="form-group"><label for="contactPhone">Telefon</label><input type="tel" id="contactPhone" placeholder="05xx xxx xx xx"/></div>
+                <div class="form-group"><label for="contactSubject">Konu</label>
+                  <div class="select-wrapper"><select id="contactSubject"><option value="">Seçiniz</option><option>Tazminat Hesaplama</option><option>Sigorta İşlemleri</option><option>Hukuki Danışmanlık</option><option>Diğer</option></select><span class="select-arrow">▾</span></div>
+                </div>
+                <div class="form-group full-width"><label for="contactMessage">Mesajınız *</label><textarea id="contactMessage" rows="4" placeholder="Mesajınızı yazın..." required></textarea></div>
+                <div class="form-group full-width"><label class="kvkk-checkbox" style="gap:8px;display:flex;align-items:flex-start"><input type="checkbox" id="contactKvkk" style="width:18px;height:18px;margin-top:2px;accent-color:var(--primary);flex-shrink:0"/> <span style="font-size:12px;line-height:1.5;color:var(--text-secondary)"><strong>KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.</strong><br/><small>Kişisel verilerimin yukarıda belirtilen amaçlarla işlenmesine izin veriyorum.</small></span></label><span class="field-error" id="contactKvkkError"></span></div>
+              </div>
+              <button type="submit" class="btn-next" style="width:100%;justify-content:center;">Gönder</button>
+            </form>
+          </div>
+          <div class="contact-info-card">
+            <h3>İletişim Bilgileri</h3>
+            <div class="ci-item"><span class="ci-icon">📞</span><div><p class="ci-label">Telefon</p><a href="tel:05510126904">0551 012 69 04</a></div></div>
+            <div class="ci-item"><span class="ci-icon">📧</span><div><p class="ci-label">E-posta</p><a href="mailto:info@muvekkilbilgi.com">info@muvekkilbilgi.com</a></div></div>
+            <div class="ci-item"><span class="ci-icon">📍</span><div><p class="ci-label">Adres</p><p>İçerenköy Mah. Eryılmazlar Sok. No:2 Kat:3 Ataşehir / İstanbul</p></div></div>
+            <button class="btn-whatsapp" onclick="window.location.href='https://api.whatsapp.com/send/?phone=905510126904'" style="cursor:pointer">
+              <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp'tan Bize Ulaşın
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section" id="faq">
+      <div class="section-inner">
+        <div class="section-badge">Sık Sorulan Sorular</div>
+        <h2 class="section-title">Merak Edilenler</h2>
+        <div class="faq-list" id="faqList"></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-logo"><div class="logo-icon small"><svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="lgf" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#C5A880"/><stop offset="100%" stop-color="#E2C992"/></linearGradient><linearGradient id="lgf2" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#8B6914"/><stop offset="100%" stop-color="#C5A880"/></linearGradient><filter id="lg-s2"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="40" height="40" rx="10" fill="url(#lgf)"/><circle cx="17" cy="14" r="6" fill="#fff"/><path d="M7 34v-1.5C7 24.6 11.5 19 17 19s10 5.6 10 13.5V34H7z" fill="#fff"/><circle cx="29.5" cy="29.5" r="7.2" fill="url(#lgf2)" filter="url(#lg-s2)"/><circle cx="29.5" cy="26.1" r="1.55" fill="#fff"/><rect x="28.1" y="28.7" width="2.8" height="6" rx="1.4" fill="#fff"/></svg></div><span>Müvekkil Bilgi</span></div>
+        <div class="footer-links"><a href="#modules">Hesaplamalar</a><a href="#blogSection">Blog</a><a href="#faq">SSS</a><a href="#contactSection">İletişim</a></div>
+        <p class="footer-note">Bu hesaplama aracı bilgilendirme amaçlıdır ve hukuki tavsiye niteliği taşımaz.</p>
+        <p class="footer-copy">&copy; 2026 Müvekkil Bilgi. Tüm hakları saklıdır.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =================== SCREEN: ARAÇ DEĞER KAYBI =================== -->
+  <div id="screen-arac" style="display:none">
+    <section class="calculator-section">
+      <div class="calculator-wrapper">
+        <div class="step-sidebar">
+          <div class="progress-ring-wrapper">
+            <svg class="progress-ring" viewBox="0 0 80 80"><circle class="progress-ring-bg" cx="40" cy="40" r="32"/><circle class="progress-ring-fill" id="progressCircle" cx="40" cy="40" r="32"/></svg>
+            <span class="progress-pct" id="progressPct">25%</span>
+          </div>
+          <p class="progress-label" id="progressLabel">1 / 4 Adım</p>
+          <div class="step-list">
+            <div class="step-item active" id="si-1"><div class="step-dot"><span>1</span></div><div class="step-info"><p class="step-title">Araç Bilgileri</p><p class="step-desc">Yıl, marka ve model</p></div></div>
+            <div class="step-connector"></div>
+            <div class="step-item" id="si-2"><div class="step-dot"><span>2</span></div><div class="step-info"><p class="step-title">Hasar Bilgileri</p><p class="step-desc">Kaza hasarı ve tutarı</p></div></div>
+            <div class="step-connector"></div>
+            <div class="step-item" id="si-3"><div class="step-dot"><span>3</span></div><div class="step-info"><p class="step-title">Kaza Detayları</p><p class="step-desc">Km ve kaza bilgileri</p></div></div>
+            <div class="step-connector"></div>
+            <div class="step-item" id="si-4"><div class="step-dot"><span>4</span></div><div class="step-info"><p class="step-title">Sonuç</p><p class="step-desc">Değer kaybı tahmini</p></div></div>
+          </div>
+        </div>
+        <div class="form-area">
+          <!-- Step 1 -->
+          <div class="form-step active" id="step-1">
+            <div class="step-header"><div class="step-number-badge">Adım 1</div><h2>Araç Bilgileri</h2><p>Aracınıza ait temel bilgileri girin</p></div>
+            <div class="form-grid">
+              <div class="form-group"><label for="vehicleYear">Araç Yılı *</label><div class="select-wrapper"><select id="vehicleYear"><option value="">Yıl seçin</option></select><span class="select-arrow">▾</span></div></div>
+              <div class="form-group"><label for="vehicleBrand">Araç Markası *</label><div class="select-wrapper"><select id="vehicleBrand"><option value="">Marka seçin</option></select><span class="select-arrow">▾</span></div></div>
+              <div class="form-group full-width"><label for="vehicleModel">Araç Modeli *</label><div class="select-wrapper"><select id="vehicleModel" disabled><option value="">Önce marka seçin</option></select><span class="select-arrow">▾</span></div></div>
+              <div class="form-group full-width"><label for="vehicleTrim">Donanım Paketi</label><div class="select-wrapper"><select id="vehicleTrim" disabled><option value="">Önce model seçin</option></select><span class="select-arrow">▾</span></div></div>
+              <div class="form-group full-width"><label>Yakıt Türü</label><div class="select-wrapper"><select id="fuelType"><option value="">Seçiniz</option><option value="benzin">Benzin</option><option value="dizel">Dizel</option><option value="lpg">LPG</option><option value="elektrikli">Elektrikli</option><option value="hibrit">Hibrit</option><option value="hybrid">Hybrid</option></select><span class="select-arrow">▾</span></div></div>
+              <div class="form-group"><label for="engineVolume">Motor Hacmi (cc)</label><div class="input-wrapper"><span class="input-prefix">cc</span><input type="number" id="engineVolume" placeholder="1600" min="0"/></div></div>
+              <div class="form-group"><label for="transmission">Şanzıman</label><div class="select-wrapper"><select id="transmission"><option value="">Seçiniz</option><option value="otomatik">Otomatik</option><option value="manuel">Manuel</option><option value="yarimotomatik">Yarı Otomatik</option></select><span class="select-arrow">▾</span></div></div>
+            </div>
+            <div class="form-actions"><button class="btn-next" onclick="goToStep(2)">İleri <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+          </div>
+          <!-- Step 2 -->
+          <div class="form-step" id="step-2">
+            <div class="step-header"><div class="step-number-badge">Adım 2</div><h2>Hasar Bilgileri</h2><p>Hasarlı parçaları seçin ve hasar tutarını girin</p></div>
+            <div class="car-diagram-section">
+              <p class="diagram-hint">Araç üzerinde hasarlı parçaya tıklayın ve hasar tipini seçin <span class="hint-badge">Birden fazla seçilebilir</span></p>
+              <div id="car2d-container" class="car-diagram-wrapper" style="position:relative;overflow:hidden;border-radius:var(--radius-lg);border:1px solid var(--border);width:100%;aspect-ratio:3/4;max-height:70vh;display:flex;align-items:center;justify-content:center;background:var(--bg);box-sizing:border-box;padding:12px">
+<div id="car2d-body" class="car-body" style="position:relative;width:88%;max-width:400px;aspect-ratio:1/1.25;flex-shrink:0">
+  <div class="car-body-main" style="position:absolute;inset:0;border-radius:35% 35% 30% 30% / 28% 28% 24% 24%;border:2px solid var(--car-border,#5a5a5a);box-shadow:inset 0 2px 8px rgba(0,0,0,0.3),0 4px 20px rgba(0,0,0,0.4);z-index:0;background:var(--car-body,#3a3a3a);"></div>
+  <div style="position:absolute;left:18%;top:22%;width:64%;height:38%;background:var(--car-glass,rgba(100,130,160,0.25));border-radius:30% 30% 20% 20% / 40% 40% 20% 20%;border:1px solid var(--car-glass-border,rgba(150,180,210,0.15));z-index:0"></div>
+  <div class="car-wheel" style="position:absolute;left:4%;top:15%;width:10%;height:8%;border-radius:30%;z-index:0;border:1px solid var(--car-wheel-border,#444);background:var(--car-wheel,#222);"></div>
+  <div class="car-wheel" style="position:absolute;right:4%;top:15%;width:10%;height:8%;border-radius:30%;z-index:0;border:1px solid var(--car-wheel-border,#444);background:var(--car-wheel,#222);"></div>
+  <div class="car-wheel" style="position:absolute;left:4%;top:72%;width:10%;height:8%;border-radius:30%;z-index:0;border:1px solid var(--car-wheel-border,#444);background:var(--car-wheel,#222);"></div>
+  <div class="car-wheel" style="position:absolute;right:4%;top:72%;width:10%;height:8%;border-radius:30%;z-index:0;border:1px solid var(--car-wheel-border,#444);background:var(--car-wheel,#222);"></div>
+  <div class="part-zone" data-part="on_tampon" style="position:absolute;left:5%;top:-2%;width:90%;height:12%;background:var(--car-part,rgba(120,60,180,0.25));border-radius:40% 40% 6px 6px;z-index:1"></div>
+  <div class="part-zone" data-part="sol_on_camurluk" style="position:absolute;left:-3%;top:10%;width:20%;height:26%;background:var(--car-part,rgba(60,180,180,0.25));border-radius:10px 0 0 10px;z-index:1"></div>
+  <div class="part-zone" data-part="sag_on_camurluk" style="position:absolute;right:-3%;top:10%;width:20%;height:26%;background:var(--car-part,rgba(60,180,180,0.25));border-radius:0 10px 10px 0;z-index:1"></div>
+  <div class="part-zone" data-part="kaput" style="position:absolute;left:18%;top:10%;width:64%;height:16%;background:var(--car-part,rgba(180,120,60,0.25));border-radius:8px;z-index:1"></div>
+  <div class="part-zone" data-part="sol_on_kapi" style="position:absolute;left:0;top:36%;width:18%;height:24%;background:var(--car-part,rgba(180,60,180,0.25));border-radius:0 8px 8px 0;z-index:1"></div>
+  <div class="part-zone" data-part="sag_on_kapi" style="position:absolute;right:0;top:36%;width:18%;height:24%;background:var(--car-part,rgba(180,60,180,0.25));border-radius:8px 0 0 8px;z-index:1"></div>
+  <div class="part-zone" data-part="tavan" style="position:absolute;left:20%;top:30%;width:60%;height:30%;background:var(--car-part,rgba(180,180,180,0.12));border-radius:12px;z-index:1"></div>
+  <div class="part-zone" data-part="sol_arka_kapi" style="position:absolute;left:0;top:60%;width:18%;height:22%;background:var(--car-part,rgba(180,180,60,0.25));border-radius:0 8px 8px 0;z-index:1"></div>
+  <div class="part-zone" data-part="sag_arka_kapi" style="position:absolute;right:0;top:60%;width:18%;height:22%;background:var(--car-part,rgba(180,180,60,0.25));border-radius:8px 0 0 8px;z-index:1"></div>
+  <div class="part-zone" data-part="sol_arka_camurluk" style="position:absolute;left:-3%;top:82%;width:22%;height:18%;background:var(--car-part,rgba(60,180,60,0.25));border-radius:0 0 0 18px;z-index:1"></div>
+  <div class="part-zone" data-part="sag_arka_camurluk" style="position:absolute;right:-3%;top:82%;width:22%;height:18%;background:var(--car-part,rgba(60,180,60,0.25));border-radius:0 0 18px 0;z-index:1"></div>
+  <div class="part-zone" data-part="bagaj" style="position:absolute;left:20%;top:78%;width:60%;height:15%;background:var(--car-part,rgba(60,120,180,0.25));border-radius:6px;z-index:1"></div>
+  <div class="part-zone" data-part="arka_tampon" style="position:absolute;left:5%;top:92%;width:90%;height:12%;background:var(--car-part,rgba(180,60,60,0.25));border-radius:6px 6px 40% 40%;z-index:1"></div>
+  <span style="position:absolute;left:0;right:0;top:2%;text-align:center;color:var(--car-label,#ccc);font:700 11px var(--font);pointer-events:none;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">ÖN TAMPON</span>
+  <span style="position:absolute;left:1%;top:18%;text-align:center;color:var(--car-label,#bbb);font:8px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sol Ön<br/>Çamurluk</span>
+  <span style="position:absolute;left:0;right:0;top:14%;text-align:center;color:var(--car-label,#ddd);font:600 10px var(--font);pointer-events:none;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">KAPUT</span>
+  <span style="position:absolute;right:1%;top:18%;text-align:center;color:var(--car-label,#bbb);font:8px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sağ Ön<br/>Çamurluk</span>
+  <span style="position:absolute;left:0;top:44%;width:18%;text-align:center;color:var(--car-label,#bbb);font:7px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sol Ön<br/>Kapı</span>
+  <span style="position:absolute;right:0;top:44%;width:18%;text-align:center;color:var(--car-label,#bbb);font:7px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sağ Ön<br/>Kapı</span>
+  <span style="position:absolute;left:0;right:0;top:44%;text-align:center;color:var(--car-label,#888);font:9px var(--font);pointer-events:none;z-index:2;opacity:0.5">TAVAN</span>
+  <span style="position:absolute;left:0;top:67%;width:18%;text-align:center;color:var(--car-label,#bbb);font:7px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sol Arka<br/>Kapı</span>
+  <span style="position:absolute;right:0;top:67%;width:18%;text-align:center;color:var(--car-label,#bbb);font:7px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sağ Arka<br/>Kapı</span>
+  <span style="position:absolute;left:1%;top:87%;text-align:center;color:var(--car-label,#bbb);font:8px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sol Arka<br/>Çamurluk</span>
+  <span style="position:absolute;right:1%;top:87%;text-align:center;color:var(--car-label,#bbb);font:8px var(--font);pointer-events:none;z-index:2;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">Sağ Arka<br/>Çamurluk</span>
+  <span style="position:absolute;left:0;right:0;top:83%;text-align:center;color:var(--car-label,#ddd);font:600 10px var(--font);pointer-events:none;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">BAGAJ</span>
+  <span style="position:absolute;left:0;right:0;top:95%;text-align:center;color:var(--car-label,#ccc);font:700 11px var(--font);pointer-events:none;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,0.6)">ARKA TAMPON</span>
+</div>
+              </div>
+              <div class="part-btns" style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;justify-content:center;padding:0 4px">
+                <button class="part-btn" data-part="on_tampon">Ön Tampon</button>
+                <button class="part-btn" data-part="sol_on_camurluk">Sol Ön Çamurluk</button>
+                <button class="part-btn" data-part="sag_on_camurluk">Sağ Ön Çamurluk</button>
+                <button class="part-btn" data-part="kaput">Kaput</button>
+                <button class="part-btn" data-part="sol_on_kapi">Sol Ön Kapı</button>
+                <button class="part-btn" data-part="sag_on_kapi">Sağ Ön Kapı</button>
+                <button class="part-btn" data-part="sol_arka_kapi">Sol Arka Kapı</button>
+                <button class="part-btn" data-part="sag_arka_kapi">Sağ Arka Kapı</button>
+                <button class="part-btn" data-part="sol_arka_camurluk">Sol Arka Çamurluk</button>
+                <button class="part-btn" data-part="sag_arka_camurluk">Sağ Arka Çamurluk</button>
+                <button class="part-btn" data-part="bagaj">Bagaj</button>
+                <button class="part-btn" data-part="arka_tampon">Arka Tampon</button>
+                <button class="part-btn" data-part="tavan">Tavan</button>
+                <button class="part-btn part-btn-reset" data-part="__reset">Sıfırla</button>
+              </div>
+              <div class="selected-parts" id="selectedParts"><p class="no-parts-msg" id="noPartsMsg">Henüz parça seçilmedi</p></div>
+            </div>
+            <!-- Document Uploads -->
+            <div class="doc-uploads-grid">
+              <div class="doc-upload-card">
+                <div class="doc-upload-header">
+                  <div class="doc-upload-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <div class="doc-upload-info">
+                    <span class="doc-upload-label">Kaza Tespit Tutanağı</span>
+                    <span class="doc-upload-hint">PDF, JPG veya PNG · İsteğe bağlı</span>
+                  </div>
+                  <span class="doc-upload-badge opsiyonel">Opsiyonel</span>
+                </div>
+                <div class="doc-upload-drop" id="kttDrop" onclick="document.getElementById('kttInput').click()" ondragover="event.preventDefault();this.closest('.doc-upload-drop').classList.add('drag-over')" ondragleave="event.preventDefault();this.closest('.doc-upload-drop').classList.remove('drag-over')" ondrop="event.preventDefault();this.closest('.doc-upload-drop').classList.remove('drag-over');handleDocDrop(event,'ktt')">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="doc-upload-drop-icon"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="doc-upload-drop-text">Dosyayı sürükleyin veya tıklayın</div>
+                  <input type="file" id="kttInput" class="doc-upload-input" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleDocFile(this.files,'ktt')"/>
+                  <div class="doc-file-info" id="kttInfo" style="display:none"><div class="doc-file-icon">📄</div><div class="doc-file-details"><span class="doc-file-name" id="kttName"></span><span class="doc-file-size" id="kttSize"></span></div><button class="doc-file-remove" onclick="event.stopPropagation();removeDoc('ktt')">✕</button></div>
+                </div>
+              </div>
+              <div class="doc-upload-card">
+                <div class="doc-upload-header">
+                  <div class="doc-upload-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <div class="doc-upload-info">
+                    <span class="doc-upload-label">Ekspertiz Raporu</span>
+                    <span class="doc-upload-hint">PDF, JPG veya PNG · İsteğe bağlı</span>
+                  </div>
+                  <span class="doc-upload-badge opsiyonel">Opsiyonel</span>
+                </div>
+                <div class="doc-upload-drop" id="ekspertizDrop" onclick="document.getElementById('ekspertizInput').click()" ondragover="event.preventDefault();this.closest('.doc-upload-drop').classList.add('drag-over')" ondragleave="event.preventDefault();this.closest('.doc-upload-drop').classList.remove('drag-over')" ondrop="event.preventDefault();this.closest('.doc-upload-drop').classList.remove('drag-over');handleDocDrop(event,'ekspertiz')">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="doc-upload-drop-icon"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="doc-upload-drop-text">Dosyayı sürükleyin veya tıklayın</div>
+                  <input type="file" id="ekspertizInput" class="doc-upload-input" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleDocFile(this.files,'ekspertiz')"/>
+                  <div class="doc-file-info" id="ekspertizInfo" style="display:none"><div class="doc-file-icon">📄</div><div class="doc-file-details"><span class="doc-file-name" id="ekspertizName"></span><span class="doc-file-size" id="ekspertizSize"></span></div><button class="doc-file-remove" onclick="event.stopPropagation();removeDoc('ekspertiz')">✕</button></div>
+                </div>
+              </div>
+            </div>
+            <!-- Photo Upload -->
+            <div class="photo-upload-card" id="photoUploadCard">
+              <div class="doc-upload-header">
+                <div class="doc-upload-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+                <div class="doc-upload-info">
+                  <span class="doc-upload-label">Hasar Fotoğrafları</span>
+                  <span class="doc-upload-hint">JPG, PNG veya WEBP · En fazla 5 adet</span>
+                </div>
+                <span class="doc-upload-badge oneri">Önerilen</span>
+              </div>
+              <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="event.preventDefault();this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handlePhotoDrop(event)">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" class="photo-upload-icon-svg"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="photo-upload-text">Fotoğrafları sürükleyin veya tıklayın</div>
+                <div class="photo-upload-hint">AI, fotoğrafları analiz ederek hasar tespiti yapacak</div>
+                <input type="file" id="photoInput" class="doc-upload-input" accept="image/*" multiple onchange="handlePhotoFiles(this.files)"/>
+                <div class="photo-previews" id="photoPreviews"></div>
+                <div class="photo-upload-progress" id="photoProgress" style="display:none"><div class="photo-upload-progress-bar" id="photoProgressBar"></div></div>
+              </div>
+              <div id="photoAnalysis"></div>
+            </div>
+            <div class="form-group">
+              <label for="tramerValue">Tamir / Tramer Tutarı (TL) <span class="tooltip-icon" title="Sigorta veya servis tarafından belirlenen hasar onarım tutarı">?</span></label>
+              <div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="tramerValue" placeholder="Örn: 45000" min="0"/></div>
+              <p class="field-hint">Bu alan opsiyoneldir, bilinmiyorsa boş bırakabilirsiniz</p>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" onclick="goToStep(1)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>
+              <button class="btn-next" onclick="goToStep(3)">İleri <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div class="form-step" id="step-3">
+            <div class="step-header"><div class="step-number-badge">Adım 3</div><h2>Kaza Detayları</h2><p>Hesaplama için gerekli bilgileri girin</p></div>
+            <div class="form-grid">
+              <div class="form-group full-width"><label for="mileage">Araç Kilometresi *</label><div class="input-wrapper"><span class="input-prefix">km</span><input type="number" id="mileage" placeholder="Örn: 45000" min="0"/></div></div>
+              <div class="form-group full-width" id="marketValueDisplay" style="padding:10px 14px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-secondary)"></div>
+              <div class="form-group full-width"><label>Kusur Oranınız: <strong id="faultDisplay">0%</strong> <span class="tooltip-icon" title="Kaza tutanağında belirtilen sizin kusur oranınız.">?</span></label>
+                <div class="slider-wrapper"><input type="range" id="faultRatio" min="0" max="100" value="0" step="5"/><div class="slider-labels"><span>0% (Kusursuz)</span><span>50%</span><span>100%</span></div></div>
+              </div>
+              <div class="form-group"><label>Son 2 yılda kaza geçirdiniz mi? *</label><div class="radio-group"><label class="radio-option"><input type="radio" name="recentAccident" value="no"/><span class="radio-custom"></span> Hayır</label><label class="radio-option"><input type="radio" name="recentAccident" value="yes"/><span class="radio-custom"></span> Evet</label></div></div>
+              <div class="form-group"><label>Daha önce değer kaybı tazminatı aldınız mı?</label><div class="radio-group"><label class="radio-option"><input type="radio" name="priorCompensation" value="no" checked/><span class="radio-custom"></span> Hayır</label><label class="radio-option"><input type="radio" name="priorCompensation" value="yes"/><span class="radio-custom"></span> Evet</label></div></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" onclick="goToStep(2)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>
+              <button class="btn-next" onclick="calculateAndShow()">Hesapla <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+          <!-- Step 4 -->
+          <div class="form-step" id="step-4">
+            <div class="step-header result-header">
+              <div class="success-animation"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h2>Hesaplama Tamamlandı!</h2><p>Aracınızın tahmini değer kaybı tazminatı</p>
+            </div>
+            <div class="result-card"><div class="result-label">Tahmini Değer Kaybı Aralığı</div><div class="result-range"><span class="result-min" id="resultMin">—</span><span class="result-separator">–</span><span class="result-max" id="resultMax">—</span></div><div class="result-currency">Türk Lirası (TL)</div></div>
+            <div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu tahmin, parçaların boyanıp-değişmesine, kaza fotoğraflarına ve bilirkişi raporuna göre farklılık gösterebilir.</p></div>
+            <div class="result-breakdown" id="resultBreakdown"></div>
+            <div class="next-steps-card"><h3>Bu Tazminatı Nasıl Alırsınız?</h3><div class="next-steps">
+                <div class="ns-item completed"><div class="ns-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><p class="ns-status">TAMAMLANDI</p><p class="ns-title">1. Tahmini değer kaybı hesabı</p><p class="ns-desc">Araç ve kaza bilgilerine göre tahmini aralık hesaplandı.</p></div></div>
+                <div class="ns-item current no-wa"><div class="ns-icon pulse"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M12 8v4l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div><div><p class="ns-status">ÖN DEĞERLENDİRME TALEP EDİN</p><p class="ns-title">2. Kaza bilgilerinizi gönderin</p><p class="ns-desc">Kaza fotoğrafları ve kaza tespit tutanağınızla WhatsApp'tan bizimle iletişime geçin.</p><a class="btn-whatsapp ns-wa-btn" target="_blank" rel="noopener" style="margin-top:8px;display:inline-flex;gap:8px;align-items:center;padding:10px 20px;background:#25D366;color:#fff;border-radius:50px;font-size:14px;font-weight:700;text-decoration:none;width:auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Ön İnceleme Talep Edin</a></div></div>
+                <div class="ns-item upcoming last"><div class="ns-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/></svg></div><div><p class="ns-status">SONRAKİ</p><p class="ns-title">3. Hukuki süreç başlatma</p><p class="ns-desc">Ön inceleme sonrası hukuki sürecinizi başlatın ve tazminatınızı alın.</p></div></div></div></div>
+            <div class="ai-insights" id="aiInsights" style="display:none"></div>
+            <div class="form-actions result-actions" id="resultActions">
+              <button class="btn-back" onclick="goToStep(3)" style="flex:0;padding:8px 16px;font-size:13px"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>
+              <a style="flex:0;font-size:12px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.6" onclick="resetCalculator()">Yeni Hesaplama</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SCREEN: KUSUR ORANI TESPITI =================== -->
+  <div id="screen-kusur" style="display:none">
+    <section class="calculator-section">
+      <div class="calculator-wrapper">
+        <div class="form-area" style="max-width:100%">
+          <div class="step-header">
+            <div class="step-number-badge kusur-badge-anim" style="background:linear-gradient(135deg,#8B5CF6,#C5A880)"><span class="kusur-badge-icon">🚦</span> Kusur Oranı ve Tazminat Hakları Tespiti</div>
+            <h2>Trafik Kazası Kusur Oranı ve Tazminat Hakları Tespiti</h2>
+            <p>Karayolları Trafik Kanunu'na göre yapay zeka destekli kusur analizi · Kaza tespit tutanağı, fotoğraflar ve açıklamalar ile</p>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Kazaya Karışan Araç Sayısı</label>
+              <div class="party-count-stepper">
+                <button type="button" class="party-count-btn" onclick="adjustKusurPartyCount(-1)" aria-label="Azalt">−</button>
+                <input type="number" id="kusurPartyCountInput" min="2" max="10" value="2" inputmode="numeric" onblur="renderKusurParties()" onkeydown="if(event.key==='Enter')renderKusurParties()"/>
+                <button type="button" class="party-count-btn" onclick="adjustKusurPartyCount(1)" aria-label="Artır">+</button>
+                <span class="party-count-label">araç</span>
+              </div>
+            </div>
+          </div>
+          <div id="kusurPartiesContainer"></div>
+          <div class="doc-uploads-grid" style="margin-top:24px">
+            <div class="doc-upload-card">
+              <div class="doc-upload-header">
+                <div class="doc-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                <div class="doc-upload-info"><span class="doc-upload-label">Kaza Tespit Tutanağı</span><span class="doc-upload-hint">PDF, JPG veya PNG · İsteğe bağlı</span></div>
+                <span class="doc-upload-badge opsiyonel">Opsiyonel</span>
+              </div>
+              <div class="doc-upload-drop" id="kusurKttDrop" onclick="document.getElementById('kusurKttInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="event.preventDefault();this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleKusurKtt(event.dataTransfer.files)">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="doc-upload-drop-icon"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="doc-upload-drop-text">Kaza tespit tutanağını sürükleyin veya tıklayın</div>
+                <input type="file" id="kusurKttInput" class="doc-upload-input" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleKusurKtt(this.files)"/>
+                <div class="doc-file-info" id="kusurKttInfo" style="display:none"><div class="doc-file-icon">📄</div><div class="doc-file-details"><span class="doc-file-name" id="kusurKttName"></span><span class="doc-file-size" id="kusurKttSize"></span></div><button class="doc-file-remove" onclick="event.stopPropagation();removeKusurKtt()">✕</button></div>
+              </div>
+            </div>
+            <div class="photo-upload-card" style="margin-bottom:0">
+              <div class="doc-upload-header">
+                <div class="doc-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <div class="doc-upload-info"><span class="doc-upload-label">Kaza Fotoğrafları</span><span class="doc-upload-hint">JPG, PNG · En fazla 5 adet</span></div>
+                <span class="doc-upload-badge oneri">Önerilen</span>
+              </div>
+              <div class="photo-upload-area" id="kusurPhotoArea" onclick="document.getElementById('kusurPhotoInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="event.preventDefault();this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');handleKusurPhotoDrop(event)">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" class="photo-upload-icon-svg"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="photo-upload-text">Kaza fotoğraflarını sürükleyin veya tıklayın</div>
+                <div class="photo-upload-hint">AI, fotoğraflardaki hasarı ve kaza şeklini analiz edecek</div>
+                <input type="file" id="kusurPhotoInput" class="doc-upload-input" accept="image/*" multiple onchange="handleKusurPhotos(this.files)"/>
+                <div class="photo-previews" id="kusurPhotoPreviews"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:24px">
+            <button class="btn-next" onclick="analyzeKusur()" style="flex:1;justify-content:center;gap:10px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="currentColor" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+              AI ile Kusur Analizi Yap
+            </button>
+          </div>
+          <div id="kusurResult" style="display:none;margin-top:28px"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SCREEN: İŞÇİ HAKLI FESİH SEBEBİ TESPİTİ =================== -->
+  <div id="screen-fesih" style="display:none">
+    <section class="calculator-section">
+      <div class="calculator-wrapper">
+        <div class="form-area" style="max-width:100%">
+          <div class="step-header">
+            <div class="step-number-badge fesih-badge-anim" style="background:linear-gradient(135deg,#8B5CF6,#C5A880)"><span class="fesih-badge-icon">📋</span> Haklı Fesih ve Kıdem Tazminatı Uygunluk Testi</div>
+            <h2>İstifa Edersem Tazminat Alabilir Miyim?</h2>
+            <p>İş Kanunu 4857 madde 24 kapsamında, iş sözleşmenizi haklı nedenle feshedip kıdem tazminatı alıp alamayacağınızı yapay zeka ile değerlendirin</p>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Kaç Yıldır Bu İşyerinde Çalışıyorsunuz?</label>
+              <div class="input-wrapper"><span class="input-prefix">yıl</span><input type="number" id="fesih_kidem" min="0" placeholder="Örn: 3"/></div>
+            </div>
+            <div class="form-group">
+              <label>Olayın/Durumun Başlangıç Tarihi</label>
+              <input type="date" id="fesih_tarihi" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px"/>
+            </div>
+            <div class="form-group full-width">
+              <label>Aşağıdakilerden hangileri durumunuza uyuyor?</label>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:6px">
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="fesih_ucret"/> Ücret/fazla mesai ödenmiyor</label>
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="fesih_saglik"/> Sağlık/iş güvenliği tehlikesi var</label>
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="fesih_hakaret"/> Hakaret, şiddet veya mobbing var</label>
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="fesih_sozlesme"/> Sözleşme şartlarına aykırılık var</label>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <label>Olayı/Durumu Detaylı Anlatın *</label>
+              <textarea id="fesih_aciklama" rows="5" placeholder="İşvereninizin size karşı ne yaptığını, ne zamandır sürdüğünü ve neden iş sözleşmenizi feshetmeyi düşündüğünüzü anlatın..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;resize:vertical;font-family:inherit"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Elinizde Kanıt/Tanık/Belge Var mı?</label>
+              <textarea id="fesih_kanit" rows="2" placeholder="Örn: WhatsApp yazışmaları, tanık beyanı, banka dekontu, SGK kaydı vb." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;resize:vertical;font-family:inherit"></textarea>
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:24px">
+            <button class="btn-next" onclick="analyzeFesih()" style="flex:1;justify-content:center;gap:10px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="currentColor" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+              AI ile Fesih Sebebi Analizi Yap
+            </button>
+          </div>
+          <div id="fesihResult" style="display:none;margin-top:28px"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SCREEN: İŞE İADE DAVASI AÇABİLİR MİYİM =================== -->
+  <div id="screen-iseIade" style="display:none">
+    <section class="calculator-section">
+      <div class="calculator-wrapper">
+        <div class="form-area" style="max-width:100%">
+          <div class="step-header">
+            <div class="step-number-badge iseiade-badge-anim" style="background:linear-gradient(135deg,#8B5CF6,#C5A880)"><span class="iseiade-badge-icon">⚖️</span> İşe İade Davası Uygunluk Testi</div>
+            <h2>İşe İade Davası Açabilir Miyim?</h2>
+            <p>İş Kanunu 4857 madde 18-21 kapsamında işe iade başvurusu/davası açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin</p>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>İşyerinde Toplam Kaç Çalışan Var?</label>
+              <div class="input-wrapper"><span class="input-prefix">kişi</span><input type="number" id="iseIade_calisanSayisi" min="0" placeholder="Örn: 45"/></div>
+            </div>
+            <div class="form-group">
+              <label>Bu İşyerindeki Çalışma Süreniz</label>
+              <div class="input-wrapper"><span class="input-prefix">ay</span><input type="number" id="iseIade_kidemAy" min="0" placeholder="Örn: 18"/></div>
+            </div>
+            <div class="form-group">
+              <label>Fesih Tarihi</label>
+              <input type="date" id="iseIade_fesihTarihi" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px"/>
+            </div>
+            <div class="form-group full-width">
+              <label>Aşağıdakilerden hangileri durumunuza uyuyor?</label>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:6px">
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="iseIade_belirsizSureli"/> Sözleşmem belirsiz süreli</label>
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="iseIade_sebepsiz"/> İşveren geçerli bir fesih sebebi göstermedi</label>
+                <label class="radio-option" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="iseIade_yazisizFesih"/> Fesih bildirimi yazılı yapılmadı</label>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <label>Fesih Sürecini Detaylı Anlatın *</label>
+              <textarea id="iseIade_aciklama" rows="5" placeholder="İşten nasıl çıkarıldığınızı, size söylenen gerekçeyi ve varsa yazılı bildirim/tutanağı anlatın..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;resize:vertical;font-family:inherit"></textarea>
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:24px">
+            <button class="btn-next" onclick="analyzeIseIade()" style="flex:1;justify-content:center;gap:10px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="currentColor" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+              AI ile İşe İade Uygunluğumu Analiz Et
+            </button>
+          </div>
+          <div id="iseIadeResult" style="display:none;margin-top:28px"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SCREEN: İŞÇİLİK =================== -->
+  <div id="screen-iscilik" style="display:none">
+    <section class="iscilik-section">
+      <div class="iscilik-wrapper">
+        <div class="calc-page-header"><div class="step-number-badge">İşçilik Tazminatı</div><h2>Alacaklarınızı Hesaplayın</h2><p>Aşağıdaki bilgileri girerek tahmini işçilik alacaklarınızı öğrenin.</p></div>
+        <div class="iscilik-form-card">
+          <div class="form-group"><label>Çalışma Süresi *</label><div class="duration-row"><div class="select-wrapper" style="flex:1"><select id="workYears"><option value="0">0 Yıl</option></select><span class="select-arrow">▾</span></div><div class="select-wrapper" style="flex:1"><select id="workMonths"><option value="0">0 Ay</option></select><span class="select-arrow">▾</span></div></div><p class="field-hint">Toplam çalışma sürenizi yıl ve ay olarak girin</p></div>
+          <div class="form-group"><label for="netSalary">Son Aldığınız Net Maaş (TL) *</label><div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="netSalary" placeholder="Aldığınız Net Maaş" min="0"/></div><p class="field-hint">Brüt maaş otomatik hesaplanır (Net × 1.4)</p></div>
+          <div class="form-group"><label for="extras">Aylık Ek Haklar — Yol/Yemek/Prim (TL)</label><div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="extras" placeholder="0 (Opsiyonel)" min="0"/></div><p class="field-hint">Opsiyonel. Boş bırakılırsa 0 kabul edilir.</p></div>
+          <div class="form-group"><label for="terminationReason">İşten Çıkış Nedeni *</label><div class="select-wrapper"><select id="terminationReason"><option value="">Seçiniz</option><option value="employer">İşveren işten çıkardı</option><option value="resignation">Kendim istifa ettim</option><option value="justified">Haklı nedenlerle (maaş ödenmemesi, mobbing vb.) ben çıktım</option></select><span class="select-arrow">▾</span></div></div>
+          <div class="accordion-wrapper"><button type="button" class="accordion-header" onclick="toggleAccordion(this)"><span>Fazla Mesai ve İzin Bilgileri <span class="acc-opt">(Opsiyonel)</span></span><span class="accordion-arrow">▾</span></button><div class="accordion-content" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease"><div class="accordion-inner"><div class="form-group"><label for="unusedLeave">Kullanılmayan Yıllık İzin Gün Sayısı</label><div class="input-wrapper"><span class="input-prefix">gün</span><input type="number" id="unusedLeave" placeholder="0" min="0"/></div></div><div class="form-group" style="margin-bottom:0"><label for="weeklyOvertime">Haftalık Ortalama Fazla Mesai Saati</label><div class="input-wrapper"><span class="input-prefix">saat</span><input type="number" id="weeklyOvertime" placeholder="0" min="0" step="0.5"/></div><p class="field-hint">45 saatlik normal çalışma üzerindeki fazla saatler</p></div><div class="form-group"><label for="haftaTatiliGun">Hafta Tatilinde Çalışma Gün Sayısı</label><div class="input-wrapper"><span class="input-prefix">gün</span><input type="number" id="haftaTatiliGun" placeholder="0" min="0"/></div><p class="field-hint">Hafta tatilinde (Pazar/haftalık izin) çalıştığınız toplam gün sayısı</p></div><div class="form-group" style="margin-bottom:0"><label for="ugbtGun">Ulusal Bayram/Genel Tatil Çalışma Gün Sayısı</label><div class="input-wrapper"><span class="input-prefix">gün</span><input type="number" id="ugbtGun" placeholder="0" min="0"/></div><p class="field-hint">Resmi tatillerde (23 Nisan, 1 Mayıs, 19 Mayıs, 30 Ağustos, 29 Ekim, dini bayramlar vb.) çalıştığınız toplam gün sayısı</p></div></div></div></div>
+          <button class="btn-next" onclick="triggerIscilikCalc()" style="margin-top:24px;width:100%;justify-content:center;">Hesapla <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </div>
+        <div id="iscResultPanel" style="display:none;margin-top:24px;"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== GENERIC CALC SCREEN =================== -->
+  <div id="screen-generic" style="display:none">
+    <section class="iscilik-section">
+      <div class="iscilik-wrapper">
+        <div class="calc-page-header"><div class="step-number-badge" id="genericBadge">Hesaplama</div><h2 id="genericTitle">Hesaplama</h2><p id="genericDesc">Bilgileri girin</p></div>
+        <div class="iscilik-form-card" id="genericFormCard"></div>
+        <div id="genericResultPanel" style="display:none;margin-top:24px;"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SCREEN: BLOG =================== -->
+  <div id="screen-blog" style="display:none">
+    <section class="blog-page-section">
+      <div class="section-inner">
+        <div class="section-badge">Blog</div>
+        <h2 class="section-title" id="blogPageTitle">Blog Yazıları</h2>
+        <div class="blog-page-content" id="blogPageContent"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== LEAD MODAL =================== -->
+  <div id="leadModal" class="modal-overlay" style="display:none" onclick="handleModalOverlayClick(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header-section">
+        <div class="modal-badge-icon"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="rgba(197,168,128,0.12)"/><path d="M12 21l6 6 12-14" stroke="#C5A880" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h2>Ön Değerlendirme Talep Edin</h2><p>Kazanın ve belgelerinize göre talep edilebilecek kalemlerin incelenmesi için ön değerlendirme talep edin.</p>
+      </div>
+      <div class="modal-form-fields">
+        <div class="modal-field"><label for="leadName">Ad Soyad *</label><input type="text" id="leadName" placeholder="Adınız Soyadınız" autocomplete="name"/><span class="field-error" id="nameError"></span></div>
+        <div class="modal-field"><label for="leadPhone">Telefon Numarası *</label><input type="tel" id="leadPhone" placeholder="05xx xxx xx xx" autocomplete="tel"/><span class="field-error" id="phoneError"></span></div>
+        <div class="modal-field"><label for="leadEmail">E-posta</label><input type="email" id="leadEmail" placeholder="ornek@email.com"/><span class="field-error" id="emailError"></span></div>
+        <div class="modal-field"><label for="leadCity">Şehir *</label><div class="select-wrapper"><select id="leadCity"><option value="">Şehir seçin</option></select><span class="select-arrow">▾</span></div><span class="field-error" id="cityError"></span></div>
+        <div class="modal-field"><label for="leadDistrict">İlçe</label><input type="text" id="leadDistrict" placeholder="İlçe seçin (opsiyonel)"/></div>
+        <div class="modal-field" id="leadPlateField"><label for="leadPlate">Araç Plakası</label><input type="text" id="leadPlate" placeholder="34 ABC 123 (opsiyonel)"/></div>
+        <div class="modal-field"><label>Bu kaza/olay için bir avukata vekalet verdiniz mi? *</label><div class="toggle-group" id="vekaletToggle"><button type="button" class="toggle-btn" data-value="Hayır" onclick="selectVekalet(this)">Hayır</button><button type="button" class="toggle-btn" data-value="Evet" onclick="selectVekalet(this)">Evet</button></div><span class="field-error" id="vekaletError"></span></div>
+        <div class="modal-field"><label for="leadDescription">Açıklama</label><textarea id="leadDescription" rows="3" placeholder="Eklemek istediğiniz detaylar..."></textarea></div>
+        <div class="modal-field kvkk-field"><label class="kvkk-checkbox"><input type="checkbox" id="kvkkConsent"/> <span><strong>KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.</strong><br/><small>Müvekkil Bilgi olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında; ad, telefon, e-posta gibi kişisel verilerinizin tazminat hesaplama hizmeti sunulması, tarafınızla iletişime geçilmesi ve hukuki danışmanlık sağlanması amaçlarıyla işleneceğini, üçüncü kişilerle paylaşılmayacağını ve yasal saklama süreleri boyunca muhafaza edileceğini belirtiriz. Detaylı bilgi için <a href="#" onclick="showKvkkText();return false;">Aydınlatma Metni</a>'ni okuyabilirsiniz.</small></span></label><span class="field-error" id="kvkkError"></span></div>
+      </div>
+      <button class="btn-show-result" id="btnShowResult" onclick="submitLead()">Ön Değerlendirme Talep Et <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <p class="modal-privacy-note">Bilgileriniz gizli tutulur ve üçüncü şahıslarla paylaşılmaz.</p>
+    </div>
+  </div>
+
+  <!-- =================== KVKK MODAL =================== -->
+  <div id="kvkkModal">
+    <div class="kvkk-modal-box">
+      <h2>KVKK Aydınlatma Metni</h2>
+      <p><strong>Veri Sorumlusu:</strong> Müvekkil Bilgi (İşletme adı)</p>
+      <p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, Müvekkil Bilgi olarak kişisel verilerinizin güvenliğine önem vermekteyiz. İşbu aydınlatma metni ile kişisel verilerinizin işlenme amaçları, hukuki sebepleri, aktarımı ve haklarınız hakkında sizi bilgilendirmek isteriz.</p>
+      <p><strong>Hangi Verileriniz İşlenmektedir?</strong></p>
+      <ul>
+        <li>Kimlik verileri: Ad, soyad</li>
+        <li>İletişim verileri: Telefon numarası, e-posta adresi, şehir, ilçe</li>
+        <li>Araç bilgileri: Plaka (opsiyonel)</li>
+        <li>Hesaplama bilgileri: Tazminat hesaplama sonuçları</li>
+      </ul>
+      <p><strong>Verileriniz Hangi Amaçla İşlenmektedir?</strong></p>
+      <ul>
+        <li>Tazminat hesaplama hizmetinin sunulması ve sonuçların gösterilmesi</li>
+        <li>Hukuki danışmanlık hizmeti için avukat/yönlendirme yapılması</li>
+        <li>Talep ve şikayetlerinizin değerlendirilmesi</li>
+        <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+      </ul>
+      <p><strong>Hukuki Sebep:</strong> KVKK madde 5/2(c) - Bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması kaydıyla, sözleşme taraflarına ait kişisel verilerin işlenmesinin gerekli olması.</p>
+      <p><strong>Verilerinizin Aktarımı:</strong> Kişisel verileriniz, yukarıdaki amaçların gerçekleştirilmesi kapsamında, hukuki danışmanlık almanız durumunda yönlendirileceğiniz avukatlar ile ve yasal zorunluluk hallerinde resmi mercilerle paylaşılabilir.</p>
+      <p><strong>Haklarınız:</strong> KVKK madde 11 uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenme amacını öğrenme, yurt içinde/yurt dışında aktarıldığı üçüncü kişileri bilme, eksik/yanlış işlenmişse düzeltilmesini isteme, KVKK madde 7'deki şartlar çerçevesinde silinmesini/yok edilmesini isteme, aktarıldığı üçüncü kişilere bildirilmesini isteme, aleyhinize sonuç doğuran otomatik analiz sonuçlarına itiraz etme ve kanuna aykırı işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme haklarına sahipsiniz.</p>
+      <p><strong>İletişim:</strong> KVKK kapsamındaki haklarınızı kullanmak için <strong>info@muvekkilbilgi.com</strong> adresine e-posta gönderebilirsiniz.</p>
+      <button onclick="document.getElementById('kvkkModal').style.display='none'">Kapat</button>
+    </div>
+  </div>
+
+  <!-- =================== PRINT REPORT (hidden) =================== -->
+  <div id="printReport"></div>
+
+  <!-- =================== WHATSAPP FLOAT =================== -->
+  <button id="waFloat" class="wa-float" onclick="window.location.href='https://wa.me/905510126904'" title="WhatsApp'tan ulaşın" style="cursor:pointer">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="wa-float-tooltip">Ön İnceleme Talep Edin</span>
+  </button>
+
+  <!-- =================== CHATBOT =================== -->
+  <div id="chatBot" class="chatbot-container">
+    <button id="chatToggle" class="chat-toggle" onclick="toggleChat()">
+      <svg class="chat-icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chat-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div id="chatPanel" class="chat-panel" style="display:none">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">⚖️</div>
+          <div><h4>Müvekkil Bilgi Asistan</h4><p>Çevrimiçi · Anlık Yanıt</p></div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+      </div>
+      <div id="chatMessages" class="chat-messages">
+        <div class="chat-msg bot"><div class="chat-msg-avatar">⚖️</div><div class="chat-msg-text"><p>Merhaba! Ben Müvekkil Bilgi hukuk asistanınızım. Trafik kazası, işçilik, tazminat ve sigorta konularında size yardımcı olabilirim. Size nasıl yardımcı olabilirim?</p></div></div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Sorunuzu yazın..." onkeydown="if(event.key==='Enter')sendChatMsg()"/>
+        <button onclick="sendChatMsg()" id="chatSendBtn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M18 2L9 11M18 2l-6 16-3-7-7-3 16-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emsal Karar Modal -->
+  <div class="emsal-modal" id="emsalModal" onclick="if(event.target===this)closeEmsalModal()">
+    <div class="emsal-panel">
+      <div class="emsal-header">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Emsal Karar Arama</h3>
+        <button class="emsal-close" onclick="closeEmsalModal()">✕</button>
+      </div>
+      <div class="emsal-search">
+        <input class="emsal-search-input" id="emsalSearch" placeholder="Araç modeli, karar metni, hasar türü ile ara..." oninput="searchEmsalKararlar()"/>
+      </div>
+      <div class="emsal-filters" id="emsalFilters"></div>
+      <div class="emsal-list" id="emsalList"></div>
+      <div class="emsal-count" id="emsalCount"></div>
+    </div>
+  </div>
+
+  <!-- Hidden PDF Report Layout -->
+  <div class="pdf-report-hidden" id="pdfReportHidden">
+    <div class="pdf-badge" id="pdfBadge">Müvekkil Bilgi Raporu</div>
+    <h1 id="pdfTitle">Hesaplama Raporu</h1>
+    <div class="pdf-sub" id="pdfSub">Oluşturma Tarihi: <span id="pdfDate"></span></div>
+    <hr class="pdf-divider"/>
+    <div id="pdfInsightBox" class="pdf-insight"></div>
+    <table id="pdfTable"><tbody id="pdfTbody"></tbody></table>
+    <div class="pdf-total" id="pdfTotal"></div>
+    <div class="pdf-footer">Bu rapor Müvekkil Bilgi tarafından oluşturulmuştur · Kesin tutar için hukuki danışmanlık alınmalıdır</div>
+    <div class="pdf-watermark">Müvekkil Bilgi</div>
+  </div>
+
+  <!-- Karşılaştırmalı Hesaplama Panel (injected dynamically after result) -->
+  <div id="compareSection" style="display:none"></div>
+
+  <script src="calculator.js"></script>
+</body>
+</html>
+
+

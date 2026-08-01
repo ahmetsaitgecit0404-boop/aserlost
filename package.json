@@ -1,0 +1,17 @@
+{
+  "name": "muvekkilbilgi",
+  "version": "2.0.0",
+  "description": "Müvekkil Bilgi - Tazminat Hesaplama Platformu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.2",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^7.2.0",
+    "three": "^0.185.1"
+  }
+}

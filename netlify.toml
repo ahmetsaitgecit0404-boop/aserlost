@@ -1,0 +1,63 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/ai/calculate"
+  to = "/.netlify/functions/calculate"
+  status = 200
+
+[[redirects]]
+  from = "/api/ai/vision"
+  to = "/.netlify/functions/vision"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/login"
+  to = "/.netlify/functions/admin-auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/leads"
+  to = "/.netlify/functions/admin-data?table=leads"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/contacts"
+  to = "/.netlify/functions/admin-data?table=contacts"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/tracking"
+  to = "/.netlify/functions/admin-data?table=tracking"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/login_attempts"
+  to = "/.netlify/functions/admin-data?table=login_attempts"
+  status = 200
+
+[[redirects]]
+  from = "/yonetim"
+  to = "/yonetim.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "*.glb"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

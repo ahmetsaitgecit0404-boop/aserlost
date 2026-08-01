@@ -1,0 +1,8 @@
+node_modules/
+arabamodel.glb
+depogaleri.glb
+.DS_Store
+Thumbs.db
+
+# Local Netlify folder
+.netlify
