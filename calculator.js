@@ -1143,6 +1143,13 @@ async function calculateAndShow(){
     clearInterval(stageInt);
     if(aiR){
       const aiMv=aiR.gercekPiyasaDegeri||params.marketValue;
+      // fallback, AI'nin ayarladığı gerçek piyasa değeri (aiMv) üzerinden yeniden hesaplanıyor —
+      // bu, aracın hangi parçalarının ne kadar ağır hasar gördüğünü (boyalı/değişen) dikkate alan
+      // deterministik, şeffaf bir formül. AI'nin sonucu bunun ALTINA ASLA düşürülmüyor; çünkü
+      // AI'nin (sahibinden.com gibi ilan sitelerine gerçek erişimi olmadığından) bazen olduğundan
+      // düşük bir tahminde bulunması, gerçekte değişen/ağır hasarlı parçaların etkisini görmezden
+      // gelebiliyordu.
+      const fallbackAtAiMv=calculateDegerKaybi({...params,marketValue:aiMv});
       params.marketValue=aiMv;state.autoMarketValue=aiMv;
       // Değer kaybında sabit bir yasal tavan yok (2020 AYM kararıyla eski tavan sistemi geçersiz,
       // Yargıtay "gerçek zarar" ilkesini esas alır) — bu sadece AI'nin uç değerlere savrulmasını
@@ -1152,17 +1159,14 @@ async function calculateAndShow(){
       if(aiR.max>maxAllowed)aiR.max=maxAllowed;
       if(aiR.min<500)aiR.min=500;
       if(aiR.max<aiR.min+1000)aiR.max=aiR.min+1000;
-      const merged={...fallback,...aiR};
+      const merged={...fallbackAtAiMv,...aiR};
+      // Parça-hasar formülünün hesapladığı değer, AI'nin sonucundan yüksekse formül esas alınır
+      // (AI'nin hasar şiddetini olduğundan düşük değerlendirmiş olma ihtimaline karşı).
+      if(fallbackAtAiMv.min>merged.min)merged.min=fallbackAtAiMv.min;
+      if(fallbackAtAiMv.max>merged.max)merged.max=fallbackAtAiMv.max;
       if(merged.min>maxAllowed)merged.min=Math.round(maxAllowed*0.6);
       if(merged.max>maxAllowed)merged.max=maxAllowed;
-      // AI, eski (düşük nominal TL'li) Yargıtay/Sigorta Tahkim emsallerinden etkilenip
-      // sistem piyasa değerine göre orantısız düşük bir tutar döndürebilir — güncel piyasa
-      // değerine bağlı %3 yasal/emsal alt sınırı burada da (fallback formülündeki gibi) uyguluyoruz.
-      const faultF=1-params.faultRatio/100;
-      const minFloor=Math.max(500,Math.round(aiMv*0.03*faultF/10)*10);
-      if(merged.min<minFloor)merged.min=minFloor;
       if(merged.max<merged.min+1000)merged.max=merged.min+1000;
-      if(merged.max>maxAllowed)merged.max=maxAllowed;
       if(merged.min>merged.max)merged.min=Math.round(merged.max*0.6);
       state.aracResult=merged;state.aiAnalysis=merged;
       if(merged.thinking&&merged.thinking.length>0){
