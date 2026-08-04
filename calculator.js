@@ -375,6 +375,18 @@ const TRIM_MULTIPLIERS = {_default:1.0,'Base':1.0,'Standard':1.0,'Standart':1.0,
   'Excellent':1.15,'Excellent+':1.22,'Elite':1.12,'Prestige':1.20,
   'Jump':0.95,'Cool':0.95,'Vision':0.95,'Flame':1.15,'R Line':1.15,'Urban':1.05,'Ultimate':1.30,'Feel':1.0,'Feel Bold':1.08,'Shine Bold':1.20,'Shine':1.12,
   'Longitude':1.0,'Luxury Line':1.20,'Progressive':1.08,'Core':0.95,'Plus':1.10,'V1 Standart Menzil':1.0,'V1 Uzun Menzil':1.10,'V2 Uzun Menzil':1.25};
+/* CAR_TRIMS'teki isimler mevcut (2019 sonrası) nesil için araştırıldı — daha eski bir araç
+   yılı seçildiğinde o dönemde muhtemelen hiç kullanılmamış güncel paket ismini göstermek
+   yanlış olur. Eski araçlarda marka-özel isim yerine nötr/genel bir liste ("Base/Comfort/
+   Premium/Full") gösteriyoruz — bu, "muhtemelen yanlış olan spesifik bir isim" göstermekten daha dürüst. */
+const TRIM_CURRENT_GEN_MIN_YEAR=2019;
+function getTrimsForVehicle(brand,model,year){
+  const modelOverride=CAR_MODEL_TRIMS[brand+'|'+model];
+  if(modelOverride)return modelOverride;
+  const y=parseInt(year)||new Date().getFullYear();
+  if(y>=TRIM_CURRENT_GEN_MIN_YEAR&&CAR_TRIMS[brand])return CAR_TRIMS[brand];
+  return CAR_TRIMS._default||['Base','Comfort','Premium','Full'];
+}
 function getTrimPrice(basePrice,trimName){
   const m=TRIM_MULTIPLIERS[trimName]||TRIM_MULTIPLIERS['_default'];
   return Math.round(basePrice*m);
@@ -735,18 +747,21 @@ function initBrands(){
     state.vehicleBrand=brand||null;state.vehicleModel=null;state.vehicleTrim='Base';
     ts.disabled=true;ts.innerHTML='<option value="">Önce model seçin</option>';
   });
-  document.getElementById('vehicleModel').addEventListener('change',function(){
-    state.vehicleModel=this.value||null;
-    const ts=document.getElementById('vehicleTrim'),brand=sel.value;
-    if(brand&&this.value){
-      const trims=CAR_MODEL_TRIMS[brand+'|'+this.value]||CAR_TRIMS[brand]||CAR_TRIMS._default||['Base','Comfort','Premium','Full'];
+  function refreshVehicleTrims(){
+    const ts=document.getElementById('vehicleTrim'),brand=sel.value,model=document.getElementById('vehicleModel').value,year=document.getElementById('vehicleYear').value;
+    if(brand&&model){
+      const trims=getTrimsForVehicle(brand,model,year);
       ts.disabled=false;ts.innerHTML=trims.map((t,i)=>`<option value="${t}"${i===0?' selected':''}>${t}</option>`).join('');
       state.vehicleTrim=trims[0];
     }else{ts.disabled=true;ts.innerHTML='<option value="">Önce model seçin</option>';state.vehicleTrim='Base';}
+  }
+  document.getElementById('vehicleModel').addEventListener('change',function(){
+    state.vehicleModel=this.value||null;
+    refreshVehicleTrims();
     updateAutoMarketValue();
   });
   document.getElementById('vehicleTrim').addEventListener('change',function(){state.vehicleTrim=this.value||'Base';updateAutoMarketValue();});
-  document.getElementById('vehicleYear').addEventListener('change',function(){state.vehicleYear=parseInt(this.value)||null;updateAutoMarketValue();});
+  document.getElementById('vehicleYear').addEventListener('change',function(){state.vehicleYear=parseInt(this.value)||null;refreshVehicleTrims();updateAutoMarketValue();});
 }
 
 const MODULE_CATS={
@@ -2282,16 +2297,19 @@ function initGenericVehiclePicker(prefix,onChange){
     tSel.disabled=true;tSel.innerHTML='<option value="">Önce model seçin</option>';
     recalc();
   });
-  mSel.addEventListener('change',()=>{
+  function refreshTrimOptions(){
     const brand=bSel.value,model=mSel.value;
     if(brand&&model){
-      const trims=CAR_MODEL_TRIMS[brand+'|'+model]||CAR_TRIMS[brand]||CAR_TRIMS._default||['Base','Comfort','Premium','Full'];
+      const trims=getTrimsForVehicle(brand,model,ySel.value);
       tSel.disabled=false;tSel.innerHTML=trims.map((tr,i)=>`<option value="${tr}"${i===0?' selected':''}>${tr}</option>`).join('');
     }else{tSel.disabled=true;tSel.innerHTML='<option value="">Önce model seçin</option>';}
+  }
+  mSel.addEventListener('change',()=>{
+    refreshTrimOptions();
     recalc();
   });
   tSel.addEventListener('change',recalc);
-  ySel.addEventListener('change',recalc);
+  ySel.addEventListener('change',()=>{refreshTrimOptions();recalc();});
 }
 function openGenericCalc(mid){
   currentGenericModule=mid;const cfg=CALC_CONFIGS[mid];if(!cfg)return;
