@@ -2338,8 +2338,8 @@ function openGenericCalc(mid){
    lüks ~3500+ TL/gün). Sayı artık AI'ye bırakılmıyor, doğrudan bu formülle hesaplanıyor
    — AI sadece segment açıklaması için kullanılıyor, aşırı düşük/yüksek halüsinasyon riski yok. */
 function calcDailyRentalEstimate(marketValue){
-  const lo=Math.max(800,Math.round(marketValue*0.0008/50)*50);
-  const hi=Math.max(lo+400,Math.round(marketValue*0.0013/50)*50);
+  const lo=Math.max(800,Math.round(marketValue*0.0010/50)*50);
+  const hi=Math.max(lo+400,Math.round(marketValue*0.0016/50)*50);
   return Math.round(((lo+hi)/2)/50)*50;
 }
 async function estimateMahrumiyetGunlukKira(){
