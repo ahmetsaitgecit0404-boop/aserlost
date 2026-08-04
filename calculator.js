@@ -273,8 +273,8 @@ const CAR_TRIMS = {
   suv:['Base','Comfort','Premium','4x4','Adventure','Off-Road'],
   _budget:['Base','Comfort','Premium'],
   'Audi':['Base','Advanced','S line','Black Edition','Competition','Carbon'],
-  'BMW':['Base','Sport Line','M Sport','M Performance','Individual','Edition'],
-  'Mercedes-Benz':['Base','Avantgarde','AMG Line','Night','Edition','Exclusive'],
+  'BMW':['Base','Sport Line','Luxury Line','M Sport','M Performance','Individual'],
+  'Mercedes-Benz':['Comfort','Progressive','Avantgarde','Exclusive','AMG Line'],
   'BMW-M':['Base','Competition','CS','CSL'],
   'Porsche':['Base','S','4S','GTS','Turbo','Turbo S'],
   'Ferrari':['Base','S','GTB','Spider','Pista','Speciale'],
@@ -283,7 +283,7 @@ const CAR_TRIMS = {
   'Range Rover':['Base','SE','HSE','Autobiography','SV'],
   'Land Rover':['Base','S','SE','HSE','Metropolitan','X-Dynamic'],
   'Tesla':['Standard Range','Long Range','Performance','Plaid'],
-  'TOGG':['Standart','Uzun Menzil','Performans'],
+  'TOGG':['V1 Standart Menzil','V1 Uzun Menzil','V2 Uzun Menzil'],
   'Chery':['Base','Comfort','Premium','Pro','Pro Max','Excellence','Business','Luxury','Executive'],
   'BYD':['Base','Comfort','Design','Premium','Flagship'],
   'MG':['Base','Comfort','Luxury','Exclusive','Trophy'],
@@ -295,7 +295,7 @@ const CAR_TRIMS = {
   'Renault':['Joy','Touch','Icon','R.S. Line','Initiale Paris'],
   'Fiat':['Easy','Urban','Lounge','Limited'],
   'Ford':['Base','Titanium','ST Line','Active','Vignale','ST','RS'],
-  'Volvo':['Base','Momentum','R-Design','Inscription','Polestar','Recharge'],
+  'Volvo':['Core','Plus','Ultimate','Recharge'],
   'Peugeot':['Base','Active','Allure','GT Line','GT','PSE'],
   'Opel':['Edition','GS','Ultimate'],
   'Seat':['Base','Reference','Style','Xcellence','FR','Cupra'],
@@ -312,7 +312,7 @@ const CAR_TRIMS = {
   'Mini':['Base','Classic','PEPPER','SALT','JCW','John Cooper Works'],
   'DS':['Base','Performance Line','Rivoli','Opera','Esprit de Voyage'],
   'Polestar':['Standard','Long Range','Dual Motor','Performance'],
-  'Jeep':['Base','Sport','Limited','Trailhawk','S','Summit'],
+  'Jeep':['Longitude','Limited','S','Trailhawk','Summit'],
   'Subaru':['Base','Comfort','Limited','Sport','STI'],
 };
 /* Marka geneli yerine modele özel gerçek paket (trim) adları — CAR_TRIMS[marka]'dan önce kontrol edilir.
@@ -373,7 +373,8 @@ const TRIM_MULTIPLIERS = {_default:1.0,'Base':1.0,'Standard':1.0,'Standart':1.0,
   'CS':1.30,'CSL':1.50,'Design':1.08,'Lounge':1.06,'Dream':1.04,'Grace':1.07,
   'Passion':1.10,'Edition':1.06,  'Exclusive':1.25,'Excellence':1.18,'Business':1.06,'Executive':1.15,'Individual':1.35,
   'Excellent':1.15,'Excellent+':1.22,'Elite':1.12,'Prestige':1.20,
-  'Jump':0.95,'Cool':0.95,'Vision':0.95,'Flame':1.15,'R Line':1.15,'Urban':1.05,'Ultimate':1.30,'Feel':1.0,'Feel Bold':1.08,'Shine Bold':1.20,'Shine':1.12};
+  'Jump':0.95,'Cool':0.95,'Vision':0.95,'Flame':1.15,'R Line':1.15,'Urban':1.05,'Ultimate':1.30,'Feel':1.0,'Feel Bold':1.08,'Shine Bold':1.20,'Shine':1.12,
+  'Longitude':1.0,'Luxury Line':1.20,'Progressive':1.08,'Core':0.95,'Plus':1.10,'V1 Standart Menzil':1.0,'V1 Uzun Menzil':1.10,'V2 Uzun Menzil':1.25};
 function getTrimPrice(basePrice,trimName){
   const m=TRIM_MULTIPLIERS[trimName]||TRIM_MULTIPLIERS['_default'];
   return Math.round(basePrice*m);
