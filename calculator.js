@@ -428,6 +428,7 @@ const MODULES = [
   {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci'},
   {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci'},
   {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci'},
+  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci'},
   // ===== DİĞER TAZMİNATLAR =====
   {id:'bosanma',title:'Boşanma Tazminatı\nve Mal Paylaşımı',icon:'👨‍⚖️',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.',tags:['Boşanma','Nafaka','Mal Paylaşımı'],screen:'generic',category:'diger'},
   {id:'miras',title:'Miras Payı\nHesaplama',icon:'📜',desc:'Türk Medeni Kanunu\'na göre miras paylarını hesaplayın. Yasal mirasçılar ve miras oranları.',tags:['Miras Hukuku','Pay Hesaplama','Yasal Düzenleme'],screen:'generic',category:'diger'},
@@ -518,6 +519,36 @@ const CALC_CONFIGS = {
   manevi:{badge:'Manevi Tazminat Hesaplama',title:'Manevi Tazminat Hesaplayın',desc:'Yaşadığınız manevi zarar için tahmini tazminatınızı hesaplayın',
     fields:[{id:'mt_kusur',label:'Karşı Taraf Kusur Oranı (%) *',type:'range',min:0,max:100,step:5,defaultVal:100,required:true},{id:'mt_sure',label:'Tedavi / Süre (Ay)',type:'number',prefix:'ay',placeholder:'Örn: 6'},{id:'mt_yas',label:'Mağdur Yaşı',type:'number',prefix:'yaş',placeholder:'35'},{id:'mt_gelir',label:'Aylık Gelir (TL)',type:'number',prefix:'₺',placeholder:'Opsiyonel'}],
     calculate(d){const k=parseInt(d.mt_kusur)||100,s=parseInt(d.mt_sure)||1,y=parseInt(d.mt_yas)||35,g=parseFloat(d.mt_gelir)||15000,temel=Math.round(50000+s*8000+(65-y)*500),kusul=Math.round(temel*(k/100)),ek=Math.round(g*s*0.3),top=kusul+ek;return{total:top,rows:[{label:'Temel Tutar',value:fmt(temel)},{label:'Kusur Oranı',value:'%'+k},{label:'Kusura Göre',value:fmt(kusul)},{label:'Süre Bazlı Ek',value:fmt(ek)},{label:'Tedavi Süresi',value:s+' ay'},{label:'Tahmini Manevi Tazminat',value:fmt(top),highlight:true}]}}},
+  bakiyeSure:{badge:'Bakiye Süre Ücreti',title:'Bakiye Süre Ücreti Tazminatı Hesaplayın',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği, 5580 sayılı Kanun) süresinden önce ve haklı neden olmaksızın feshedildiyse, kalan sürenin ücretini hesaplayın',
+    fields:[
+      {id:'bs_sozlesme_ay',label:'Sözleşme Süresi (Ay) *',type:'number',prefix:'ay',placeholder:'Örn: 8',required:true},
+      {id:'bs_ucret',label:'Aylık Ücret (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 30000',required:true},
+      {id:'bs_calisilan_ay',label:'Kaç Ay Çalıştınız? *',type:'number',prefix:'ay',placeholder:'Örn: 5',required:true},
+      {id:'bs_fesih_eden',label:'Sözleşmeyi Kim Feshetti? (0=İşveren, 1=Ben)',type:'range',min:0,max:1,step:1,defaultVal:0},
+      {id:'bs_haksiz',label:'İşverenin Feshi Haklı Bir Nedene mi Dayanıyordu? (0=Hayır/haksız, 1=Evet/haklı)',type:'range',min:0,max:1,step:1,defaultVal:0}
+    ],
+    calculate(d){
+      const sozlesmeAy=parseFloat(d.bs_sozlesme_ay)||0,ucret=parseFloat(d.bs_ucret)||0,calisilanAy=parseFloat(d.bs_calisilan_ay)||0;
+      const isciFesih=parseInt(d.bs_fesih_eden)===1;
+      const haklıNeden=parseInt(d.bs_haksiz)===1;
+      const kalanAy=Math.max(0,sozlesmeAy-calisilanAy);
+      const hakEdiyor=!isciFesih&&!haklıNeden&&kalanAy>0;
+      const bakiyeUcret=hakEdiyor?Math.round(kalanAy*ucret):0;
+      const kidemUyari=calisilanAy>=12;
+      const rows=[
+        {label:'Sözleşme Süresi',value:sozlesmeAy+' ay'},
+        {label:'Çalışılan Süre',value:calisilanAy+' ay'},
+        {label:'Kalan (Bakiye) Süre',value:kalanAy+' ay'},
+        {label:'Aylık Ücret',value:fmt(ucret)},
+      ];
+      if(!hakEdiyor){
+        let neden=isciFesih?'Sözleşmeyi siz feshettiğiniz için bakiye süre ücreti talep edemezsiniz.':haklıNeden?'İşveren haklı bir nedenle feshettiği için bakiye süre ücreti talep edilemez.':'Kalan süre bulunmadığı için (sözleşme zaten dolmuş) bakiye süre ücreti oluşmuyor.';
+        rows.push({label:'Sonuç',value:neden});
+      }
+      rows.push({label:'Bakiye Süre Ücreti Tazminatı',value:fmt(bakiyeUcret),highlight:hakEdiyor});
+      if(hakEdiyor&&kidemUyari)rows.push({label:'Not',value:'1 yıldan fazla çalıştığınız için ayrıca kıdem tazminatı hakkınız da olabilir — "İşçilik Alacakları Hesaplama" aracını da kullanın.'});
+      return{total:bakiyeUcret,rows};
+    }},
   mahrumiyet:{badge:'Araç Mahrumiyet Bedeli',title:'Araç Mahrumiyet (Yatma) Bedeli',desc:'Kaza sonrası aracınız tamirdeyken uğradığınız kullanım kaybını hesaplayın',
     vehiclePicker:true,
     fields:[{id:'mr_gunluk',label:'Günlük Kira Bedeli (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 750, ya da AI ile tahmin ettirin',required:true},{id:'mr_gun',label:'Mahrumiyet Süresi (Gün) *',type:'number',prefix:'gün',placeholder:'Örn: 20',required:true},{id:'mr_arac_deger',label:'Araç Piyasa Değeri (TL)',type:'number',prefix:'₺',placeholder:'Araç seçince otomatik dolar'},{id:'mr_arac_yas',label:'Araç Yaşı',type:'number',prefix:'yıl',placeholder:'Araç seçince otomatik dolar'}],
@@ -579,6 +610,16 @@ window.addEventListener('popstate',()=>{
   else navigate('home');
 });
 
+/* scrollIntoView({block:'start'}) hedefi viewport'un tam tepesine hizalar, ama header
+   position:sticky olduğu için hedefin üst kısmını (özellikle mobilde) kapatıyordu —
+   kullanıcıya "sonuç aşağı kaçtı" gibi görünüyordu. Header yüksekliği kadar pay bırakıyoruz. */
+function scrollToResult(el){
+  if(!el)return;
+  const headerEl=document.getElementById('mainHeader');
+  const headerH=headerEl?headerEl.getBoundingClientRect().height:0;
+  const top=el.getBoundingClientRect().top+window.pageYOffset-headerH-12;
+  window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+}
 function navigate(screen){
   if(_navLock||state.screen===screen)return;
   const prev=state.screen,PREV=document.getElementById('screen-'+prev),NEXT=document.getElementById('screen-'+screen);
@@ -2566,7 +2607,7 @@ function showAracResult(){
   }
   document.querySelectorAll('#screen-arac .form-step').forEach((el,i)=>{el.classList.toggle('active',i+1===4);});
   updateSidebarState(4);updateProgressRing(4);
-  document.querySelector('#screen-arac .calculator-section').scrollIntoView({behavior:'smooth',block:'start'});
+  scrollToResult(document.querySelector('#screen-arac .calculator-section'));
   setTimeout(()=>{
     const ra=document.getElementById('resultActions');
     if(ra&&!ra.querySelector('.btn-pdf')){const pdf=document.createElement('a');pdf.className='btn-pdf';pdf.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> PDF Rapor';pdf.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:50px;color:var(--text2);font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;transition:.2s';pdf.onmouseover=()=>{pdf.style.borderColor='var(--primary)'};pdf.onmouseout=()=>{pdf.style.borderColor='var(--border)'};pdf.onclick=()=>{const partNames=Object.keys(state.selectedParts).map(k=>PART_LABELS[k]+' ('+PART_TYPE_LABELS[state.selectedParts[k]]+')').join(', ')||'Belirtilmedi';const rows=[{label:'Araç',value:state.vehicleYear+' '+state.vehicleBrand+' '+state.vehicleModel},{label:'Araç Yaşı',value:r.vehicleAge+' yıl'},{label:'Km',value:new Intl.NumberFormat('tr-TR').format(state.mileage)},{label:'Piyasa Değeri',value:new Intl.NumberFormat('tr-TR').format(state.autoMarketValue)+' TL'},{label:'Kusur Oranı',value:state.faultRatio+'%'},{label:'Hasarlı Parçalar',value:partNames},{label:'Tahmini Değer Kaybı',value:new Intl.NumberFormat('tr-TR').format(r.min)+' - '+new Intl.NumberFormat('tr-TR').format(r.max)+' TL'}];printReport('Araç Değer Kaybı',rows,new Intl.NumberFormat('tr-TR').format(r.min)+' – '+new Intl.NumberFormat('tr-TR').format(r.max)+' TL');};ra.appendChild(pdf);}
@@ -2589,7 +2630,7 @@ function showIscResult(){
   const p=document.getElementById('iscResultPanel');
   const iscMsg='Merhaba, Müvekkil Bilgi üzerinden işçilik tazminatı hesaplaması yaptım. Tahmini alacağım: '+f(r.toplamNet)+' TL. '+(r.reason==='justified'||r.reason==='employer'?'Haklı fesih sebebim var, benimle iletişime geçebilir misiniz?':'Benimle iletişime geçebilir misiniz?');
   p.innerHTML=`<div class="isc-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${rl[r.reason]||''} · ${Math.floor(r.totalYears)} yıl ${Math.round((r.totalYears%1)*12)} ay</p></div></div><div class="isc-total-block"><div class="isc-total-label">Toplam Tahmini İşçilik Alacağı</div><div class="isc-total-amount">${f(r.toplamNet)} TL</div><div class="isc-total-note">Net tutar</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Net Tutar</span></div>${rows.map(row=>row.v?`<div class="isc-breakdown-row"><span>${row.label}</span><span class="isc-amount">${f(row.val)} TL</span></div>`:'').join('')}${rows.every(r=>!r.v)?'<div class="isc-no-result">Girilen bilgilere göre alacak hesaplanamadı.</div>':''}</div><div class="isc-salary-info"><div class="isc-salary-row"><span>Net Maaş</span><span>${f(r.netSalary)} TL</span></div><div class="isc-salary-row"><span>Brüt Maaş</span><span>${f(r.brutMaas)} TL</span></div><div class="isc-salary-row"><span>Giydirilmiş Brüt</span><span>${f(r.giydirilmisBrut)} TL</span></div></div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir.</p></div>${renderOnIncelemeBanner(iscMsg)}${renderRelatedToolsBox('iscilik')}<div class="form-actions result-actions" id="iscResultActions" style="margin-top:16px"><button class="btn-back" onclick="resetIscilik()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 12a8 8 0 1 0 2-5.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 7v5H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Yeni Hesaplama</button></div></div>`;
-  p.style.display='block';setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  p.style.display='block';setTimeout(()=>scrollToResult(p),100);
   const rn=p.querySelector('.result-notice p');
   if(rn)rn.innerHTML='<strong>Önemli Uyarı:</strong> İşçilik tazminatı alabilmek için haklı fesih sebebinizin olması gerekir. İşveren tarafından haksız yere işten çıkarılma, maaş ödenmemesi, mobbing, fazla mesai ücretlerinin ödenmemesi gibi durumlar haklı fesih sebebi sayılır. <strong>Haklı fesih sebebi tespitinizi yapabilmemiz için bizimle iletişime geçin.</strong>';
   setTimeout(function(){
@@ -2606,7 +2647,7 @@ function showGenericResult(){
   if(ai&&ai.ai){aiHtml=`<div class="ai-insights" style="display:block;margin-top:16px"><div class="ai-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="#C5A880" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="#C5A880" stroke-width="1.5" fill="none"/></svg><span>AI Uzman Analizi</span><span class="ai-guyen">%${ai.guven||70} güven</span></div><div class="ai-body"><div class="ai-col"><div class="ai-col-label">Değerlendirme</div><div class="ai-col-val">${ai.degerlendirme||''}</div></div><div class="ai-col"><div class="ai-col-label">Hukuki Analiz</div><div class="ai-col-val">${ai.hukuk||''}</div></div>${ai.oneri?`<div class="ai-oneri">💡 ${ai.oneri}</div>`:''}</div></div>`;}
   const genMsg='Merhaba, Müvekkil Bilgi üzerinden '+cfg.title+' hesaplaması yaptım. Tahmini tazminatım: '+fmt2(r.total)+' TL. Benimle iletişime geçebilir misiniz?';
   p.innerHTML=`<div class="generic-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${cfg.title}</p></div></div><div class="isc-total-block"><div class="isc-total-label">Tahmini Tazminat</div><div class="isc-total-amount">${fmt(r.total)}</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>${r.rows.map(row=>`<div class="isc-breakdown-row"><span>${row.label}</span><span class="${row.highlight?'isc-amount':''}">${row.value}</span></div>`).join('')}</div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir, kesin sonuç değildir. Gerçek tutarınız için ön inceleme talep edin.</p></div>${renderOnIncelemeBanner(genMsg)}${renderRelatedToolsBox(mt)}<div class="form-actions" id="genericResultActions" style="margin-top:16px"><button class="btn-back" onclick="openGenericCalc('${mt}')">Yeniden Hesapla</button></div></div>`;
-  p.style.display='block';setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  p.style.display='block';setTimeout(()=>scrollToResult(p),100);
   setTimeout(()=>{
     const ra=document.getElementById('genericResultActions');
     if(ra&&r.rows&&!ra.querySelector('.btn-pdf')){const pdf=document.createElement('a');pdf.className='btn-pdf';pdf.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> PDF Rapor';pdf.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:50px;color:var(--text2);font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;transition:.2s';pdf.onmouseover=()=>{pdf.style.borderColor='var(--primary)'};pdf.onmouseout=()=>{pdf.style.borderColor='var(--border)'};pdf.onclick=()=>{printReport(cfg.title||'Tazminat',r.rows,fmt(r.total));};ra.appendChild(pdf);}
