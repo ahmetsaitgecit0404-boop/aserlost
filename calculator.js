@@ -2212,18 +2212,18 @@ async function showThinkingTimeline(ov,thinkingSteps,veriKaynaklari,karsilastirm
       <div class="tt-footer" style="opacity:0;transition:opacity 0.5s ease">${sourcesHtml}${compareHtml}</div>
     </div>`;
   for(let i=0;i<thinkingSteps.length;i++){
-    await sleep(200);
+    await sleep(80);
     const step=ov.querySelector(`.tt-step[data-idx="${i}"]`);
     if(step){
       step.style.opacity='1';step.style.transform='translateY(0)';
       const txt=step.querySelector('.tt-step-text');
       if(txt)txt.textContent=thinkingSteps[i];
     }
-    await sleep(1800);
+    await sleep(220);
   }
   const footer=ov.querySelector('.tt-footer');
   if(footer)footer.style.opacity='1';
-  await sleep(1500);
+  await sleep(300);
   hideLoadingOverlay(ov);
 }
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -2510,7 +2510,11 @@ function submitLead(){
   leads.push(leadData);
   localStorage.setItem('muvekkilbilgi_leads',JSON.stringify(leads));
 
-  sbInsert('leads',leadData);
+  // Supabase'deki leads tablosunda ref/etiket sütunları yok — gönderilirse INSERT tamamen
+  // reddediliyor (400) ve sbInsert bunu sessizce yutuyordu, yani hiçbir başvuru kaydedilmiyordu.
+  // ref/etiket zaten ayrıca 'tracking' tablosunda tutuluyor, leads insert'ünden çıkarıyoruz.
+  const {ref:_ref,etiket:_etiket,...leadDataForDb}=leadData;
+  sbInsert('leads',leadDataForDb);
   trackFormComplete(ref,etiket,type);
   postToGoogleForms({name,phone,city,vekalet,tur:type,tutar:sonucOzeti,tarih,saat});
   markLeadCaptured();
@@ -2795,7 +2799,8 @@ function submitContactForm(e){
   const contacts=JSON.parse(localStorage.getItem('muvekkilbilgi_contacts')||'[]');
   contacts.push(contactData);
   localStorage.setItem('muvekkilbilgi_contacts',JSON.stringify(contacts));
-  sbInsert('contacts',contactData);
+  const {ref:_cref,etiket:_cetiket,...contactDataForDb}=contactData;
+  sbInsert('contacts',contactDataForDb);
   document.getElementById('contactForm').reset();
   showSuccessToast('Mesajınız başarıyla gönderildi!');
 }
