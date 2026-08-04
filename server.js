@@ -251,10 +251,7 @@ app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
   if (typeof password !== 'string' || password.length === 0 || password.length > 128) {
     return res.status(400).json({ error: 'Geçersiz giriş.' });
   }
-  const hash = crypto.createHash('sha256').update(password).digest('hex');
-  const expected = Buffer.from(ADMIN_PASSWORD_HASH, 'utf8');
-  const got = Buffer.from(hash, 'utf8');
-  const valid = expected.length === got.length && crypto.timingSafeEqual(expected, got);
+  const valid = verifyPassword(password, ADMIN_PASSWORD_HASH);
   await logLoginAttempt(ip, valid);
   if (!valid) {
     return res.status(401).json({ error: 'Yanlış şifre.' });
@@ -304,7 +301,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Müvekkil Bilgi server running on http://localhost:${PORT}`);
-  console.log(`API proxy active — Groq key: ${GROQ_API_KEY.slice(0, 8)}...`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Müvekkil Bilgi server running on http://localhost:${PORT}`);
+    console.log(`API proxy active — Groq key: ${GROQ_API_KEY.slice(0, 8)}...`);
+  });
+}
+
+module.exports = app;
