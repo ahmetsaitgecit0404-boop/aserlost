@@ -338,11 +338,11 @@ const CAR_MODEL_TRIMS = {
   'Chery|Arrizo 6':['Comfort','Luxury'],
   'Chery|Arrizo 6 Pro':['Comfort','Luxury'],
   'Chery|Arrizo 8':['Comfort','Luxury','Excellent'],
-  'Chery|Omoda 3':['Comfort','Excellent'],
-  'Chery|Omoda 5':['Comfort','Excellent','Excellent+'],
-  'Chery|Omoda 5 Pro':['Excellent','Excellent+'],
-  'Chery|Omoda 7':['Excellent','Excellent+'],
-  'Chery|Omoda 9':['Excellent','Excellent+'],
+  'Chery|Omoda 3':['Comfort','Luxury'],
+  'Chery|Omoda 5':['Comfort','Luxury','Excellent'],
+  'Chery|Omoda 5 Pro':['Comfort','Luxury','Excellent'],
+  'Chery|Omoda 7':['Comfort','Luxury','Excellent'],
+  'Chery|Omoda 9':['Comfort','Luxury','Excellent'],
   'Chery|iCar 03':['Comfort','Excellent'],
   'Chery|Fulwin A8':['Comfort','Luxury'],
   'Chery|Fulwin A9':['Comfort','Luxury'],
@@ -2453,11 +2453,30 @@ function showLeadModal(type){
   ['nameError','phoneError','emailError','cityError','vekaletError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
   const plateField=document.getElementById('leadPlateField');
   if(plateField)plateField.style.display=type==='arac'?'':'none';
-  document.getElementById('leadModal').style.display='flex';document.body.style.overflow='hidden';
+  document.getElementById('leadModal').style.display='flex';lockBodyScroll();
+}
+
+/* iOS Safari'de body{overflow:hidden} arka plan kaymasını gerçekten engellemiyor (bilinen
+   platform kısıtlaması) — modal açıkken kullanıcı arka planı kaydırabiliyor, modal kapanınca
+   sayfa beklenmedik bir noktada kalıyor ve sonuç ekranına giden scroll bununla çakışıyordu.
+   body'yi position:fixed yapıp kapanışta orijinal konuma geri dönmek, iOS'ta güvenilir tek yöntem. */
+function lockBodyScroll(){
+  state._scrollY=window.scrollY||window.pageYOffset||0;
+  document.body.style.position='fixed';
+  document.body.style.top='-'+state._scrollY+'px';
+  document.body.style.left='0';document.body.style.right='0';
+  document.body.style.width='100%';
+  document.body.style.overflow='hidden';
+}
+function unlockBodyScroll(){
+  const y=state._scrollY||0;
+  document.body.style.position='';document.body.style.top='';document.body.style.left='';document.body.style.right='';
+  document.body.style.width='';document.body.style.overflow='';
+  window.scrollTo(0,y);
 }
 
 function showKvkkText(){const m=document.getElementById('kvkkModal');if(m)m.style.display='flex';}
-function closeLeadModal(){try{const m=document.getElementById('leadModal');if(m)m.style.display='none';document.body.style.overflow='';}catch(e){}}
+function closeLeadModal(){try{const m=document.getElementById('leadModal');if(m)m.style.display='none';unlockBodyScroll();}catch(e){}}
 function handleModalOverlayClick(e){}
 function selectVekalet(btn){document.querySelectorAll('#vekaletToggle .toggle-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.leadVekalet=btn.dataset.value;}
 
