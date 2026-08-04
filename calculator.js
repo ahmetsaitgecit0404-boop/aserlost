@@ -2453,6 +2453,7 @@ function showLeadModal(type){
   ['nameError','phoneError','emailError','cityError','vekaletError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
   const plateField=document.getElementById('leadPlateField');
   if(plateField)plateField.style.display=type==='arac'?'':'none';
+  const modalBox=document.querySelector('#leadModal .modal-box');if(modalBox)modalBox.scrollTop=0;
   document.getElementById('leadModal').style.display='flex';lockBodyScroll();
 }
 
