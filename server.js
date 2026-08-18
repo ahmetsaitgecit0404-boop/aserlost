@@ -10,6 +10,24 @@ const PORT = process.env.PORT || 3000;
 
 const GROQ_API_KEY = process.env.GROQ_KEY || '';
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+// gpt-oss / qwen3.6 birer "reasoning" modeli: düşünme adımları da completion
+// token bütçesinden yeniyor, kapatılmazsa content boş (veya qwen'de <think>
+// bloğu içeren ham metin) dönüyor. Kabul edilen değerler modele göre farklı:
+//   openai/gpt-oss-*  -> low | medium | high
+//   qwen/qwen3.6-*    -> none | default
+// Yanlış değer 400 döndürdüğü için modele göre eşliyoruz.
+const REASONING_HEADROOM = 1200;
+function reasoningEffortFor(model) {
+  const m = String(model || '');
+  if (m.startsWith('qwen/')) return 'none';
+  if (m.startsWith('openai/gpt-oss')) return 'low';
+  return null;
+}
+function withReasoning(body) {
+  const eff = reasoningEffortFor(body.model);
+  if (eff) body.reasoning_effort = eff;
+  return body;
+}
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hvsxeljnyxmhiwgsqhgx.supabase.co';
 const ADMIN_TOKEN_TTL_MS = 4 * 60 * 60 * 1000;
@@ -109,12 +127,12 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
         'Authorization': `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
+      body: JSON.stringify(withReasoning({
         model: model || 'openai/gpt-oss-120b',
         messages: messages,
         temperature: typeof temperature === 'number' ? temperature : 0.8,
-        max_tokens: max_tokens || 1024
-      }),
+        max_tokens: Math.max(1024, (max_tokens || 1024) + REASONING_HEADROOM)
+      })),
       signal: AbortSignal.timeout(30000)
     });
     if (!groqRes.ok) {
@@ -149,8 +167,9 @@ app.post('/api/ai/calculate', apiLimiter, async (req, res) => {
       model: model || 'openai/gpt-oss-120b',
       messages: messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
-      max_tokens: max_tokens || 2048
+      max_tokens: Math.max(2048, (max_tokens || 2048) + REASONING_HEADROOM)
     };
+    withReasoning(groqBody);
     if (responseFormat) groqBody.response_format = { type: 'json_object' };
     const groqRes = await fetch(GROQ_API_URL, {
       method: 'POST',
@@ -187,8 +206,9 @@ app.post('/api/ai/vision', apiLimiter, async (req, res) => {
       model: model || 'qwen/qwen3.6-27b',
       messages: messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
-      max_tokens: max_tokens || 1024
+      max_tokens: Math.max(1024, (max_tokens || 1024) + REASONING_HEADROOM)
     };
+    withReasoning(groqBody);
     if (responseFormat) groqBody.response_format = { type: 'json_object' };
     const groqRes = await fetch(GROQ_API_URL, {
       method: 'POST',

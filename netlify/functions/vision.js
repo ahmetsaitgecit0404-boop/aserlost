@@ -1,5 +1,16 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
+// gpt-oss / qwen3.6 reasoning modelleri: düşünme adımları da completion token
+// bütçesinden yeniyor, kapatılmazsa content boş dönüyor. Kabul edilen değer
+// modele göre farklı (gpt-oss: low|medium|high, qwen: none|default).
+const REASONING_HEADROOM = 1200;
+function reasoningEffortFor(model) {
+  const m = String(model || '');
+  if (m.startsWith('qwen/')) return 'none';
+  if (m.startsWith('openai/gpt-oss')) return 'low';
+  return null;
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -17,7 +28,8 @@ exports.handler = async (event) => {
       model: model || 'qwen/qwen3.6-27b',
       messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
-      max_tokens: max_tokens || 1024
+      max_tokens: Math.max(1024, (max_tokens || 1024) + REASONING_HEADROOM),
+      ...(reasoningEffortFor(model || 'qwen/qwen3.6-27b') ? { reasoning_effort: reasoningEffortFor(model || 'qwen/qwen3.6-27b') } : {})
     };
     if (responseFormat) groqBody.response_format = { type: 'json_object' };
     const groqRes = await fetch(GROQ_API_URL, {
