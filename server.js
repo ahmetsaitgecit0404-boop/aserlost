@@ -321,9 +321,15 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Müvekkil Bilgi server running on http://localhost:${PORT}`);
+// Vercel serverless'te listen ÇAĞRILMAMALI (platform handler'ı kendisi sarar).
+// Bunun dışında her ortamda dinlemeye başla: eskiden `require.main === module`
+// koşulu vardı, ama Hostinger uygulamayı bir süreç yöneticisi üzerinden modül
+// olarak yüklediğinde bu koşul false kalıp listen hiç çağrılmıyordu — süreç
+// "çalışıyor" görünüyor, hiçbir istek gelmiyor, bağlantı sıfırlanıyordu.
+// 0.0.0.0 açıkça veriliyor: yalnızca loopback'e bağlanma riski kalmasın.
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Müvekkil Bilgi server listening on 0.0.0.0:${PORT}`);
     console.log(`API proxy active — Groq key: ${GROQ_API_KEY.slice(0, 8)}...`);
   });
 }
