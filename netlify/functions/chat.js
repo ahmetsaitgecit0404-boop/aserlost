@@ -20,7 +20,7 @@ exports.handler = async (event) => {
       m.content = m.content.replace(/<[^>]*>/g, '').slice(0, 4096);
     }
     const groqBody = {
-      model: model || 'llama-3.3-70b-versatile',
+      model: model || 'openai/gpt-oss-120b',
       messages,
       temperature: typeof temperature === 'number' ? temperature : 0.8,
       max_tokens: max_tokens || 1024

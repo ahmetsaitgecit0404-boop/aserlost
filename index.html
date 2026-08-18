@@ -10,6 +10,13 @@
   <meta property="og:description" content="Trafik kazası ve iş hukuku tazminat hesaplamalarınızı ücretsiz, anında hesaplayın." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://muvekkilbilgi.com" />
+  <meta property="og:locale" content="tr_TR" />
+  <meta property="og:site_name" content="Müvekkil Bilgi" />
+  <meta property="og:image" content="https://muvekkilbilgi.com/favicon.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Müvekkil Bilgi – Tazminat Hesaplama Platformu" />
+  <meta name="twitter:description" content="Trafik kazası ve iş hukuku tazminat hesaplamalarınızı ücretsiz, anında hesaplayın." />
+  <meta name="twitter:image" content="https://muvekkilbilgi.com/favicon.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://muvekkilbilgi.com" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.groq.com https://hvsxeljnyxmhiwgsqhgx.supabase.co; frame-src 'none'; object-src 'none'" />
@@ -24,11 +31,46 @@
     "operatingSystem": "Web"
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": "Müvekkil Bilgi",
+    "url": "https://muvekkilbilgi.com",
+    "telephone": "+905510126904",
+    "email": "info@muvekkilbilgi.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "İçerenköy Mah. Eryılmazlar Sok. No:2 Kat:3",
+      "addressLocality": "Ataşehir",
+      "addressRegion": "İstanbul",
+      "addressCountry": "TR"
+    },
+    "priceRange": "Ücretsiz ön hesaplama"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Araç değer kaybı tazminatı nedir?","acceptedAnswer":{"@type":"Answer","text":"Trafik kazası geçiren bir araç, aynı marka, model ve yaşta kazasız bir araca kıyasla daha düşük piyasa değeri taşır. Bu değer düşüşünün tazmin edilmesi için ödenen tazminata değer kaybı tazminatı denir."}},
+      {"@type":"Question","name":"Kıdem tazminatı hakkı ne zaman doğar?","acceptedAnswer":{"@type":"Answer","text":"İşçi, aynı işyerinde en az 1 yıl çalışmış ve işten çıkarılmış ya da haklı nedenle istifa etmişse kıdem tazminatı hakkı doğar."}},
+      {"@type":"Question","name":"Bu hesaplamalar kesin tutar mıdır?","acceptedAnswer":{"@type":"Answer","text":"Hayır. Hesaplamalar yasal formüllere dayanmakla birlikte tahmini niteliktedir. Kesin tutar mahkeme kararı ve bilirkişi raporuna göre değişebilir."}},
+      {"@type":"Question","name":"Hizmet ücretli midir?","acceptedAnswer":{"@type":"Answer","text":"Hesaplama aracı tamamen ücretsizdir. Dosyanızın ön incelemesini talep etmek için bizimle iletişime geçebilirsiniz."}},
+      {"@type":"Question","name":"İş gücü kaybı tazminatı nedir?","acceptedAnswer":{"@type":"Answer","text":"Kaza sonucu çalışanın geçici veya kalıcı olarak çalışamaz hale gelmesi durumunda uğradığı gelir kaybının karşılanmasıdır."}},
+      {"@type":"Question","name":"Destekten yoksun kalma tazminatı nedir?","acceptedAnswer":{"@type":"Answer","text":"Kaza sonucu vefat eden kişinin bakmakla yükümlü olduğu kişilerin uğradığı gelir kaybının karşılanmasıdır."}},
+      {"@type":"Question","name":"İş kazası tazminatı nedir?","acceptedAnswer":{"@type":"Answer","text":"İşyerinde veya işin yürütümü sırasında meydana gelen kazalarda işçiye ödenen tazminattır. SGK ve işveren sorumluluğu kapsamında hesaplanır."}},
+      {"@type":"Question","name":"Nafaka nasıl hesaplanır?","acceptedAnswer":{"@type":"Answer","text":"Nafaka hesaplanırken tarafların gelir durumu, yaşam standardı, çocuk sayısı ve yaşı, kusur oranı dikkate alınır. Hakim takdirine bağlıdır."}},
+      {"@type":"Question","name":"Tapu harcı ne kadar?","acceptedAnswer":{"@type":"Answer","text":"Gayrimenkul alım-satımında tapu harcı emlak bedelinin %4'üdür. Bu oran alıcı ve satıcı için ayrı ayrı geçerlidir."}}
+    ]
+  }
+  </script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20260807" />
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -82,18 +124,37 @@
   <!-- =================== SCREEN: HOME =================== -->
   <div id="screen-home">
 
+    <!-- Persona Tabs -->
+    <section class="persona-tabs-section">
+      <div class="persona-tabs" id="personaTabs" role="tablist">
+        <button type="button" class="persona-tab" data-persona="vatandas" onclick="setPersona('vatandas')" role="tab">
+          <span class="persona-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span>
+          <span class="persona-tab-text"><strong>Vatandaşım</strong><small>Hakkımı öğrenmek istiyorum</small></span>
+        </button>
+        <button type="button" class="persona-tab" data-persona="avukat" onclick="setPersona('avukat')" role="tab">
+          <span class="persona-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V7"/><path d="M7 7h10"/><path d="M12 7L8.5 3.5M12 7l3.5-3.5"/><path d="M3 11l3-5 3 5"/><path d="M15 11l3-5 3 5"/><path d="M2 11a3 3 0 0 0 6 0"/><path d="M16 11a3 3 0 0 0 6 0"/><path d="M8 21h8"/></svg></span>
+          <span class="persona-tab-text"><strong>Avukatım</strong><small>Meslektaşlar için hızlı hesaplama</small></span>
+        </button>
+        <button type="button" class="persona-tab" data-persona="botlar" onclick="setPersona('botlar')" role="tab">
+          <span class="persona-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+          <span class="persona-tab-text"><strong>Hesaplama Botları</strong><small>Direkt araçlara git</small></span>
+        </button>
+      </div>
+    </section>
+
     <!-- Hero -->
-    <section class="home-hero">
+    <section class="home-hero" id="homeHero">
       <div class="home-hero-content">
-        <div class="hero-badge"><span class="badge-dot"></span> Ücretsiz &amp; Anlık Hesaplama</div>
-        <h1 class="home-title">Haklarınızı Öğrenin,<br/><span class="gradient-text">Tazminatınızı Alın</span></h1>
-        <p class="home-subtitle">Trafik kazası sonrası değer kaybınızı, işçilik alacaklarınızı veya farklı tazminat türlerini Türk hukuku mevzuatına uygun olarak saniyeler içinde hesaplayın.</p>
+        <div class="hero-badge" id="heroBadge"><span class="badge-dot"></span> <span id="heroBadgeText">Ücretsiz &amp; Anlık Hesaplama</span></div>
+        <h1 class="home-title" id="heroTitle">Haklarınızı Öğrenin,<br/><span class="gradient-text">Tazminatınızı Alın</span></h1>
+        <p class="home-subtitle" id="heroSubtitle">Trafik kazası sonrası değer kaybınızı, işçilik alacaklarınızı veya farklı tazminat türlerini Türk hukuku mevzuatına uygun olarak saniyeler içinde hesaplayın.</p>
+        <div class="hero-persona-cta" id="heroPersonaCta" style="display:none"></div>
         <div class="hero-stats">
-          <div class="stat"><span class="stat-number">50.000+</span><span class="stat-label">Hesaplama</span></div>
-          <div class="stat-divider"></div>
-          <div class="stat"><span class="stat-number">16+</span><span class="stat-label">Modül</span></div>
+          <div class="stat"><span class="stat-number">26+</span><span class="stat-label">Modül</span></div>
           <div class="stat-divider"></div>
           <div class="stat"><span class="stat-number">3 dk</span><span class="stat-label">Ortalama Süre</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-number">7/24</span><span class="stat-label">Erişim</span></div>
         </div>
         <div class="hero-road-anim" aria-hidden="true">
           <svg viewBox="0 0 1000 36" preserveAspectRatio="none" class="hero-road-svg">
@@ -134,14 +195,14 @@
         <div class="section-badge">Neden Müvekkil Bilgi?</div>
         <h2 class="section-title">Güvenilir &amp; Şeffaf Hesaplama</h2>
         <div class="methods-grid">
-          <div class="method-card"><div class="method-icon">⚖️</div><h3>Yasal Dayanak</h3><p>Hesaplamalar Türk Ticaret Kanunu, İş Kanunu ve mahkeme içtihatlarına dayanmaktadır.</p></div>
-          <div class="method-card"><div class="method-icon">🔒</div><h3>Gizlilik</h3><p>Girdiğiniz bilgiler üçüncü şahıslarla paylaşılmaz. Güvenli ve şifreli bağlantı kullanılır.</p></div>
-          <div class="method-card"><div class="method-icon">⚡</div><h3>Anlık Sonuç</h3><p>Tüm hesaplamalar cihazınızda anında gerçekleşir, bekleme süresi yoktur.</p></div>
-          <div class="method-card"><div class="method-icon">🤖</div><h3>Yapay Zeka Asistan</h3><p>7/24 Groq AI destekli hukuk asistanımızla sorularınızı anında yanıtlayın.</p></div>
-          <div class="method-card"><div class="method-icon">📱</div><h3>Mobil Uyumlu</h3><p>Telefon, tablet ve bilgisayarınızdan kolayca kullanın. Responsive tasarım.</p></div>
-          <div class="method-card"><div class="method-icon">🏆</div><h3>16+ Hesaplama Modülü</h3><p>Araç değer kaybından manevi tazminata kadar geniş kapsamlı hesaplama araçları.</p></div>
-          <div class="method-card"><div class="method-icon">📊</div><h3>Detaylı Raporlar</h3><p>Her hesaplama için adım adım detaylı breakdown ve analiz raporları.</p></div>
-          <div class="method-card"><div class="method-icon">💬</div><h3>Ücretsiz Danışmanlık</h3><p>WhatsApp ve iletişim formu üzerinden ücretsiz ön bilgilendirme desteği.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V7"/><path d="M7 7h10"/><path d="M12 7L8.5 3.5M12 7l3.5-3.5"/><path d="M3 11l3-5 3 5"/><path d="M15 11l3-5 3 5"/><path d="M2 11a3 3 0 0 0 6 0"/><path d="M16 11a3 3 0 0 0 6 0"/><path d="M8 21h8"/></svg></div><h3>Yasal Dayanak</h3><p>Hesaplamalar Türk Ticaret Kanunu, İş Kanunu ve mahkeme içtihatlarına dayanmaktadır.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Gizlilik</h3><p>Girdiğiniz bilgiler üçüncü şahıslarla paylaşılmaz. Güvenli ve şifreli bağlantı kullanılır.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><h3>Anlık Sonuç</h3><p>Tüm hesaplamalar cihazınızda anında gerçekleşir, bekleme süresi yoktur.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M4.2 7.2l2.1 2.1M17.7 14.7l2.1 2.1M3 12h3M18 12h3M4.2 16.8l2.1-2.1M17.7 9.3l2.1-2.1"/></svg></div><h3>Yapay Zeka Asistan</h3><p>7/24 Groq AI destekli hukuk asistanımızla sorularınızı anında yanıtlayın.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>Mobil Uyumlu</h3><p>Telefon, tablet ve bilgisayarınızdan kolayca kullanın. Responsive tasarım.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><h3>26+ Hesaplama Modülü</h3><p>Araç değer kaybından manevi tazminata kadar geniş kapsamlı hesaplama araçları.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-6"/></svg></div><h3>Detaylı Raporlar</h3><p>Her hesaplama için adım adım detaylı breakdown ve analiz raporları.</p></div>
+          <div class="method-card"><div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-1.1 4.2L21 20l-4.3-1.1a8.4 8.4 0 1 1 4.3-7.4z"/></svg></div><h3>Ücretsiz Ön Değerlendirme</h3><p>WhatsApp ve iletişim formu üzerinden ücretsiz ön değerlendirme desteği.</p></div>
         </div>
       </div>
     </section>
@@ -746,7 +807,7 @@
   <!-- Karşılaştırmalı Hesaplama Panel (injected dynamically after result) -->
   <div id="compareSection" style="display:none"></div>
 
-  <script src="calculator.js"></script>
+  <script src="calculator.js?v=20260807"></script>
 </body>
 </html>
 

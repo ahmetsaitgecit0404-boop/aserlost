@@ -48,11 +48,11 @@ function getChatApiUrl(){const p=getProxyUrl();return p?p+'/api/chat':'';}
 function getVisionApiUrl(){const p=getProxyUrl();return p?p+'/api/ai/vision':'';}
 async function groqFetch(endpoint,messages,extra){
   const url=getProxyUrl()+endpoint;
-  const body=JSON.stringify({model:extra?.model||'llama-3.3-70b-versatile',messages,temperature:extra?.temp||0.3,max_tokens:extra?.tokens||2000,responseFormat:extra?.responseFormat?true:undefined});
+  const body=JSON.stringify({model:extra?.model||'openai/gpt-oss-120b',messages,temperature:extra?.temp||0.3,max_tokens:extra?.tokens||2000,responseFormat:extra?.responseFormat?true:undefined});
   return fetchWithTimeout(url,{method:'POST',headers:{'Content-Type':'application/json'},body},extra?.timeout||30000);
 }
 /* Groq'un decommission ettiği llama-3.2-*-vision-preview modelleri yerine tek noktadan güncel model */
-const GROQ_VISION_MODEL='meta-llama/llama-4-scout-17b-16e-instruct';
+const GROQ_VISION_MODEL='qwen/qwen3.6-27b';
 /* AI'dan gelen JSON metnini dayanıklı şekilde parse eder: markdown fence temizler, gerekirse ilk {...} bloğunu regex ile çıkarır. Başarısız olursa anlaşılır bir hata fırlatır. */
 function parseAiJson(text){
   const raw=String(text||'').trim();
@@ -407,18 +407,7 @@ const AGE_FACTORS = [{max:2,factor:1.00},{max:4,factor:0.92},{max:6,factor:0.82}
 const PART_LABELS = {tavan:'Tavan',kaput:'Kaput',bagaj:'Bagaj',sol_on_camurluk:'Sol Ön Çamurluk',sag_on_camurluk:'Sağ Ön Çamurluk',sol_on_kapi:'Sol Ön Kapı',sag_on_kapi:'Sağ Ön Kapı',sol_arka_kapi:'Sol Arka Kapı',sag_arka_kapi:'Sağ Arka Kapı',sol_arka_camurluk:'Sol Arka Çamurluk',sag_arka_camurluk:'Sağ Arka Çamurluk',on_tampon:'Ön Tampon',arka_tampon:'Arka Tampon'};
 const TURKISH_CITIES = ['Adana','Adıyaman','Afyonkarahisar','Ağrı','Amasya','Ankara','Antalya','Artvin','Aydın','Balıkesir','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Düzce','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkari','Hatay','Iğdır','Isparta','İstanbul','İzmir','Kahramanmaraş','Karabük','Karaman','Kars','Kastamonu','Kayseri','Kırıkkale','Kırklareli','Kırşehir','Kilis','Kocaeli','Konya','Kütahya','Malatya','Manisa','Mardin','Mersin','Muğla','Muş','Nevşehir','Niğde','Ordu','Osmaniye','Rize','Sakarya','Samsun','Siirt','Sinop','Sivas','Şanlıurfa','Şırnak','Tekirdağ','Tokat','Trabzon','Tunceli','Uşak','Van','Yalova','Yozgat','Zonguldak'];
 
-const TESTIMONIALS=[
-  {name:'Ahmet K.',city:'İstanbul',rating:5,date:'12 Ocak 2026',module:'Araç Değer Kaybı',text:'2023 model Golfüm kaza yaptı, sandım değer kaybı alamam. Müvekkil Bilgi sayesinde 87.000 TL değer kaybı tazminatı aldım! Sigorta şirketinin ilk teklifi sadece 12.000 TL\'ydi. Profesyonel destekle 7 kat fazla aldım.',avatar:'A'},
-  {name:'Fatma S.',city:'Ankara',rating:5,date:'8 Ocak 2026',module:'İşçilik Tazminatı',text:'11 yıllık çalıştığım işyerinden haksız yere çıkarıldım. Müvekkil Bilgi hesaplamasıyla kıdem + ihbar + izin hesabımı yaptım, avukatımla birlikte toplam 285.000 TL tazminat kazandım. Çok teşekkürler!',avatar:'F'},
-  {name:'Mehmet Y.',city:'İzmir',rating:5,date:'3 Ocak 2026',module:'İş Kazası Tazminatı',text:'İş kazası sonucu elimin 3 parmağı kırıldı. SGK\'dan aldığım reddedildi, Müvekkil Bilgi sayesinde işverene karşı dava açtım ve 450.000 TL tazminat kazandım. Hesaplama aracı gerçekten doğru çıkıyor!',avatar:'M'},
-  {name:'Elif D.',city:'Bursa',rating:5,date:'28 Aralık 2025',module:'Destekten Yoksun',text:'Eşim trafik kazasında vefat etti. En zor zamanda Müvekkil Bilgi\'nun hesaplama aracı ve avukat yönlendirmesi sayesinde 1.2M TL destekten yoksun kalma tazminatı aldım. Allah razı olsun.',avatar:'E'},
-  {name:'Hasan B.',city:'Antalya',rating:5,date:'20 Aralık 2025',module:'Manevi Tazminat',text:'Hastaneden kaynaklı bir hata sonucu 6 ay tedavi gördüm. Müvekkil Bilgi\'nun yardımıyla 180.000 TL manevi tazminat talebinde bulundum ve kazandım. Bu site gerçekten işe yarıyor!',avatar:'H'},
-  {name:'Zeynep A.',city:'Konya',rating:4,date:'15 Aralık 2025',module:'Tüketici Hakları',text:'Aldığım telefon arızalı çıktı, firmaya iade etmek istedim reddettiler. Müvekkil Bilgi sayesinde tüketici mahkemesine başvurdum ve hem bedelini hem de manevi tazminatı aldım. Harika bir platform!',avatar:'Z'},
-  {name:'Ali R.',city:'Trabzon',rating:5,date:'10 Aralık 2025',module:'Kasko Hasarı',text:'Kasko sigortam hasarımı tam karşılamadı. Müvekkil Bilgi\'nun hesaplamasıyla sigortaya itiraz ettim, eksper yeniden geldi ve 62.000 TL fazladan ödeme aldım. Kesinlikle kullanın!',avatar:'A'},
-  {name:'Selin T.',city:'Eskişehir',rating:5,date:'5 Aralık 2025',module:'Nafaka',text:'Boşanma sürecimde nafaka hesabımı Müvekkil Bilgi ile yaptım. Hakimin bana verdiği nafaka, hesaplamayla birebir aynı çıktı! 3 çocuk için aylık 18.500 TL nafaka aldım. Çocuklarımın hakkıydı.',avatar:'S'},
-  {name:'Emre K.',city:'Gaziantep',rating:5,date:'1 Aralık 2025',module:'Trafik Cezası İtiraz',text:'Haksız yere 4.000 TL trafik cezası yedim. Müvekkil Bilgi\'nun yardımıyla itiraz dilekçesi yazdım ve ceza iptal edildi! Hiçbir avukat tutmadan kendim yaptım, sayenizde.',avatar:'E'},
-  {name:'Derya M.',city:'Adana',rating:5,date:'25 Kasım 2025',module:'Maddi Hasar',text:'Kaza sonrası aracım pert oldu ama sigorta eksik ödedi. Müvekkil Bilgi\'nun maddi hasar hesaplamasıyla gerçek zararımı hesapladım ve karşı tarafa dava açtım. 320.000 TL ek tazminat aldım!',avatar:'D'}
-];
+const TESTIMONIALS=[];
 
 const MODULES = [
   // ===== TRAFİK KAZASI TAZMİNATLARI =====
@@ -593,24 +582,54 @@ function fmt2(n){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0})
 let _navLock=false;
 /* ========== SEO URL ROUTING ========== */
 const ROUTE_MAP={
-  '/deger-kaybi-hesaplama':{screen:'arac',title:'Araç Değer Kaybı Hesaplama | Müvekkil Bilgi'},
-  '/kidem-tazminati-hesaplama':{screen:'iscilik',title:'Kıdem Tazminatı Hesaplama | Müvekkil Bilgi'},
-  '/ihbar-tazminati-hesaplama':{screen:'iscilik',title:'İhbar Tazminatı Hesaplama | Müvekkil Bilgi'},
-  '/is-kazasi-tazminati':{generic:'isKazasi',title:'İş Kazası Tazminatı Hesaplama | Müvekkil Bilgi'},
-  '/arac-mahrumiyet-bedeli':{generic:'mahrumiyet',title:'Araç Mahrumiyet Bedeli Hesaplama | Müvekkil Bilgi'},
-  '/miras-payi-hesaplama':{generic:'miras',title:'Miras Payı Hesaplama | Müvekkil Bilgi'}
+  '/deger-kaybi-hesaplama':{screen:'arac',title:'Araç Değer Kaybı Hesaplama | Müvekkil Bilgi',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle ücretsiz hesaplayın.'},
+  '/kidem-tazminati-hesaplama':{screen:'iscilik',title:'Kıdem Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı saniyeler içinde ücretsiz hesaplayın.'},
+  '/ihbar-tazminati-hesaplama':{screen:'iscilik',title:'İhbar Tazminatı Hesaplama | Müvekkil Bilgi',desc:'İhbar süresi ve ihbar tazminatı tutarınızı İş Kanunu\'na uygun şekilde ücretsiz hesaplayın.'},
+  '/is-kazasi-tazminati':{generic:'isKazasi',title:'İş Kazası Tazminatı Hesaplama | Müvekkil Bilgi',desc:'İş kazası sonucu hak ettiğiniz tazminatı SGK ve işveren sorumluluğu dahil ücretsiz hesaplayın.'},
+  '/arac-mahrumiyet-bedeli':{generic:'mahrumiyet',title:'Araç Mahrumiyet Bedeli Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini günlük kira rakamlarına göre hesaplayın.'},
+  '/miras-payi-hesaplama':{generic:'miras',title:'Miras Payı Hesaplama | Müvekkil Bilgi',desc:'Türk Medeni Kanunu\'na göre yasal mirasçıların miras paylarını ücretsiz hesaplayın.'},
+  '/kusur-orani-tespiti':{screen:'kusur',title:'Trafik Kazası Kusur Oranı Tespiti | Müvekkil Bilgi',desc:'Kazanızı anlatın, yapay zeka kusur oranınızı ve hangi tazminat haklarına sahip olduğunuzu belirlesin.'},
+  '/hakli-fesih-kidem-tazminati-testi':{screen:'fesih',title:'Haklı Fesih ve Kıdem Tazminatı Testi | Müvekkil Bilgi',desc:'İş Kanunu madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile test edin.'},
+  '/ise-iade-davasi-sartlari':{screen:'iseIade',title:'İşe İade Davası Şartları | Müvekkil Bilgi',desc:'İşten çıkarıldıysanız işe iade davası açma şartlarını taşıyıp taşımadığınızı ücretsiz öğrenin.'},
+  '/arac-hasar-bedeli-hesaplama':{generic:'hasar',title:'Araç Hasar Bedeli Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası araç onarım bedelinizi yedek parça ve işçilik maliyetleri dahil hesaplayın.'},
+  '/pert-arac-bedeli-hesaplama':{generic:'pertBedeli',title:'Pert Araç Bedeli Hesaplama | Müvekkil Bilgi',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan pert araçlarda sigortadan alacağınız bedeli hesaplayın.'},
+  '/surekli-sakatlik-tazminati-hesaplama':{generic:'sakatlik',title:'Sürekli Sakatlık Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası sürekli sakatlık oranınıza göre tazminatınızı ücretsiz hesaplayın.'},
+  '/destekten-yoksun-kalma-tazminati':{generic:'yoksun',title:'Destekten Yoksun Kalma Tazminatı | Müvekkil Bilgi',desc:'Trafik kazasında vefat eden yakınınızın desteğinden yoksun kalma tazminatınızı hesaplayın.'},
+  '/maddi-tazminat-hesaplama':{generic:'maddi',title:'Maddi Tazminat Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası maddi zararlarınızı kapsamlı ve detaylı şekilde ücretsiz hesaplayın.'},
+  '/kasko-hasar-tazminati-hesaplama':{generic:'kasko',title:'Kasko Hasar Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.'},
+  '/manevi-tazminat-hesaplama':{generic:'manevi',title:'Manevi Tazminat Hesaplama | Müvekkil Bilgi',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi ücretsiz hesaplayın.'},
+  '/gecici-is-goremezlik-hesaplama':{generic:'gecici',title:'Geçici İş Göremezlik Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.'},
+  '/kalici-is-goremezlik-hesaplama':{generic:'kalici',title:'Kalıcı İş Göremezlik Hesaplama | Müvekkil Bilgi',desc:'Kaza sonrası kalıcı iş göremezlik oranınıza göre tazminatınızı hesaplayın.'},
+  '/trafik-cezasi-itiraz-hesaplama':{generic:'trafikCezasi',title:'Trafik Cezası İtiraz Hesaplama | Müvekkil Bilgi',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplamasını yapın.'},
+  '/ise-iade-tazminati-hesaplama':{generic:'iseIadeTazminat',title:'İşe İade Tazminatı Hesaplama | Müvekkil Bilgi',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve tazminatı hesaplayın.'},
+  '/is-gucu-kaybi-hesaplama':{generic:'isgucu',title:'İş Gücü Kaybı Hesaplama | Müvekkil Bilgi',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını ücretsiz hesaplayın.'},
+  '/bakiye-sure-ucreti-tazminati':{generic:'bakiyeSure',title:'Bakiye Süre Ücreti Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Belirli süreli iş sözleşmeniz süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.'},
+  '/bosanma-tazminati-mal-paylasimi':{generic:'bosanma',title:'Boşanma Tazminatı ve Mal Paylaşımı | Müvekkil Bilgi',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.'},
+  '/kamulastirmasiz-el-atma-tazminati':{generic:'kamulastirma',title:'Kamulaştırmasız El Atma Tazminatı | Müvekkil Bilgi',desc:'Kamulaştırmasız el atma durumunda taşınmaz bedeli ve tazminat hesaplaması yapın.'},
+  '/nafaka-hesaplama':{generic:'nafaka',title:'Nafaka Hesaplama | Müvekkil Bilgi',desc:'Boşanma davalarında iştirak ve yoksulluk nafakası hesaplamasını ücretsiz yapın.'},
+  '/tuketici-haklari-tazminati':{generic:'tuketici',title:'Tüketici Hakları Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.'},
+  '/tapu-harci-hesaplama':{generic:'tapu',title:'Tapu Harcı ve Vergi Hesaplama | Müvekkil Bilgi',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.'}
 };
-const SCREEN_TO_PATH={arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama'};
-const GENERIC_TO_PATH={isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama'};
-function updateRouteUrl(path,title){
-  if(!path||window.location.pathname===path)return;
-  try{history.pushState({},'',path);if(title)document.title=title;}catch(e){}
+const SCREEN_TO_PATH={arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
+const GENERIC_TO_PATH={isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama',hasar:'/arac-hasar-bedeli-hesaplama',pertBedeli:'/pert-arac-bedeli-hesaplama',sakatlik:'/surekli-sakatlik-tazminati-hesaplama',yoksun:'/destekten-yoksun-kalma-tazminati',maddi:'/maddi-tazminat-hesaplama',kasko:'/kasko-hasar-tazminati-hesaplama',manevi:'/manevi-tazminat-hesaplama',gecici:'/gecici-is-goremezlik-hesaplama',kalici:'/kalici-is-goremezlik-hesaplama',trafikCezasi:'/trafik-cezasi-itiraz-hesaplama',iseIadeTazminat:'/ise-iade-tazminati-hesaplama',isgucu:'/is-gucu-kaybi-hesaplama',bakiyeSure:'/bakiye-sure-ucreti-tazminati',bosanma:'/bosanma-tazminati-mal-paylasimi',kamulastirma:'/kamulastirmasiz-el-atma-tazminati',nafaka:'/nafaka-hesaplama',tuketici:'/tuketici-haklari-tazminati',tapu:'/tapu-harci-hesaplama'};
+function setMetaDesc(desc){
+  if(!desc)return;
+  const el=document.querySelector('meta[name="description"]');
+  if(el)el.setAttribute('content',desc);
+}
+function updateRouteUrl(path,title,desc){
+  if(!path)return;
+  if(title)document.title=title;
+  if(desc)setMetaDesc(desc);
+  if(window.location.pathname===path)return;
+  try{history.pushState({},'',path);}catch(e){}
 }
 function handleInitialRoute(){
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
   const route=ROUTE_MAP[path];
   if(route){
     if(route.title)document.title=route.title;
+    if(route.desc)setMetaDesc(route.desc);
     if(route.screen)navigate(route.screen);
     else if(route.generic)openGenericCalc(route.generic);
     return;
@@ -620,7 +639,7 @@ function handleInitialRoute(){
 window.addEventListener('popstate',()=>{
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
   const route=ROUTE_MAP[path];
-  if(route){if(route.title)document.title=route.title;if(route.screen)navigate(route.screen);else if(route.generic)openGenericCalc(route.generic);}
+  if(route){if(route.title)document.title=route.title;if(route.desc)setMetaDesc(route.desc);if(route.screen)navigate(route.screen);else if(route.generic)openGenericCalc(route.generic);}
   else navigate('home');
 });
 
@@ -651,8 +670,8 @@ function navigate(screen){
     setTimeout(()=>{PREV.style.display='none';PREV.style.opacity='';PREV.style.transform='';PREV.style.filter='';PREV.style.transition='';animIn(NEXT);},D*.75);
   }else animIn(NEXT);
   state.screen=screen;const back=document.getElementById('headerBack'),nav=document.getElementById('homeNav');
-  if(screen==='home'){back.style.display='none';if(nav)nav.style.display='';updateRouteUrl('/','Müvekkil Bilgi – Tazminat Hesaplama Platformu');}
-  else{back.style.display='flex';if(nav)nav.style.display='none';if(SCREEN_TO_PATH[screen])updateRouteUrl(SCREEN_TO_PATH[screen],(ROUTE_MAP[SCREEN_TO_PATH[screen]]||{}).title);}
+  if(screen==='home'){back.style.display='none';if(nav)nav.style.display='';updateRouteUrl('/','Müvekkil Bilgi – Tazminat Hesaplama Platformu','Trafik kazası araç değer kaybı, işçilik, hasar bedeli, iş gücü kaybı, sakatlık ve tazminat hesaplamalarınızı yasal mevzuata uygun, ücretsiz hesaplayın.');}
+  else{back.style.display='flex';if(nav)nav.style.display='none';if(SCREEN_TO_PATH[screen]){const r=ROUTE_MAP[SCREEN_TO_PATH[screen]]||{};updateRouteUrl(SCREEN_TO_PATH[screen],r.title,r.desc);}}
   window.scrollTo({top:0});if(screen==='blog')renderBlogPage();if(screen==='kusur'){setTimeout(renderKusurParties,50);}
   setTimeout(()=>{_navLock=false;},D+200);
 }
@@ -721,6 +740,53 @@ function calculateDegerKaybi(params){
   minR=Math.max(500,Math.min(minR,maxPossibleLoss));
   maxR=Math.max(minR+500,Math.min(maxR,maxPossibleLoss));
   return{min:minR,max:maxR,vehicleAge,km_f,age_f,overlap,paintSum,replaceSum,faultF};
+}
+
+const PERSONA_CONTENT={
+  vatandas:{
+    badge:'Ücretsiz &amp; Anlık Hesaplama',
+    title:'Haklarınızı Öğrenin,<br/><span class="gradient-text">Tazminatınızı Alın</span>',
+    subtitle:'Trafik kazası sonrası değer kaybınızı, işçilik alacaklarınızı veya farklı tazminat türlerini Türk hukuku mevzuatına uygun olarak saniyeler içinde hesaplayın.',
+    cta:''
+  },
+  avukat:{
+    badge:'Meslektaşlar İçin Hızlı Ön Hesaplama',
+    title:'Dosyanızı Hızlandırın,<br/><span class="gradient-text">Zaman Kazanın</span>',
+    subtitle:'Müvekkilleriniz için değer kaybı, işçilik ve diğer tazminat kalemlerini saniyeler içinde hesaplayın; emsal Yargıtay kararlarıyla destekleyin.',
+    cta:'<button type="button" class="btn-persona-secondary" onclick="openEmsalModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Emsal Karar Ara</button>'
+  },
+  botlar:{
+    badge:'Tüm Hesaplama Araçları',
+    title:'Hesaplama Botlarına<br/><span class="gradient-text">Hoş Geldiniz</span>',
+    subtitle:'Aşağıdaki listeden ihtiyacınız olan hesaplama modülünü seçin, saniyeler içinde sonucu görün.',
+    cta:''
+  }
+};
+function setPersona(p){
+  if(!PERSONA_CONTENT[p])return;
+  try{localStorage.setItem('muvekkilbilgi_persona',p);}catch(e){}
+  document.querySelectorAll('.persona-tab').forEach(btn=>{btn.classList.toggle('active',btn.dataset.persona===p);});
+  const c=PERSONA_CONTENT[p];
+  const badgeEl=document.getElementById('heroBadgeText'),titleEl=document.getElementById('heroTitle'),subEl=document.getElementById('heroSubtitle'),ctaEl=document.getElementById('heroPersonaCta');
+  if(badgeEl)badgeEl.innerHTML=c.badge;
+  if(titleEl)titleEl.innerHTML=c.title;
+  if(subEl)subEl.textContent=c.subtitle;
+  if(ctaEl){if(c.cta){ctaEl.innerHTML=c.cta;ctaEl.style.display='block';}else{ctaEl.style.display='none';ctaEl.innerHTML='';}}
+  if(p==='botlar'){
+    setTimeout(()=>{const el=document.getElementById('modules');if(el)scrollToResult(el);},150);
+  }
+}
+function initPersona(){
+  let p='vatandas';
+  try{p=localStorage.getItem('muvekkilbilgi_persona')||'vatandas';}catch(e){}
+  if(!PERSONA_CONTENT[p])p='vatandas';
+  document.querySelectorAll('.persona-tab').forEach(btn=>{btn.classList.toggle('active',btn.dataset.persona===p);});
+  const c=PERSONA_CONTENT[p];
+  const badgeEl=document.getElementById('heroBadgeText'),titleEl=document.getElementById('heroTitle'),subEl=document.getElementById('heroSubtitle'),ctaEl=document.getElementById('heroPersonaCta');
+  if(badgeEl)badgeEl.innerHTML=c.badge;
+  if(titleEl)titleEl.innerHTML=c.title;
+  if(subEl)subEl.textContent=c.subtitle;
+  if(ctaEl&&c.cta){ctaEl.innerHTML=c.cta;ctaEl.style.display='block';}
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -953,7 +1019,7 @@ function hideLoadingOverlay(ov){if(ov&&ov.parentNode){ov.remove();_loadingOverla
 /* ======================================================
    GROQ AI — 4 Aşamalı Uzman Sistem (Değer Kaybı Motoru)
    ====================================================== */
-const AI_MODEL='llama-3.3-70b-versatile';
+const AI_MODEL='openai/gpt-oss-120b';
 const AI_CACHE_KEY='muvekkilbilgi_ai_cache_v2';
 
 function getAiCacheKey(p){
@@ -1687,7 +1753,7 @@ Kusur oranları toplamı 100 olmalıdır. Her bir araç için KTK madde numaras�
   const res=await groqFetch('/api/ai/calculate',[
     {role:'system',content:'Sen Türkiye trafik kazalarında kusur tespiti konusunda uzman bilirkişisin. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
-    {model:'llama-3.3-70b-versatile',temp:0.2,tokens:3800,responseFormat:true,timeout:35000});
+    {model:'openai/gpt-oss-120b',temp:0.2,tokens:3800,responseFormat:true,timeout:35000});
   if(!res.ok){
     let msg='AI servisi şu anda yanıt vermiyor. Lütfen birkaç dakika sonra tekrar deneyin.';
     try{const ej=await res.json();if(ej?.error)msg=ej.error;}catch(_){}
@@ -1853,7 +1919,7 @@ Yanıtı SADECE şu JSON formatında ver:
   const res=await groqFetch('/api/ai/calculate',[
     {role:'system',content:'Sen Türkiye iş hukukunda uzman bir avukatsın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
-    {model:'llama-3.3-70b-versatile',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
+    {model:'openai/gpt-oss-120b',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
   if(!res.ok){
     let msg='AI servisi şu anda yanıt vermiyor. Lütfen birkaç dakika sonra tekrar deneyin.';
     try{const ej=await res.json();if(ej?.error)msg=ej.error;}catch(_){}
@@ -1959,7 +2025,7 @@ Yanıtı SADECE şu JSON formatında ver:
   const res=await groqFetch('/api/ai/calculate',[
     {role:'system',content:'Sen Türkiye iş hukukunda işe iade davası konusunda uzman bir avukatsın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
-    {model:'llama-3.3-70b-versatile',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
+    {model:'openai/gpt-oss-120b',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
   if(!res.ok){
     let msg='AI servisi şu anda yanıt vermiyor. Lütfen birkaç dakika sonra tekrar deneyin.';
     try{const ej=await res.json();if(ej?.error)msg=ej.error;}catch(_){}
@@ -2335,7 +2401,7 @@ function openGenericCalc(mid){
   fc.innerHTML=h;
   document.getElementById('genericResultPanel').style.display='none';
   navigate('generic');
-  if(GENERIC_TO_PATH[mid])updateRouteUrl(GENERIC_TO_PATH[mid],(ROUTE_MAP[GENERIC_TO_PATH[mid]]||{}).title);
+  if(GENERIC_TO_PATH[mid]){const r=ROUTE_MAP[GENERIC_TO_PATH[mid]]||{};updateRouteUrl(GENERIC_TO_PATH[mid],r.title,r.desc);}
   setTimeout(()=>document.querySelector('#screen-generic .iscilik-section').scrollIntoView({behavior:'smooth'}),100);
   if(cfg.vehiclePicker){
     const prefix='gv'+mid;
@@ -2378,7 +2444,7 @@ async function estimateMahrumiyetGunlukKira(){
     const res=await groqFetch('/api/ai/calculate',[
       {role:'system',content:'Sen Türkiye araç kiralama piyasası konusunda uzmansın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
       {role:'user',content:prompt}],
-      {model:'llama-3.3-70b-versatile',temp:0.25,tokens:150,responseFormat:true,timeout:12000});
+      {model:'openai/gpt-oss-120b',temp:0.25,tokens:150,responseFormat:true,timeout:12000});
     if(!res.ok)return;
     const data=await res.json();
     const txt=data.choices?.[0]?.message?.content||'{}';
@@ -2399,7 +2465,7 @@ async function estimatePertHurda(){
     const res=await groqFetch('/api/ai/calculate',[
       {role:'system',content:'Sen Türkiye sigorta eksperliği konusunda uzmansın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
       {role:'user',content:prompt}],
-      {model:'llama-3.3-70b-versatile',temp:0.25,tokens:250,responseFormat:true,timeout:20000});
+      {model:'openai/gpt-oss-120b',temp:0.25,tokens:250,responseFormat:true,timeout:20000});
     if(!res.ok){
       let msg='AI servisi şu anda yanıt vermiyor.';
       try{const ej=await res.json();if(ej?.error)msg=ej.error;}catch(_){}
@@ -2531,6 +2597,127 @@ function printReport(title,rows,resultLine){
   el.innerHTML=`<div class="pr-badge">${title}</div><h1>Müvekkil Bilgi Hesaplama Raporu</h1><p class="pr-sub">Oluşturma: ${new Date().toLocaleString('tr-TR')}</p><table class="pr-table">${rows.map(r=>`<tr><td>${r.label}</td><td>${r.value}</td></tr>`).join('')}</table>${docHtml}<p class="pr-total"><strong>Sonuç:</strong> ${resultLine}</p><p class="pr-footer">Bu rapor tahmini niteliktedir, kesin sonuç değildir. Gerçek tutarınızı öğrenmek için ön inceleme talep edin. · Müvekkil Bilgi</p>`;
   setTimeout(()=>{window.print();},200);
 }
+let _cmpUid=0;
+const _cmpState={};
+function renderCompareWidget(minVal,maxVal){
+  const uid=String(++_cmpUid);
+  const mn=Math.round(minVal||0),mx=Math.round(maxVal||minVal||0);
+  _cmpState[uid]={mn,mx};
+  return `<div class="compare-widget" id="cmpWrap_${uid}">
+    <div class="compare-widget-head">
+      <span class="compare-widget-icon">⚖️</span>
+      <div class="compare-widget-headtext"><strong>Karşı taraftan bir teklif aldınız mı?</strong><small>Aldığınız teklifi girin, saniyeler içinde karşılaştıralım</small></div>
+    </div>
+    <div class="compare-widget-row">
+      <div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="cmpInput_${uid}" placeholder="Örn: 15000" min="0" onkeydown="if(event.key==='Enter'){event.preventDefault();runCompareWidget('${uid}');}"/></div>
+      <button type="button" class="btn-next cmp-run-btn" onclick="runCompareWidget('${uid}')"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Karşılaştır</button>
+    </div>
+    <div class="compare-widget-result" id="cmpResult_${uid}" style="display:none"></div>
+  </div>`;
+}
+function _cmpCountUp(el,to,duration,suffix){
+  const startTime=performance.now();
+  function step(now){
+    const p=Math.min(1,(now-startTime)/duration);
+    const eased=1-Math.pow(1-p,3);
+    el.textContent=fmt2(to*eased)+(suffix||'');
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function _cmpBurstConfetti(container){
+  const colors=['#C5A880','#E2C992','#8B6914','#22c55e','#8B5CF6'];
+  for(let i=0;i<32;i++){
+    const p=document.createElement('span');
+    p.className='confetti-piece';
+    p.style.left=(40+Math.random()*20)+'%';
+    p.style.top=(Math.random()*20)+'%';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    const dx=Math.round((Math.random()-0.5)*320),dy=Math.round(-(90+Math.random()*170)),rot=Math.round((Math.random()-0.5)*720);
+    p.style.setProperty('--dx',dx+'px');
+    p.style.setProperty('--dy',dy+'px');
+    p.style.setProperty('--rot',rot+'deg');
+    p.style.animationDelay=(Math.random()*0.12)+'s';
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),1700);
+  }
+}
+function runCompareWidget(uid){
+  const st=_cmpState[uid];if(!st)return;
+  const {mn:minVal,mx:maxVal}=st;
+  const input=document.getElementById('cmpInput_'+uid),resEl=document.getElementById('cmpResult_'+uid);
+  if(!input||!resEl)return;
+  const offer=parseFloat(input.value);
+  if(!offer||offer<=0){resEl.style.display='block';resEl.className='compare-widget-result compare-result-warn';resEl.innerHTML='Lütfen geçerli bir tutar girin.';return;}
+  const ours=offer<minVal?minVal:(offer>maxVal?maxVal:maxVal);
+  const diff=Math.max(0,ours-offer);
+  const pct=offer>0?Math.round((diff/offer)*100):0;
+  const scaleMax=Math.max(maxVal*1.35,offer*1.2,minVal*1.6,100);
+  const markerPct=Math.max(2,Math.min(98,(offer/scaleMax)*100));
+  const zoneMinPct=Math.min(96,(minVal/scaleMax)*100),zoneMaxPct=Math.min(98,(maxVal/scaleMax)*100);
+  let verdictClass,verdictIcon,verdictTitle,verdictText,waMsg;
+  if(offer<minVal){
+    verdictClass='compare-result-bad';verdictIcon='🚨';verdictTitle='Bu teklif oldukça düşük!';
+    verdictText=`Hesapladığımız en düşük tutarın (${fmt2(minVal)} TL) bile altında bir teklif almışsınız. İmzalamadan önce kesinlikle itiraz edin.`;
+    waMsg=`Merhaba, sigorta/karşı taraf bana ${fmt2(offer)} TL teklif etti ama Müvekkil Bilgi'nin hesapladığı tutar ${fmt2(minVal)}-${fmt2(maxVal)} TL aralığında. Bu farkı değerlendirmenizi istiyorum.`;
+  }else if(offer<=maxVal){
+    verdictClass='compare-result-mid';verdictIcon='⚠️';verdictTitle='Teklif aralıkta ama düşük tarafta';
+    verdictText=`Teklifiniz hesapladığımız aralık içinde, ama üst sınıra göre hâlâ ${fmt2(maxVal-offer)} TL daha fazlasını talep edebilirsiniz.`;
+    waMsg=`Merhaba, sigorta/karşı taraf bana ${fmt2(offer)} TL teklif etti, Müvekkil Bilgi hesabıma göre üst sınır ${fmt2(maxVal)} TL. Aradaki farkı nasıl talep edebilirim?`;
+  }else{
+    verdictClass='compare-result-good';verdictIcon='✅';verdictTitle='Bu teklif gayet iyi görünüyor';
+    verdictText=`Aldığınız teklif, hesapladığımız aralığın (${fmt2(minVal)}-${fmt2(maxVal)} TL) üzerinde. Yine de imzalamadan önce bir göz atmamızı isterseniz buradayız.`;
+    waMsg=`Merhaba, sigorta/karşı taraf bana ${fmt2(offer)} TL teklif etti, bunun makul olup olmadığını Müvekkil Bilgi ile teyit etmek istiyorum.`;
+  }
+  resEl.style.display='block';
+  resEl.className='compare-widget-result '+verdictClass;
+  resEl.innerHTML=`
+    <div class="cmp-reveal">
+      <div class="cmp-stats">
+        <div class="cmp-stat cmp-stat-offer"><span class="cmp-stat-label">Aldığınız Teklif</span><span class="cmp-stat-val" id="cmpOfferVal_${uid}">0 TL</span></div>
+        <div class="cmp-stat-vs">VS</div>
+        <div class="cmp-stat cmp-stat-ours"><span class="cmp-stat-label">Müvekkil Bilgi Hesabı</span><span class="cmp-stat-val" id="cmpOursVal_${uid}">0 TL</span></div>
+      </div>
+      <div class="cmp-gauge">
+        <div class="cmp-gauge-track">
+          <div class="cmp-gauge-zone cmp-zone-bad" style="width:${zoneMinPct}%"></div>
+          <div class="cmp-gauge-zone cmp-zone-mid" style="width:${Math.max(0,zoneMaxPct-zoneMinPct)}%"></div>
+          <div class="cmp-gauge-zone cmp-zone-good" style="width:${Math.max(0,100-zoneMaxPct)}%"></div>
+          <div class="cmp-gauge-marker" id="cmpMarker_${uid}" style="left:0%"><span>Teklifiniz</span></div>
+        </div>
+        <div class="cmp-gauge-labels"><span>Düşük</span><span>Makul Aralık</span><span>İyi</span></div>
+      </div>
+      ${diff>0?`<div class="cmp-diff-callout"><div class="cmp-diff-icon">${verdictIcon}</div><div><div class="cmp-diff-num"><span id="cmpDiffVal_${uid}">0 TL</span> daha fazlasını isteyebilirsiniz</div><div class="cmp-diff-pct">Teklifinizden <strong>%<span id="cmpPctVal_${uid}">0</span> daha fazla</strong></div></div></div>`:''}
+      <div class="cmp-verdict"><strong>${verdictIcon} ${verdictTitle}</strong><p>${verdictText}</p></div>
+      <div class="cmp-actions">
+        <a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="${whatsappLink(waMsg)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Bu Farkı WhatsApp'tan Değerlendirelim</a>
+        <button type="button" class="btn-back cmp-download-btn" onclick="downloadCompareCard('${uid}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14" stroke-linecap="round" stroke-linejoin="round"/></svg> Karşılaştırmayı Görsel Olarak İndir</button>
+      </div>
+    </div>`;
+  const offerEl=document.getElementById('cmpOfferVal_'+uid),oursEl=document.getElementById('cmpOursVal_'+uid),markerEl=document.getElementById('cmpMarker_'+uid),diffEl=document.getElementById('cmpDiffVal_'+uid),pctEl=document.getElementById('cmpPctVal_'+uid);
+  if(offerEl)_cmpCountUp(offerEl,offer,800,' TL');
+  if(oursEl)_cmpCountUp(oursEl,ours,1000,' TL');
+  if(diffEl)_cmpCountUp(diffEl,diff,1200,' TL');
+  if(pctEl){
+    const pStart=performance.now();
+    (function stepPct(now){const p=Math.min(1,(now-pStart)/1200),eased=1-Math.pow(1-p,3);pctEl.textContent=Math.round(pct*eased);if(p<1)requestAnimationFrame(stepPct);})(pStart);
+  }
+  if(markerEl)setTimeout(()=>{markerEl.style.left=markerPct+'%';},60);
+  if(diff>0){const revealEl=resEl.querySelector('.cmp-reveal');if(revealEl)setTimeout(()=>_cmpBurstConfetti(revealEl),350);}
+}
+function downloadCompareCard(uid){
+  const el=document.getElementById('cmpWrap_'+uid);
+  if(!el||typeof html2canvas==='undefined')return;
+  const btn=el.querySelector('.cmp-download-btn');
+  if(btn){btn.disabled=true;btn.textContent='Hazırlanıyor...';}
+  html2canvas(el,{scale:2,useCORS:true,backgroundColor:(getComputedStyle(document.documentElement).getPropertyValue('--bg-card')||'#181818').trim(),logging:false}).then(canvas=>{
+    const link=document.createElement('a');
+    link.download='muvekkil-bilgi-karsilastirma.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    if(btn){btn.disabled=false;btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14" stroke-linecap="round" stroke-linejoin="round"/></svg> Karşılaştırmayı Görsel Olarak İndir';}
+  }).catch(()=>{if(btn){btn.disabled=false;btn.textContent='İndirilemedi, tekrar deneyin';}});
+}
 function renderOnIncelemeBanner(msg){
   const href='https://wa.me/'+WHATSAPP_NUM+'?text='+encodeURIComponent(msg||'Merhaba, Müvekkil Bilgi üzerinden bir hesaplama yaptım. Sonuçlarımı değerlendirmenizi ve hukuki süreç hakkında bilgi almak istiyorum.');
   return `<div class="on-inceleme-banner" style="margin:16px 0;padding:16px 18px;background:linear-gradient(135deg,rgba(37,211,102,0.1),rgba(197,168,128,0.08));border:1px solid rgba(37,211,102,0.25);border-radius:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -2620,7 +2807,7 @@ function showAracResult(){
   if(relBox){const existing=relBox.parentNode.querySelector('.related-tools-box');if(existing)existing.remove();const wrap=document.createElement('div');wrap.innerHTML=renderRelatedToolsBox('arac');relBox.parentNode.insertBefore(wrap,relBox.nextSibling);}
   const resCard=document.querySelector('#screen-arac .result-card');
   const aracWaMsg='Merhaba, Müvekkil Bilgi üzerinden araç değer kaybı hesaplaması yaptım. Tahmini değer kaybım: '+fmt2(r.min)+' - '+fmt2(r.max)+' TL. Benimle iletişime geçebilir misiniz?';
-  if(relBox){const existingB=relBox.parentNode.querySelector('.on-inceleme-banner');if(existingB)existingB.remove();const bwrap=document.createElement('div');bwrap.innerHTML=renderOnIncelemeBanner(aracWaMsg);relBox.parentNode.insertBefore(bwrap.firstElementChild,relBox.nextSibling);}
+  if(relBox){const existingB=relBox.parentNode.querySelector('.on-inceleme-banner');if(existingB)existingB.remove();const bwrap=document.createElement('div');bwrap.innerHTML=renderOnIncelemeBanner(aracWaMsg);const bannerEl=bwrap.firstElementChild;relBox.parentNode.insertBefore(bannerEl,relBox.nextSibling);const existingCmp=relBox.parentNode.querySelector('.compare-widget');if(existingCmp)existingCmp.remove();const cwrap=document.createElement('div');cwrap.innerHTML=renderCompareWidget(r.min,r.max);relBox.parentNode.insertBefore(cwrap.firstElementChild,bannerEl);}
   if(resCard){
     const existingPert=resCard.parentNode.querySelector('.pert-warning-banner');if(existingPert)existingPert.remove();
     const tv=state.tramerValue||0,mv=state.autoMarketValue||0;
@@ -2657,7 +2844,7 @@ function showIscResult(){
   if(ai&&ai.ai){aiHtml=`<div class="ai-insights" style="display:block;margin-top:16px"><div class="ai-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="#C5A880" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="#C5A880" stroke-width="1.5" fill="none"/></svg><span>AI Uzman Analizi</span><span class="ai-guyen">%${ai.guven||70} güven</span></div><div class="ai-body"><div class="ai-col"><div class="ai-col-label">Değerlendirme</div><div class="ai-col-val">${ai.degerlendirme||''}</div></div><div class="ai-col"><div class="ai-col-label">Hukuki Analiz</div><div class="ai-col-val">${ai.hukuk||''}</div></div>${ai.oneri?`<div class="ai-oneri">💡 ${ai.oneri}</div>`:''}</div></div>`;}
   const p=document.getElementById('iscResultPanel');
   const iscMsg='Merhaba, Müvekkil Bilgi üzerinden işçilik tazminatı hesaplaması yaptım. Tahmini alacağım: '+f(r.toplamNet)+' TL. '+(r.reason==='justified'||r.reason==='employer'?'Haklı fesih sebebim var, benimle iletişime geçebilir misiniz?':'Benimle iletişime geçebilir misiniz?');
-  p.innerHTML=`<div class="isc-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${rl[r.reason]||''} · ${Math.floor(r.totalYears)} yıl ${Math.round((r.totalYears%1)*12)} ay</p></div></div><div class="isc-total-block"><div class="isc-total-label">Toplam Tahmini İşçilik Alacağı</div><div class="isc-total-amount">${f(r.toplamNet)} TL</div><div class="isc-total-note">Net tutar</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Net Tutar</span></div>${rows.map(row=>row.v?`<div class="isc-breakdown-row"><span>${row.label}</span><span class="isc-amount">${f(row.val)} TL</span></div>`:'').join('')}${rows.every(r=>!r.v)?'<div class="isc-no-result">Girilen bilgilere göre alacak hesaplanamadı.</div>':''}</div><div class="isc-salary-info"><div class="isc-salary-row"><span>Net Maaş</span><span>${f(r.netSalary)} TL</span></div><div class="isc-salary-row"><span>Brüt Maaş</span><span>${f(r.brutMaas)} TL</span></div><div class="isc-salary-row"><span>Giydirilmiş Brüt</span><span>${f(r.giydirilmisBrut)} TL</span></div></div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir.</p></div>${renderOnIncelemeBanner(iscMsg)}${renderRelatedToolsBox('iscilik')}<div class="form-actions result-actions" id="iscResultActions" style="margin-top:16px"><button class="btn-back" onclick="resetIscilik()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 12a8 8 0 1 0 2-5.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 7v5H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Yeni Hesaplama</button></div></div>`;
+  p.innerHTML=`<div class="isc-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${rl[r.reason]||''} · ${Math.floor(r.totalYears)} yıl ${Math.round((r.totalYears%1)*12)} ay</p></div></div><div class="isc-total-block"><div class="isc-total-label">Toplam Tahmini İşçilik Alacağı</div><div class="isc-total-amount">${f(r.toplamNet)} TL</div><div class="isc-total-note">Net tutar</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Net Tutar</span></div>${rows.map(row=>row.v?`<div class="isc-breakdown-row"><span>${row.label}</span><span class="isc-amount">${f(row.val)} TL</span></div>`:'').join('')}${rows.every(r=>!r.v)?'<div class="isc-no-result">Girilen bilgilere göre alacak hesaplanamadı.</div>':''}</div><div class="isc-salary-info"><div class="isc-salary-row"><span>Net Maaş</span><span>${f(r.netSalary)} TL</span></div><div class="isc-salary-row"><span>Brüt Maaş</span><span>${f(r.brutMaas)} TL</span></div><div class="isc-salary-row"><span>Giydirilmiş Brüt</span><span>${f(r.giydirilmisBrut)} TL</span></div></div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir.</p></div>${renderCompareWidget(r.toplamNet,r.toplamNet)}${renderOnIncelemeBanner(iscMsg)}${renderRelatedToolsBox('iscilik')}<div class="form-actions result-actions" id="iscResultActions" style="margin-top:16px"><button class="btn-back" onclick="resetIscilik()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 12a8 8 0 1 0 2-5.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 7v5H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Yeni Hesaplama</button></div></div>`;
   p.style.display='block';setTimeout(()=>scrollToResult(p),100);
   const rn=p.querySelector('.result-notice p');
   if(rn)rn.innerHTML='<strong>Önemli Uyarı:</strong> İşçilik tazminatı alabilmek için haklı fesih sebebinizin olması gerekir. İşveren tarafından haksız yere işten çıkarılma, maaş ödenmemesi, mobbing, fazla mesai ücretlerinin ödenmemesi gibi durumlar haklı fesih sebebi sayılır. <strong>Haklı fesih sebebi tespitinizi yapabilmemiz için bizimle iletişime geçin.</strong>';
@@ -2674,7 +2861,7 @@ function showGenericResult(){
   let aiHtml='';
   if(ai&&ai.ai){aiHtml=`<div class="ai-insights" style="display:block;margin-top:16px"><div class="ai-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" fill="#C5A880" opacity="0.3"/><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z" stroke="#C5A880" stroke-width="1.5" fill="none"/></svg><span>AI Uzman Analizi</span><span class="ai-guyen">%${ai.guven||70} güven</span></div><div class="ai-body"><div class="ai-col"><div class="ai-col-label">Değerlendirme</div><div class="ai-col-val">${ai.degerlendirme||''}</div></div><div class="ai-col"><div class="ai-col-label">Hukuki Analiz</div><div class="ai-col-val">${ai.hukuk||''}</div></div>${ai.oneri?`<div class="ai-oneri">💡 ${ai.oneri}</div>`:''}</div></div>`;}
   const genMsg='Merhaba, Müvekkil Bilgi üzerinden '+cfg.title+' hesaplaması yaptım. Tahmini tazminatım: '+fmt2(r.total)+' TL. Benimle iletişime geçebilir misiniz?';
-  p.innerHTML=`<div class="generic-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${cfg.title}</p></div></div><div class="isc-total-block"><div class="isc-total-label">Tahmini Tazminat</div><div class="isc-total-amount">${fmt(r.total)}</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>${r.rows.map(row=>`<div class="isc-breakdown-row"><span>${row.label}</span><span class="${row.highlight?'isc-amount':''}">${row.value}</span></div>`).join('')}</div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir, kesin sonuç değildir. Gerçek tutarınız için ön inceleme talep edin.</p></div>${renderOnIncelemeBanner(genMsg)}${renderRelatedToolsBox(mt)}<div class="form-actions" id="genericResultActions" style="margin-top:16px"><button class="btn-back" onclick="openGenericCalc('${mt}')">Yeniden Hesapla</button></div></div>`;
+  p.innerHTML=`<div class="generic-result-card"><div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama Tamamlandı</h3><p>${cfg.title}</p></div></div><div class="isc-total-block"><div class="isc-total-label">Tahmini Tazminat</div><div class="isc-total-amount">${fmt(r.total)}</div></div>${aiHtml}<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>${r.rows.map(row=>`<div class="isc-breakdown-row"><span>${row.label}</span><span class="${row.highlight?'isc-amount':''}">${row.value}</span></div>`).join('')}</div><div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu hesaplama tahmini niteliktedir, kesin sonuç değildir. Gerçek tutarınız için ön inceleme talep edin.</p></div>${renderCompareWidget(r.total,r.total)}${renderOnIncelemeBanner(genMsg)}${renderRelatedToolsBox(mt)}<div class="form-actions" id="genericResultActions" style="margin-top:16px"><button class="btn-back" onclick="openGenericCalc('${mt}')">Yeniden Hesapla</button></div></div>`;
   p.style.display='block';setTimeout(()=>scrollToResult(p),100);
   setTimeout(()=>{
     const ra=document.getElementById('genericResultActions');
@@ -2887,7 +3074,7 @@ async function sendChatMsg(){
   document.getElementById('chatSendBtn').disabled=true;
   try{
     const res=await groqFetch('/api/chat',chatHistory.slice(-20),
-      {model:'llama-3.3-70b-versatile',temp:0.8,tokens:1024,timeout:15000});
+      {model:'openai/gpt-oss-120b',temp:0.8,tokens:1024,timeout:15000});
     const data=await res.json();
     removeTyping();
     if(data.choices&&data.choices[0]){let reply=data.choices[0].message.content;appendChatMsg('bot',reply);chatHistory.push({role:'assistant',content:reply});}

@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       }
     }
     const groqBody = {
-      model: model || 'llama-3.3-70b-versatile',
+      model: model || 'openai/gpt-oss-120b',
       messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
       max_tokens: max_tokens || 2048

@@ -14,7 +14,7 @@ exports.handler = async (event) => {
       return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Invalid request format' }) };
     }
     const groqBody = {
-      model: model || 'meta-llama/llama-4-scout-17b-16e-instruct',
+      model: model || 'qwen/qwen3.6-27b',
       messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
       max_tokens: max_tokens || 1024

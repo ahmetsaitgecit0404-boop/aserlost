@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /yonetim
+Disallow: /api/
+
+Sitemap: https://muvekkilbilgi.com/sitemap.xml

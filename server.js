@@ -110,7 +110,7 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: model || 'llama-3.3-70b-versatile',
+        model: model || 'openai/gpt-oss-120b',
         messages: messages,
         temperature: typeof temperature === 'number' ? temperature : 0.8,
         max_tokens: max_tokens || 1024
@@ -120,7 +120,7 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('Groq API error:', groqRes.status, errText);
-      return res.status(502).json({ error: 'AI servisi geçici olarak kullanılamıyor' });
+      return res.status(502).json({ error: 'AI servisi hatası (' + groqRes.status + '): ' + errText.slice(0, 300) });
     }
     const data = await groqRes.json();
     res.json(data);
@@ -146,7 +146,7 @@ app.post('/api/ai/calculate', apiLimiter, async (req, res) => {
       }
     }
     const groqBody = {
-      model: model || 'llama-3.3-70b-versatile',
+      model: model || 'openai/gpt-oss-120b',
       messages: messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
       max_tokens: max_tokens || 2048
@@ -164,7 +164,7 @@ app.post('/api/ai/calculate', apiLimiter, async (req, res) => {
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('Groq API error:', groqRes.status, errText);
-      return res.status(502).json({ error: 'AI servisi geçici olarak kullanılamıyor' });
+      return res.status(502).json({ error: 'AI servisi hatası (' + groqRes.status + '): ' + errText.slice(0, 300) });
     }
     const data = await groqRes.json();
     res.json(data);
@@ -184,7 +184,7 @@ app.post('/api/ai/vision', apiLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Geçersiz istek formatı' });
     }
     const groqBody = {
-      model: model || 'meta-llama/llama-4-scout-17b-16e-instruct',
+      model: model || 'qwen/qwen3.6-27b',
       messages: messages,
       temperature: typeof temperature === 'number' ? temperature : 0.3,
       max_tokens: max_tokens || 1024
@@ -202,7 +202,7 @@ app.post('/api/ai/vision', apiLimiter, async (req, res) => {
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('Groq Vision API error:', groqRes.status, errText);
-      return res.status(502).json({ error: 'AI görsel servisi kullanılamıyor' });
+      return res.status(502).json({ error: 'AI görsel servisi hatası (' + groqRes.status + '): ' + errText.slice(0, 300) });
     }
     const data = await groqRes.json();
     res.json(data);

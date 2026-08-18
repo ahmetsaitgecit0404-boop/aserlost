@@ -8,3 +8,6 @@ Thumbs.db
 .netlify
 
 .vercel
+.env*
+deploy.zip
+selftest.log

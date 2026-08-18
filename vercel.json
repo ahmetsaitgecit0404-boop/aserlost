@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "server.js", "use": "@vercel/node", "config": { "maxDuration": 60, "includeFiles": ["index.html", "yonetim.html", "calculator.js", "style.css", "favicon.svg"] } }
+    { "src": "server.js", "use": "@vercel/node", "config": { "maxDuration": 60, "includeFiles": ["index.html", "yonetim.html", "calculator.js", "style.css", "favicon.svg", "robots.txt", "sitemap.xml"] } }
   ],
   "routes": [
     { "src": "/(.*)", "dest": "server.js" }
