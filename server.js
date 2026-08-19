@@ -281,6 +281,51 @@ app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
   res.json({ token, expiresAt: now + ADMIN_TOKEN_TTL_MS });
 });
 
+// Kayıt silme. Yıkıcı bir işlem olduğu için yalnızca leads/contacts ile sınırlı:
+// tracking ve login_attempts denetim kaydı olduğundan panelden silinemez.
+const ADMIN_DELETABLE_TABLES = ['leads', 'contacts'];
+app.delete('/api/admin/:table/:id', async (req, res) => {
+  const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!ADMIN_JWT_SECRET) {
+    return res.status(500).json({ error: 'Sunucu yapılandırması eksik (ADMIN_JWT_SECRET).' });
+  }
+  const table = req.params.table;
+  if (!ADMIN_DELETABLE_TABLES.includes(table)) {
+    return res.status(400).json({ error: 'Bu tablodan kayıt silinemez.' });
+  }
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  if (!verifyAdminToken(token, ADMIN_JWT_SECRET)) {
+    return res.status(401).json({ error: 'Yetkisiz.' });
+  }
+  // id yalnızca tamsayı olabilir; PostgREST filtresine serbest metin (örn. gt.0)
+  // geçip tüm tabloyu silmesini engeller. Yapılandırma kontrolünden ÖNCE bakılır.
+  const id = String(req.params.id || '');
+  if (!/^\d+$/.test(id)) {
+    return res.status(400).json({ error: 'Geçersiz kayıt numarası.' });
+  }
+  if (!svcKey) return res.status(500).json({ error: 'Sunucu yapılandırması eksik (SUPABASE_SERVICE_ROLE_KEY tanımlı değil).' });
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { apikey: svcKey, Authorization: `Bearer ${svcKey}`, Prefer: 'return=representation' },
+      signal: AbortSignal.timeout(15000)
+    });
+    const body = await r.text();
+    if (!r.ok) {
+      console.error('Supabase delete error:', r.status, body);
+      return res.status(502).json({ error: 'Kayıt silinemedi (' + r.status + '): ' + body.slice(0, 200) });
+    }
+    let deleted = 0;
+    try { const arr = JSON.parse(body); deleted = Array.isArray(arr) ? arr.length : 0; } catch (e) {}
+    if (!deleted) return res.status(404).json({ error: 'Kayıt bulunamadı.' });
+    res.json({ ok: true, deleted });
+  } catch (e) {
+    res.status(500).json({ error: 'Sunucu hatası: ' + e.message });
+  }
+});
+
 app.get('/api/admin/:table', async (req, res) => {
   const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
   const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
