@@ -228,6 +228,35 @@
     .linkgen input{flex:1;min-width:190px;padding:10px 13px;background:var(--elevated);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;outline:none}
     .linkgen input:focus{border-color:var(--primary)}
 
+    /* ---------- PRINT / PDF ---------- */
+    #printArea{display:none}
+    @media print{
+      /* Harici PDF kütüphanesi yerine tarayıcının "PDF olarak kaydet" çıktısı
+         kullanılıyor: panelin CSP'si dış script yüklemeye izin vermiyor. */
+      .shell,.drawer,.ovl,#loginScreen{display:none!important}
+      #printArea{display:block!important}
+      body{background:#fff!important;color:#111!important}
+      @page{size:A4;margin:13mm}
+      .pr-head{border-bottom:2px solid #C5A880;padding-bottom:10px;margin-bottom:16px}
+      .pr-brand{font-size:17px;font-weight:800;color:#8B6914}
+      .pr-title{font-size:14px;font-weight:700;margin-top:3px;color:#111}
+      .pr-meta{font-size:10.5px;color:#555;margin-top:5px;line-height:1.5}
+      .pr-tbl{width:100%;border-collapse:collapse;font-size:9.5px}
+      .pr-tbl th{background:#F3EEE6!important;border:1px solid #D8CDBB;padding:5px 6px;text-align:left;
+        font-weight:700;color:#5c4a2a;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .pr-tbl td{border:1px solid #E2E2E2;padding:5px 6px;color:#222;vertical-align:top;word-break:break-word}
+      .pr-tbl tr{page-break-inside:avoid}
+      .pr-kv{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:16px}
+      .pr-kv td{border-bottom:1px solid #E6E6E6;padding:7px 4px;vertical-align:top}
+      .pr-kv td.k{width:32%;color:#666;font-weight:600}
+      .pr-kv td.v{color:#111}
+      .pr-sect{font-size:11px;font-weight:800;color:#8B6914;text-transform:uppercase;letter-spacing:.06em;
+        margin:16px 0 7px;border-bottom:1px solid #E2D9C7;padding-bottom:4px}
+      .pr-note{font-size:11.5px;color:#222;white-space:pre-wrap;line-height:1.6;
+        border:1px solid #E2E2E2;padding:9px 11px;min-height:46px}
+      .pr-foot{margin-top:18px;padding-top:9px;border-top:1px solid #DDD;font-size:9px;color:#777;line-height:1.5}
+    }
+
     /* mobile */
     .mob-toggle{display:none;width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--elevated);color:var(--text2);cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
     .mob-toggle svg{width:17px;height:17px}
@@ -333,6 +362,10 @@
         <button class="btn" id="refreshBtn" title="Şimdi yenile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
           Yenile
+        </button>
+        <button class="btn" id="pdfBtn" title="Listeyi PDF olarak kaydet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+          PDF
         </button>
         <button class="btn btn-gold" id="exportBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0l-4.5-4.5M12 16l4.5-4.5M5 21h14"/></svg>
@@ -454,6 +487,9 @@
     </div>
   </div>
   </div>
+
+  <!-- Yazdırma/PDF çıktısı buraya yazılır; ekranda gizli, yalnızca @media print'te görünür -->
+  <div id="printArea"></div>
 
   <!-- ===================== DRAWER ===================== -->
   <div class="ovl" id="ovl"></div>
@@ -1053,6 +1089,9 @@
         acts+='<a class="btn" href="tel:+'+esc(ph)+'">Ara</a>';
       }
       if(l.email)acts+='<a class="btn" href="mailto:'+esc(l.email)+'">E-posta</a>';
+      acts+='<button class="btn" id="drPdfBtn">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>'+
+        ' PDF</button>';
       acts+='</div>';
 
       const fields=[
@@ -1089,6 +1128,8 @@
       if(delBtn)delBtn.addEventListener('click',function(){
         const id=openLeadId;closeDrawer();deleteLeads([id]);
       });
+      const pdfBtn=document.getElementById('drPdfBtn');
+      if(pdfBtn)pdfBtn.addEventListener('click',function(){printLead(openLeadId)});
 
       document.getElementById('drBody').querySelectorAll('.st-opt').forEach(function(b){
         b.addEventListener('click',function(){
@@ -1131,6 +1172,134 @@
       document.getElementById('searchWrap').style.display=(tab==='overview'||tab==='security')?'none':'block';
       document.getElementById('sidebar').classList.remove('open');
       if(tab==='security')renderSecurity();
+    }
+
+    /* ============ pdf (tarayıcının yazdır → PDF çıktısı) ============ */
+    function prDate(d){return d?d.toLocaleString('tr-TR'):'—'}
+    function prHead(title,meta){
+      return '<div class="pr-head"><div class="pr-brand">Müvekkil Bilgi</div>'+
+        '<div class="pr-title">'+esc(title)+'</div>'+
+        '<div class="pr-meta">'+meta+'</div></div>';
+    }
+    function prFoot(){
+      return '<div class="pr-foot">Bu belge muvekkilbilgi.com yönetim panelinden '+
+        esc(new Date().toLocaleString('tr-TR'))+' tarihinde oluşturulmuştur. '+
+        'Hesaplama sonuçları tahmini niteliktedir, kesin tutar bilirkişi raporu ve mahkeme kararına göre değişebilir.</div>';
+    }
+    function activeFilterText(){
+      const parts=[];
+      const rangeLbl={1:'Bugün',7:'Son 7 gün',30:'Son 30 gün'};
+      if(dateRange&&rangeLbl[dateRange])parts.push(rangeLbl[dateRange]);
+      const ft=document.getElementById('fType').value;
+      if(ft)parts.push('Modül: '+modLabel(ft));
+      const fs=document.getElementById('fStatus').value;
+      if(fs)parts.push('Durum: '+(STATUS_LABELS[fs]||fs));
+      const term=q();
+      if(term)parts.push('Arama: "'+term+'"');
+      return parts.length?parts.join(' · '):'Filtre yok (tüm kayıtlar)';
+    }
+    function prTable(cols,rows){
+      return '<table class="pr-tbl"><thead><tr>'+
+        cols.map(function(c){return '<th>'+esc(c.h)+'</th>'}).join('')+
+        '</tr></thead><tbody>'+
+        rows.map(function(r){
+          return '<tr>'+cols.map(function(c){
+            const v=c.get(r);
+            return '<td>'+(v===''||v===null||v===undefined?'—':esc(v))+'</td>';
+          }).join('')+'</tr>';
+        }).join('')+'</tbody></table>';
+    }
+    function doPrint(html){
+      const pa=document.getElementById('printArea');
+      pa.innerHTML=html;
+      window.print();
+    }
+    function printCurrent(){
+      if(!validToken(token()))return;
+      let html='';
+      if(currentTab==='contacts'){
+        const term=q();
+        const rows=sortRows(allContacts.filter(function(c){return inRange(c)&&matchQ(c,term)}));
+        if(!rows.length){alert('Yazdırılacak kayıt yok.');return}
+        html=prHead('İletişim Mesajları','Toplam <b>'+rows.length+'</b> mesaj · '+esc(activeFilterText()))+
+          prTable([
+            {h:'Tarih',get:function(r){return prDate(r._date)}},
+            {h:'Ad Soyad',get:function(r){return r.ad}},
+            {h:'E-posta',get:function(r){return r.email}},
+            {h:'Telefon',get:function(r){return r.telefon}},
+            {h:'Konu',get:function(r){return r.konu}},
+            {h:'Mesaj',get:function(r){return r.mesaj}}
+          ],rows)+prFoot();
+      }else if(currentTab==='tracking'){
+        const term=q();
+        const rows=sortRows(allTracking.filter(function(t){return inRange(t)&&matchQ(t,term)}));
+        if(!rows.length){alert('Yazdırılacak kayıt yok.');return}
+        html=prHead('Link Takip Kayıtları','Toplam <b>'+rows.length+'</b> kayıt · '+esc(activeFilterText()))+
+          prTable([
+            {h:'Tarih',get:function(r){return prDate(r._date)}},
+            {h:'Etiket',get:function(r){return r.etiket}},
+            {h:'Ref',get:function(r){return r.ref}},
+            {h:'Tip',get:function(r){return r.tip==='visit'?'Ziyaret':'Form'}},
+            {h:'Modül',get:function(r){return modLabel(r.modul)}}
+          ],rows)+prFoot();
+      }else if(currentTab==='calculations'){
+        const term=q();
+        const rows=sortRows(allCalcs.filter(function(c){return inRange(c)&&matchQ(c,term)}));
+        if(!rows.length){alert('Yazdırılacak kayıt yok.');return}
+        html=prHead('Hesaplama Kayıtları','Toplam <b>'+rows.length+'</b> kayıt')+
+          prTable([
+            {h:'Tarih',get:function(r){return prDate(r._date)}},
+            {h:'Modül',get:function(r){return modLabel(r.tur)}},
+            {h:'Sonuç',get:function(r){return r.sonuc}}
+          ],rows)+prFoot();
+      }else if(currentTab==='security'){
+        if(!allLogins.length){alert('Yazdırılacak giriş kaydı yok.');return}
+        html=prHead('Yönetim Paneli Giriş Kayıtları','Toplam <b>'+allLogins.length+'</b> deneme')+
+          prTable([
+            {h:'Tarih',get:function(r){return r.created_at?new Date(r.created_at).toLocaleString('tr-TR'):'—'}},
+            {h:'IP Adresi',get:function(r){return r.ip}},
+            {h:'Sonuç',get:function(r){return r.success===true?'Başarılı giriş':'Yanlış şifre'}}
+          ],allLogins)+prFoot();
+      }else{
+        const rows=sortRows(filteredLeads());
+        if(!rows.length){alert('Yazdırılacak başvuru yok.');return}
+        html=prHead('Başvuru Listesi','Toplam <b>'+rows.length+'</b> başvuru · '+esc(activeFilterText()))+
+          prTable([
+            {h:'Tarih',get:function(r){return prDate(r._date)}},
+            {h:'Ad Soyad',get:function(r){return r.ad}},
+            {h:'Telefon',get:function(r){return r.telefon}},
+            {h:'E-posta',get:function(r){return r.email}},
+            {h:'Şehir',get:function(r){return r.sehir}},
+            {h:'Modül',get:function(r){return modLabel(r.tur)}},
+            {h:'Sonuç',get:function(r){return r.sonuc}},
+            {h:'Durum',get:function(r){return STATUS_LABELS[leadStatus(r)]}}
+          ],rows)+prFoot();
+      }
+      doPrint(html);
+    }
+    function printLead(id){
+      const l=allLeads.find(function(x){return String(x.id)===String(id)});
+      if(!l)return;
+      const meta=leadMeta[String(id)]||{};
+      const fields=[
+        ['Ad Soyad',l.ad],['Telefon',l.telefon],['E-posta',l.email],
+        ['Şehir',l.sehir],['İlçe',l.ilce],['Plaka',l.plaka],
+        ['Hesaplama Modülü',modLabel(l.tur)],['Hesaplama Sonucu',l.sonuc],
+        ['Vekalet Durumu',l.vekalet],['Açıklama',l.aciklama],
+        ['Başvuru Tarihi',prDate(l._date)],['Kayıt No',l.id]
+      ];
+      const kv='<table class="pr-kv">'+fields.map(function(f){
+        const v=(f[1]===null||f[1]===undefined||f[1]==='')?'—':f[1];
+        return '<tr><td class="k">'+esc(f[0])+'</td><td class="v">'+esc(v)+'</td></tr>';
+      }).join('')+'</table>';
+      const note='<div class="pr-sect">Takip Durumu ve Notlar</div>'+
+        '<table class="pr-kv"><tr><td class="k">Durum</td><td class="v">'+
+        esc(STATUS_LABELS[meta.status||'yeni'])+'</td></tr></table>'+
+        '<div class="pr-note">'+esc(meta.note||'—')+'</div>';
+      doPrint(
+        prHead('Başvuru Detayı — '+(l.ad||'İsimsiz'),'Kayıt No: <b>'+esc(String(l.id))+'</b> · '+esc(prDate(l._date)))+
+        '<div class="pr-sect">Başvuru Bilgileri</div>'+kv+note+prFoot()
+      );
     }
 
     /* ============ csv ============ */
@@ -1193,6 +1362,7 @@
       document.getElementById('pwInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
       document.getElementById('logoutBtn').addEventListener('click',function(){doLogout(false)});
       document.getElementById('exportBtn').addEventListener('click',exportCSV);
+      document.getElementById('pdfBtn').addEventListener('click',printCurrent);
       document.getElementById('refreshBtn').addEventListener('click',loadAll);
       document.getElementById('bulkDelBtn').addEventListener('click',function(){deleteLeads(selectedIds())});
       document.getElementById('genLinkBtn').addEventListener('click',genLink);
