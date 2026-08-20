@@ -453,7 +453,7 @@ const BLOG_POSTS = [
   {id:9,title:'Tüketici Hakları ve Ayıplı Mal',category:'Tüketici Hakları',icon:'🛒',date:'5 Aralık 2025',excerpt:'Ayıplı mal veya hizmet satın aldığınızda haklarınızı ve başvuru süreçlerini öğrenin.',content:'<h2>Ayıplı Mal Nedir?</h2><p>Satın alınan malın, tüketicinin beklentilerini karşılayamayan, fonksiyonunu yerine getiremeyen veya ayıplı olan ürünlerdir.</p><h3>Tüketici Hakları</h3><ul><li>Ürünü iade etme hakkı</li><li>Bedel indirimi talep etme</li><li>Ücretsiz onarım talep etme</li><li>Eşdeğer ürün talep etme</li><li>Sözleşmeden dönme hakkı</li></ul><h3>Başvuru Süreleri</h3><p>Ayıp, 30 gün içinde bildirilmelidir. Dava açma süresi ise 2 yıldır.</p>'},
   {id:10,title:'Kasko Sigortası Kapsamı ve İstisnaları',category:'Sigorta',icon:'🛡️',date:'1 Aralık 2025',excerpt:'Kasko sigortasının kapsadığı durumlar ve istisnalar hakkında detaylı bilgi.',content:'<h2>Kasko Kapsamı</h2><ul><li>Çarpışma hasarı</li><li>Yangın</li><li>Hırsızlık</li><li>Doğal afet (deprem, sel, fırtına)</li><li>Cam kırılması</li><li>Terör</li></ul><h2>İstisnalar</h2><ul><li>Savaş</li><li>Nükleer riskler</li><li>Sürücünün alkollü olması</li><li>Ehliyetsiz kullanma</li><li>Bilerek verilen zarar</li></ul>'},
   {id:11,title:'Manevi Tazminat Davası Nasıl Açılır?',category:'Hukuk Rehberi',icon:'💔',date:'28 Kasım 2025',excerpt:'Manevi tazminat davası açma süreci, gerekli belgeler ve dikkat edilmesi gerekenler.',content:'<h2>Manevi Tazminat Nedir?</h2><p>Duygusal acı, elem ve ıstırabın karşılanması için talep edilen tazminattır.</p><h3>Dava Şartları</h3><ul><li>Haksız fiil olmalı</li><li>Zarar meydana gelmeli</li><li>Haksız fiil ile zarar arasında nedensel bağı olmalı</li><li>Fail kusurlu olmalı</li></ul><h3>Takdir Edilmesinde Dikkate Alınan Hususlar</h3><ul><li>Tarafların sosyal ve ekonomik durumu</li><li>Kusur oranı</li><li>Zararın ağırlığı</li><li>Olayın oluş biçimi</li></ul>'},
-  {id:12,title:'Sigorta İtiraz Dilekçesi Nasıl Yazılır?',category:'Hukuk Rehberi',icon:'📝',date:'20 Kasım 2025',excerpt:'Sigorta şirketinin tazminat talebinizi reddetmesi durumunda itiraz süreci.',content:'<h2>İtiraz Süreci</h2><ol><li>Sigorta company\'sinin red yazısını inceleyin</li><li>Itiraz dilekçesini hazırlayın</li><li>İlgili sigorta company\'sine gönderin</li><li>Reddedilirse tüketici mahkemesine başvurun</li></ol><h3>Dilekçe İçeriği</h3><ul><li>Tarafların bilgileri</li><li>Poliçe numarası</li><li>Kaza tarihi ve detayları</li><li>Talep edilen tutar</li><li>Gerekçeler</li></ul>'},
+  {id:12,title:'Sigorta İtiraz Dilekçesi Nasıl Yazılır?',category:'Hukuk Rehberi',icon:'📝',date:'20 Kasım 2025',excerpt:'Sigorta şirketinin tazminat talebinizi reddetmesi durumunda itiraz süreci.',content:'<h2>İtiraz Süreci</h2><ol><li>Sigorta şirketinin ret yazısını inceleyin</li><li>İtiraz dilekçesini hazırlayın</li><li>İlgili sigorta şirketine gönderin</li><li>Reddedilirse tüketici mahkemesine başvurun</li></ol><h3>Dilekçe İçeriği</h3><ul><li>Tarafların bilgileri</li><li>Poliçe numarası</li><li>Kaza tarihi ve detayları</li><li>Talep edilen tutar</li><li>Gerekçeler</li></ul>'},
   {id:13,title:'Arabuluculuk ile Hızlı Çözüm',category:'Hukuk Rehberi',icon:'🤝',date:'15 Kasım 2025',excerpt:'Mahkeme sürecine girmeden arabuluculuk ile tazminat anlaşmaları yapın.',content:'<h2>Arabuluculuk Nedir?</h2><p>Tarafların, tarafsız bir arabulucu eşliğinde anlaşmaya varmasıdır.</p><h3>Avantajları</h3><ul><li>Daha hızlı çözüm</li><li>Daha düşük maliyet</li><li>Gizlilik</li><li>Tarafların kontrolü</li></ul><h3>Zorunlu Arabuluculuk</h2><p>İş davaları ve ticari davalarda dava açmadan önce arabulucuya başvurma zorunluluğu vardır.</p>'},
   {id:14,title:'Bilirkişi Raporu Nasıl Okunur?',category:'Hukuk Rehberi',icon:'🔬',date:'10 Kasım 2025',excerpt:'Mahkemeler tarafından atanan bilirkişi raporlarını doğru yorumlama rehberi.',content:'<h2>Bilirkişi Raporu Nedir?</h2><p>Uzmanlık gerektiren konularda mahkeme tarafından atanan bilirkişinin hazırladığı rapordur.</p><h3>Raporun Unsurları</h3><ul><li>Kaza inceleme sonuçları</li><li>Hasar tespiti</li><li>Kusur analizi</li><li>Tazminat hesaplama</li></ul><h3>İtiraz Hakkı</h3><p>Bilirkişi raporuna 10 gün içinde itiraz edilebilir.</p>'}
 ];
@@ -469,7 +469,7 @@ const FAQ_DATA = [
   {q:'Geçici iş göremezlik ne kadar sürer?',a:'İyileşme sürecine göre değişir. İş göremezlik raporu ile belirlenen sürede SGK tarafından ödeme yapılır. Genellikle 3 ayı aşmaz.'},
   {q:'Nafaka nasıl hesaplanır?',a:'Nafaka hesaplanırken tarafların gelir durumu, yaşam standardı, çocuk sayısı ve yaşı, kusur oranı dikkate alınır. Hakim takdirine bağlıdır.'},
   {q:'İş kazası tazminatı nedir?',a:'İşyerinde veya işin yürütümü sırasında meydana gelen kazalarda işçiye ödenen tazminattır. SGK ve işveren sorumluluğu kapsamında hesaplanır.'},
-  {q:'Kasko hasarı nasıl alınır?',a:'Kasko sigortası kapsamında hasar oluştuğunda sigorta company\'sine başvuru yapılır. Eksper tespitinin ardından onarım veya ödeme yapılır.'},
+  {q:'Kasko hasarı nasıl alınır?',a:'Kasko sigortası kapsamında hasar oluştuğunda sigorta şirketine başvuru yapılır. Eksper tespitinin ardından onarım veya ödeme yapılır.'},
   {q:'Ayıplı mal için ne kadar sürede başvurulur?',a:'Ayıp, 30 gün içinde satıcıya bildirilmelidir. Dava açma süresi ise 2 yıldır. 2 yıl içinde dava açılmalıdır.'},
   {q:'Arabuluculuk nedir?',a:'Tarafların, tarafsız bir arabulucu eşliğinde anlaşmaya varmasıdır. İş davalarında ve ticari davalarda dava açmadan önce arabulucuya başvuru zorunludur.'},
   {q:'Manevi tazminat nasıl hesaplanır?',a:'Manevi tazminat hakim tarafından takdir edilir. Tarafların sosyal ve ekonomik durumu, kusur oranı, zararın ağırlığı ve olayın oluş biçimi dikkate alınır.'},
@@ -646,12 +646,37 @@ window.addEventListener('popstate',()=>{
 /* scrollIntoView({block:'start'}) hedefi viewport'un tam tepesine hizalar, ama header
    position:sticky olduğu için hedefin üst kısmını (özellikle mobilde) kapatıyordu —
    kullanıcıya "sonuç aşağı kaçtı" gibi görünüyordu. Header yüksekliği kadar pay bırakıyoruz. */
+/* Sonuç ekranı açıldığında sayfa kullanıcının kaldığı yerde (formun altında)
+   duruyor ve hemen ardından DOM'a büyük bloklar ekleniyor (AI analizi, karşılaştırma
+   aracı, ilgili araçlar, banner) — sayfa yüksekliği neredeyse iki katına çıkıyor.
+   Yumuşak kaydırma bu büyüme sırasında yarıda kesilip kullanıcıyı sayfanın altında
+   bırakıyordu. Bu yüzden: anlık kaydır, sonraki karelerde ve içerik yerleştikten
+   sonra konumu tekrar doğrula — ama kullanıcı kendisi kaydırmaya başladıysa dokunma. */
 function scrollToResult(el){
   if(!el)return;
-  const headerEl=document.getElementById('mainHeader');
-  const headerH=headerEl?headerEl.getBoundingClientRect().height:0;
-  const top=el.getBoundingClientRect().top+window.pageYOffset-headerH-12;
-  window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  let userMoved=false;
+  const onUser=function(){userMoved=true;};
+  window.addEventListener('wheel',onUser,{passive:true});
+  window.addEventListener('touchmove',onUser,{passive:true});
+  window.addEventListener('keydown',onUser,{passive:true});
+  const place=function(){
+    if(userMoved)return;
+    const headerEl=document.getElementById('mainHeader');
+    const headerH=headerEl?headerEl.getBoundingClientRect().height:0;
+    const top=el.getBoundingClientRect().top+window.pageYOffset-headerH-12;
+    // behavior:'auto' şart: CSS'te html{scroll-behavior:smooth} tanımlı olduğu için
+    // aksi halde bu çağrı da animasyona dönüşüp içerik eklenirken yarıda kesiliyor.
+    window.scrollTo({top:Math.max(0,top),behavior:'auto'});
+  };
+  place();
+  requestAnimationFrame(function(){place();requestAnimationFrame(place);});
+  setTimeout(place,250);
+  setTimeout(function(){
+    place();
+    window.removeEventListener('wheel',onUser);
+    window.removeEventListener('touchmove',onUser);
+    window.removeEventListener('keydown',onUser);
+  },650);
 }
 function navigate(screen){
   if(_navLock||state.screen===screen)return;
@@ -1120,7 +1145,7 @@ KURALLAR:
 - Gerçekçi ve tutarlı ol, abartma`;
 
   const res=await groqFetch('/api/ai/calculate',[
-    {role:'system',content:'Sen Türkiye araç değer kaybı konusunda uzman bilirkişisin. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir metin yazma.'},
+    {role:'system',content:'Sen Türkiye araç değer kaybı konusunda uzman bilirkişisin. Metni okuyan kişi avukat değil, olayı yaşayan vatandaşın kendisidir; ona doğrudan "siz" diye hitap et, "müşteriniz/müvekkiliniz/dava dosyanıza" gibi avukata konuşur ifadeler kullanma. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir metin yazma.'},
     {role:'user',content:prompt}],
     {model:AI_MODEL,temp:0.15,tokens:2000,responseFormat:true,timeout:45000});
   if(!res.ok)return null;
@@ -1173,6 +1198,17 @@ KURALLAR:
 /* ======================================================
    GENERIC AI — Tüm Modüller İçin Yapay Zeka Analizi
    ====================================================== */
+/* Bu metinleri okuyan kişi avukat değil, hakkını arayan vatandaşın kendisi.
+   Bu kural verilmediğinde model kendini bir meslektaşa brifing veriyor sanıp
+   "müşterinizin talebi", "dava dosyanıza ekleyin" gibi cümleler kuruyordu. */
+const AI_AUDIENCE_RULE = `KİME YAZIYORSUN:
+Bu metni okuyan kişi bir avukat değil, olayı bizzat yaşayan vatandaşın kendisidir.
+- Doğrudan ona "siz" diye hitap et. "Müşteriniz", "müvekkiliniz", "dava dosyanıza",
+  "talebinizi dosyaya ekleyin" gibi avukata konuşur ifadeleri ASLA kullanma.
+- Hukuki terim kullanman gerekiyorsa yanında tek cümlelik sade karşılığını ver.
+- Öneriyi kişinin kendi atabileceği somut bir adım olarak yaz
+  (örn. "sigortaya yazılı itiraz edin", "bu belgeleri saklayın", "bir avukata danışın").`;
+
 const AI_MODULE_PROMPTS = {
   hasar:`Sen Türkiye'de araç hasar onarım maliyeti konusunda uzman sigorta eksperisin. Verilen bilgilere göre gerçekçi bir hasar bedeli hesapla, parça işçilik ve yedek parça piyasasını dikkate al.`,
   isgucu:`Sen Türkiye'de trafik kazası sonrası iş gücü kaybı tazminatı konusunda uzman bilirkişisin. İş göremezlik ve gelir kaybını hesaplarken Yargıtay kararlarını, güncel asgari ücret ve rapor ücretlerini dikkate al.`,
@@ -1209,6 +1245,8 @@ async function aiGenericCalc(type, label, fields, formulaResult){
   }).join('\n');
   const prompt=`${AI_MODULE_PROMPTS[type]||'Sen Türkiye hukuk ve tazminat konusunda uzman bir bilirkişisin.'}
 
+${AI_AUDIENCE_RULE}
+
 Hesaplama Türü: ${label}
 
 Kullanıcı Bilgileri:
@@ -1241,7 +1279,7 @@ KURALLAR:
 - Abartma, gerçekçi ol`;
   try{
     const res=await groqFetch('/api/ai/calculate',[
-      {role:'system',content:'Sen Türkiye hukuk ve tazminat konusunda uzman bir bilirkişisin. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver.'},
+      {role:'system',content:'Sen Türkiye hukuk ve tazminat konusunda uzman bir bilirkişisin. Metni okuyan kişi avukat değil, olayı yaşayan vatandaşın kendisidir; ona doğrudan "siz" diye hitap et, "müşteriniz/müvekkiliniz/dava dosyanıza" gibi avukata konuşur ifadeler kullanma. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver.'},
       {role:'user',content:prompt}],
       {model:AI_MODEL,temp:0.35,tokens:1000,responseFormat:true,timeout:30000});
     if(!res.ok)return null;
@@ -1751,7 +1789,7 @@ Yanıtı SADECE şu JSON formatında ver:
 }
 Kusur oranları toplamı 100 olmalıdır. Her bir araç için KTK madde numarası ve gerekçe belirt. "haklarim" değerlendirmesi kusuru düşük/olmayan taraf içindir; anlatımda yaralanma/can kaybı belirtilmemişse isGucuKaybi ve maneviTazminat için uygun:false yaz. Yaralanma bildirilmemişse "yaralilar" dizisi boş [] olmalı.`;
   const res=await groqFetch('/api/ai/calculate',[
-    {role:'system',content:'Sen Türkiye trafik kazalarında kusur tespiti konusunda uzman bilirkişisin. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
+    {role:'system',content:'Sen Türkiye trafik kazalarında kusur tespiti konusunda uzman bilirkişisin. Metni okuyan kişi avukat değil, olayı yaşayan vatandaşın kendisidir; ona doğrudan "siz" diye hitap et, "müşteriniz/müvekkiliniz/dava dosyanıza" gibi avukata konuşur ifadeler kullanma. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
     {model:'openai/gpt-oss-120b',temp:0.2,tokens:3800,responseFormat:true,timeout:35000});
   if(!res.ok){
@@ -1917,7 +1955,7 @@ Yanıtı SADECE şu JSON formatında ver:
   "oneri": "İşçiye pratik öneri (1-2 cümle)"
 }`;
   const res=await groqFetch('/api/ai/calculate',[
-    {role:'system',content:'Sen Türkiye iş hukukunda uzman bir avukatsın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
+    {role:'system',content:'Sen Türkiye iş hukukunda uzman bir avukatsın. Metni okuyan kişi avukat değil, olayı yaşayan vatandaşın kendisidir; ona doğrudan "siz" diye hitap et, "müşteriniz/müvekkiliniz/dava dosyanıza" gibi avukata konuşur ifadeler kullanma. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
     {model:'openai/gpt-oss-120b',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
   if(!res.ok){
@@ -2023,7 +2061,7 @@ Yanıtı SADECE şu JSON formatında ver:
   "oneri": "İşçiye pratik öneri (1-2 cümle)"
 }`;
   const res=await groqFetch('/api/ai/calculate',[
-    {role:'system',content:'Sen Türkiye iş hukukunda işe iade davası konusunda uzman bir avukatsın. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
+    {role:'system',content:'Sen Türkiye iş hukukunda işe iade davası konusunda uzman bir avukatsın. Metni okuyan kişi avukat değil, olayı yaşayan vatandaşın kendisidir; ona doğrudan "siz" diye hitap et, "müşteriniz/müvekkiliniz/dava dosyanıza" gibi avukata konuşur ifadeler kullanma. Yanıtı her zaman TÜRKÇE ve geçerli JSON formatında ver. JSON dışında hiçbir şey yazma.'},
     {role:'user',content:prompt}],
     {model:'openai/gpt-oss-120b',temp:0.2,tokens:1500,responseFormat:true,timeout:30000});
   if(!res.ok){

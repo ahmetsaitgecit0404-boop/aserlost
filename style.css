@@ -199,7 +199,10 @@ body {
 .module-card:nth-child(10) { animation-delay:0.3s; }
 .module-card:nth-child(11) { animation-delay:0.33s; }
 .module-card:nth-child(12) { animation-delay:0.36s; }
-.module-card:hover { transform: translateY(-6px); border-color: rgba(197,168,128,0.3); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 30px var(--primary-glow); }
+.module-card::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% -20%, rgba(197,168,128,0.13), transparent 62%); opacity:0; transition:opacity .35s ease; }
+.module-card:hover::after { opacity:1; }
+.module-card:hover { transform: translateY(-6px); border-color: rgba(197,168,128,0.34); box-shadow: 0 20px 54px rgba(0,0,0,0.55), 0 0 34px var(--primary-glow); }
 .module-card:active { transform: translateY(-2px); }
 .module-card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--primary-light), var(--primary), transparent); opacity: 0; transition: opacity 0.4s ease; }
 .module-card:hover .module-card-glow { opacity: 1; }
@@ -232,7 +235,9 @@ body {
 .section-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; text-align: center; }
 .section-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--primary-glow), rgba(197,168,128,0.02)); border: 1px solid rgba(197,168,128,0.2); border-radius: 100px; padding: 5px 16px; font-size: 12px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; margin-bottom: 16px; backdrop-filter:blur(8px); }
 .section-badge-icon { font-size: 14px; }
-.section-title { font-size: clamp(28px,4vw,40px); font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; line-height: 1.2; }
+.section-title { font-size: clamp(28px,4vw,40px); font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; line-height: 1.2; position: relative; display: inline-block; padding-bottom: 14px; }
+/* Başlık altına ince altın çizgi — bölümler arası ritmi belirginleştirir */
+.section-title::after { content:''; position:absolute; left:50%; transform:translateX(-50%); bottom:0; width:56px; height:2px; border-radius:2px; background:linear-gradient(90deg, transparent, var(--primary), transparent); }
 .section-title .gradient-text { background: linear-gradient(135deg, #E8D5B8 0%, #C5A880 40%, #A88B60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 /* ===================================================
@@ -343,8 +348,15 @@ option { background: var(--bg-elevated); color: var(--text-primary); }
 .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
 .btn-next { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #0B0C10; font-family: var(--font); font-size: 14px; font-weight: 700; border: none; border-radius: var(--radius-md); padding: 12px 22px; cursor: pointer; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); box-shadow: var(--shadow-gold); position:relative; overflow:hidden; }
 .btn-next::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent,rgba(255,255,255,0.1)); opacity:0; transition:opacity 0.3s; }
-.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(197,168,128,0.35); }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 34px rgba(197,168,128,0.38); }
 .btn-next:hover::after { opacity:1; }
+/* Butonun üzerinden geçen ince ışık — hover'da bir kez süzülür */
+.btn-next::before { content:''; position:absolute; top:0; bottom:0; left:-60%; width:45%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.34), transparent);
+  transform:skewX(-18deg); opacity:0; pointer-events:none; }
+.btn-next:hover::before { opacity:1; animation: btnSheen .75s ease; }
+@keyframes btnSheen { from{left:-60%} to{left:120%} }
+@media (prefers-reduced-motion: reduce){ .btn-next:hover::before{ animation:none; opacity:0 } }
 .btn-next:active { transform: translateY(0); }
 .btn-back { display: flex; align-items: center; gap: 8px; background: var(--bg-elevated); color: var(--text-secondary); font-family: var(--font); font-size: 14px; font-weight: 600; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; cursor: pointer; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); }
 .btn-back:hover { border-color: var(--border-mid); color: var(--text-primary); transform: translateY(-1px); }
@@ -388,14 +400,27 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20p
 @keyframes ring-pop { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 .success-check { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-.result-card { background: linear-gradient(145deg, rgba(197,168,128,0.08), rgba(168,139,96,0.02)); border: 1px solid var(--border-mid); border-radius: var(--radius-xl); padding: 32px; text-align: center; margin-bottom: 20px; animation: fadeInScale 0.5s ease both; position:relative; overflow:hidden; }
-.result-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, var(--primary-glow) 0%, transparent 60%); opacity:0.3; pointer-events:none; }
-.result-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
-.result-range { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.result-min, .result-max { font-size: clamp(24px,4vw,36px); font-weight: 800; color: var(--text-primary); }
-.result-max { color: var(--primary); }
-.result-separator { font-size: 28px; color: var(--text-muted); }
-.result-currency { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+/* Sonuç kartı: sayfanın kahramanı. Rakam ilk bakışta okunmalı, bu yüzden
+   üstündeki tebrik bloğu mobilde bilinçli olarak küçültülüyor (aşağıda). */
+.result-card { background: linear-gradient(160deg, rgba(197,168,128,0.13), rgba(168,139,96,0.03) 55%, transparent); border: 1px solid var(--border-mid); border-radius: var(--radius-xl); padding: 34px 28px 30px; text-align: center; margin-bottom: 20px; animation: fadeInScale 0.5s ease both; position:relative; overflow:hidden; box-shadow: 0 18px 50px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05); }
+.result-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, var(--primary-glow) 0%, transparent 60%); opacity:0.45; pointer-events:none; }
+.result-card::after { content:''; position:absolute; top:0; left:14%; right:14%; height:1px; background:linear-gradient(90deg, transparent, var(--primary), transparent); opacity:.6; }
+.result-label { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1.1px; position:relative; }
+.result-range { display: flex; align-items: baseline; justify-content: center; gap: 10px; flex-wrap: wrap; position:relative; }
+.result-min, .result-max { font-size: clamp(30px,7.5vw,46px); font-weight: 800; letter-spacing:-1px; line-height:1.08; background: linear-gradient(135deg, #F0E2CB 0%, #C5A880 55%, #A88B60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.result-separator { font-size: 24px; color: var(--text-muted); font-weight: 300; }
+.result-currency { font-size: 12.5px; color: var(--text-muted); margin-top: 10px; position:relative; letter-spacing:.3px; }
+
+/* Sonuç ekranında rakamın üstünde duran tebrik bloğu: masaüstünde ferah,
+   mobilde sıkı. Amaç, tazminat tutarının ilk ekranda görünmesi. */
+.result-header { margin-bottom: 20px; }
+@media (max-width: 640px){
+  .result-header { margin-bottom: 14px; }
+  .result-header h2 { font-size: 19px; }
+  .result-header p { font-size: 12.5px; }
+  .result-header .success-animation { width: 46px; height: 46px; margin-bottom: 10px; }
+  .result-card { padding: 26px 18px 22px; }
+}
 
 .result-notice { display: flex; align-items: flex-start; gap: 10px; background: rgba(197,168,128,0.06); border: 1px solid rgba(197,168,128,0.15); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 20px; }
 .result-notice svg { flex-shrink: 0; margin-top: 1px; }
@@ -819,8 +844,10 @@ a.contact-info-item:hover { color: var(--primary); }
   .home-hero { padding: 60px 16px 36px; }
   .home-title { letter-spacing: -0.8px; }
   .home-subtitle { font-size: 15px; }
-  .result-min, .result-max { font-size: 22px; }
-  .isc-total-amount { font-size: 30px; }
+  /* Tazminat rakamı sayfanın ana bilgisi — küçük ekranda da okunaklı kalmalı */
+  .result-min, .result-max { font-size: 29px; }
+  .result-separator { font-size: 19px; }
+  .isc-total-amount { font-size: 32px; }
   .btn-next { padding: 11px 16px; font-size: 13px; }
   .btn-back { padding: 11px 14px; font-size: 13px; }
   .duration-row { flex-direction: column; }
