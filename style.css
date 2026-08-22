@@ -96,7 +96,7 @@ body {
 /* ===================================================
    HEADER
    =================================================== */
-.header { position: sticky; top: 0; z-index: 100; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4); border-bottom: 1px solid var(--glass-border); transition: background 0.3s ease; }
+.header { position: sticky; top: 0; z-index: 100; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4); border-bottom: 1px solid var(--glass-border); transition: background 0.3s ease, border-color 0.3s ease; }
 [data-theme="light"] .header { background: var(--glass-bg); }
 .header-inner { max-width: 1300px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; position: relative; }
@@ -122,7 +122,7 @@ body {
 .mobile-menu-toggle svg { width: 20px; height: 20px; }
 .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 99; }
 .mobile-overlay.open { display: block; }
-.mobile-menu-panel { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; z-index: 100; background: var(--bg-card); border-left: 1px solid var(--border); padding: 80px 24px 24px; transition: right 0.35s cubic-bezier(0.22,1,0.36,1); overflow-y: auto; }
+.mobile-menu-panel { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; z-index: 100; background: var(--bg-card); border-left: 1px solid var(--border); padding: 80px 24px 24px; transition: right 0.35s cubic-bezier(0.22,1,0.36,1), background 0.3s ease, border-color 0.3s ease; overflow-y: auto; }
 .mobile-menu-panel.open { right: 0; }
 .mobile-menu-panel a { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s; }
 .mobile-menu-panel a:hover { color: var(--primary); }
@@ -295,7 +295,7 @@ textarea:focus { border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(1
 .calculator-section { padding: 48px 24px 80px; position: relative; z-index: 1; }
 .calculator-wrapper { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
 
-.step-sidebar { background: var(--glass-bg); backdrop-filter:blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 28px 20px; height: fit-content; position: sticky; top: 88px; box-shadow: var(--glass-shadow); }
+.step-sidebar { background: var(--glass-bg); backdrop-filter:blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 28px 20px; height: fit-content; position: sticky; top: 88px; box-shadow: var(--glass-shadow); transition: background 0.3s ease, border-color 0.3s ease; }
 .progress-ring-wrapper { position: relative; width: 80px; height: 80px; margin: 0 auto 10px; }
 .progress-ring { transform: rotate(-90deg); }
 .progress-ring-bg { fill: none; stroke: var(--bg-hover); stroke-width: 6; }
@@ -611,7 +611,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20p
    LEAD MODAL
    =================================================== */
 .modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(7,8,12,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; }
-.modal-box { background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius-xl); padding: 36px 32px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.7); animation: modal-in 0.25s ease; }
+.modal-box { background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius-xl); padding: 36px 32px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.7); animation: modal-in 0.25s ease; transition: background 0.3s ease, border-color 0.3s ease; }
 @keyframes modal-in { from { opacity:0; transform:scale(0.95) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
 .modal-header-section { text-align: center; margin-bottom: 28px; }
 .modal-badge-icon { width: 64px; height: 64px; margin: 0 auto 16px; }
@@ -642,7 +642,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20p
 .kvkk-checkbox a:hover { color: var(--primary-dark); }
 
 #kvkkModal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
-.kvkk-modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; max-width: 700px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 32px; }
+.kvkk-modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; max-width: 700px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 32px; transition: background 0.3s ease, border-color 0.3s ease; }
 .kvkk-modal-box h2 { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
 .kvkk-modal-box p, .kvkk-modal-box li { font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 10px; }
 .kvkk-modal-box ul { padding-left: 20px; }
@@ -748,7 +748,10 @@ a.contact-info-item:hover { color: var(--primary); }
 .chatbot-container { position: fixed; bottom: 24px; right: 32px; z-index: 1000; font-family: var(--font); }
 .chat-toggle { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #0B0C10; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 30px rgba(197,168,128,0.35); transition: transform 0.25s ease, box-shadow 0.25s ease; }
 .chat-toggle:hover { transform: scale(1.08); box-shadow: 0 8px 40px rgba(197,168,128,0.5); }
-.chat-panel { position: absolute; bottom: 72px; right: 0; width: 380px; max-height: 520px; background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius-xl); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 16px 60px rgba(0,0,0,0.5); animation: chatSlideUp 0.3s ease; }
+/* Sohbet paneli, arkasındaki sayfayı engellemiyor (scrim yok) — bu yüzden
+   header/step-sidebar ile aynı yarı saydam "malzeme" dilini kullanıyor;
+   içindeki mesaj balonları ise okunabilirlik için opak kalıyor. */
+.chat-panel { position: absolute; bottom: 72px; right: 0; width: 380px; max-height: 520px; background: var(--glass-bg); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 16px 60px rgba(0,0,0,0.5); animation: chatSlideUp 0.3s ease; transition: background 0.3s ease, border-color 0.3s ease; }
 @keyframes chatSlideUp { from { opacity:0; transform:translateY(16px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
 .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; background: linear-gradient(135deg, rgba(197,168,128,0.1) 0%, rgba(168,139,96,0.05) 100%); border-bottom: 1px solid var(--border); }
 .chat-header-info { display: flex; align-items: center; gap: 12px; }
@@ -788,7 +791,7 @@ a.contact-info-item:hover { color: var(--primary); }
 /* ===================================================
    FOOTER
    =================================================== */
-.footer { padding: 40px 24px; border-top: 1px solid var(--border); }
+.footer { padding: 40px 24px; border-top: 1px solid var(--border); transition: border-color 0.3s ease; }
 .footer-inner { max-width: 900px; margin: 0 auto; text-align: center; }
 .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; color: var(--text-primary); font-size: 16px; font-weight: 700; }
 .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -1088,7 +1091,7 @@ a.contact-info-item:hover { color: var(--primary); }
    =================================================== */
 .emsal-modal { position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); animation:fadeInUp 0.3s ease both; }
 .emsal-modal.open { display:flex; }
-.emsal-panel { width:min(90vw,700px); max-height:85vh; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); }
+.emsal-panel { width:min(90vw,700px); max-height:85vh; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); transition: background 0.3s ease, border-color 0.3s ease; }
 .emsal-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
 .emsal-header h3 { font-size:16px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
 .emsal-close { width:32px; height:32px; border:none; background:var(--bg-hover); border-radius:50%; color:var(--text-secondary); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:0.2s; font-family:var(--font); }
@@ -1244,4 +1247,28 @@ input.module-search-input:focus { border-color: var(--primary); box-shadow: 0 8p
   .modules-grid-inner { grid-template-columns: 1fr; }
   #screen-kusur .form-grid[style*="repeat(auto-fill"] { grid-template-columns: 1fr !important; }
 }
+
+/* ===================================================
+   INSTANT PRESS FEEDBACK
+   Apple'ın "Designing Fluid Interfaces" ilkesi: geri bildirim
+   parmak/imleç DEĞDİĞİ anda gelmeli, bırakılınca değil — bu yüzden
+   her tıklanabilir kontrol :active anında hafifçe basılıp geri
+   dönüyor. Küçük ikon butonları biraz daha belirgin basılır.
+   =================================================== */
+.btn-next:active, .btn-back:active, .btn-back-home:active, .module-cta-btn:active,
+.part-btn:active, .persona-tab:active, .blog-filter-btn:active, .faq-q:active,
+.toggle-btn:active, .accordion-header:active, .btn-whatsapp:active, .btn-assessment:active,
+.emsal-filter-btn:active, .compare-toggle:active, .pp-btn:active, .cam-btn:active,
+.related-tools-box button:active, .haklarim-box button:active, .cmp-run-btn:active,
+.btn-show-result:active {
+  transform: scale(0.97);
+  transition: transform 0.1s cubic-bezier(0.22,1,0.36,1);
+}
+.theme-toggle:active, .mobile-menu-toggle:active, .chat-toggle:active,
+.chat-close-btn:active, .emsal-close:active, .close-btn:active,
+.module-search-clear:active, .chat-input-area button:active {
+  transform: scale(0.9);
+  transition: transform 0.1s cubic-bezier(0.22,1,0.36,1);
+}
+.module-card:active { transform: translateY(-2px) scale(0.99); }
 
