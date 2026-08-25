@@ -1338,7 +1338,7 @@ async function calculateAndShow(){
         hideLoadingOverlay(ov);
       }
       state.pendingType='arac';state.pendingResult=merged;
-      if(hasLeadInfo())showAracResult();else showLeadModal('arac');
+      {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else showLeadModal('arac');}
       return;
     }
     hideLoadingOverlay(ov);
@@ -1348,7 +1348,7 @@ async function calculateAndShow(){
     if(fallback.min>maxAllowed)fallback.min=Math.round(maxAllowed*0.6);
     if(fallback.max>maxAllowed)fallback.max=maxAllowed;
     state.aracResult=fallback;state.aiAnalysis=null;state.pendingType='arac';state.pendingResult=fallback;
-    if(hasLeadInfo())showAracResult();else showLeadModal('arac');
+    {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else showLeadModal('arac');}
   }
   else showValidationError('Hesaplama yapılamadı. Lütfen bilgileri kontrol edin.');
 }
@@ -1721,8 +1721,8 @@ async function analyzeKusur(){
   r.scrollIntoView({behavior:'smooth',block:'center'});
   try{
     const result=await performKusurAnalysis(parties);
-    if(hasLeadInfo())showKusurResult(result,parties);
-    else{state.pendingType='kusur';state.pendingResult={total:0,rows:[],kusur:result,_parties:parties};r.style.display='none';showLeadModal('kusur');}
+    state.pendingType='kusur';state.pendingResult={total:0,rows:[],kusur:result,_parties:parties};
+    {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else{r.style.display='none';showLeadModal('kusur');}}
   }catch(e){
     r.innerHTML=`<div style="padding:24px;text-align:center;color:#ef4444"><p>Analiz sırasında bir hata oluştu: ${sanitizeHtml(e.message||'Bilinmeyen hata')}</p><button class="btn-next" onclick="analyzeKusur()" style="margin-top:16px;display:inline-flex">Tekrar Dene</button></div>`;
   }
@@ -1917,8 +1917,8 @@ async function analyzeFesih(){
   r.scrollIntoView({behavior:'smooth',block:'center'});
   try{
     const result=await performFesihAnalysis(data);
-    if(hasLeadInfo())showFesihResult(result);
-    else{state.pendingType='fesih';state.pendingResult={total:0,rows:[],fesih:result};r.style.display='none';showLeadModal('fesih');}
+    state.pendingType='fesih';state.pendingResult={total:0,rows:[],fesih:result};
+    {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else{r.style.display='none';showLeadModal('fesih');}}
   }catch(e){
     r.innerHTML=`<div style="padding:24px;text-align:center;color:#ef4444"><p>Analiz sırasında bir hata oluştu: ${sanitizeHtml(e.message||'Bilinmeyen hata')}</p><button class="btn-next" onclick="analyzeFesih()" style="margin-top:16px;display:inline-flex">Tekrar Dene</button></div>`;
   }
@@ -2024,8 +2024,8 @@ async function analyzeIseIade(){
   r.scrollIntoView({behavior:'smooth',block:'center'});
   try{
     const result=await performIseIadeAnalysis(data);
-    if(hasLeadInfo())showIseIadeResult(result);
-    else{state.pendingType='iseIade';state.pendingResult={total:0,rows:[],iseIade:result};r.style.display='none';showLeadModal('iseIade');}
+    state.pendingType='iseIade';state.pendingResult={total:0,rows:[],iseIade:result};
+    {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else{r.style.display='none';showLeadModal('iseIade');}}
   }catch(e){
     r.innerHTML=`<div style="padding:24px;text-align:center;color:#ef4444"><p>Analiz sırasında bir hata oluştu: ${sanitizeHtml(e.message||'Bilinmeyen hata')}</p><button class="btn-next" onclick="analyzeIseIade()" style="margin-top:16px;display:inline-flex">Tekrar Dene</button></div>`;
   }
@@ -2365,7 +2365,7 @@ function triggerIscilikCalc(){
       if(aiR&&confirm('AI tahmini: '+aiR.min.toLocaleString('tr-TR')+' - '+aiR.max.toLocaleString('tr-TR')+' TL arası.\nFormül: '+Math.round(r.toplamNet).toLocaleString('tr-TR')+' TL\n\nAI sonucu ile devam etmek için Tamam,\nformül sonucu için İptal\'e tıklayın.')){state.iscResult={...r,total:aiR.ort,ai:aiR};}
     }catch(e){const ov=document.querySelector('.loading-overlay');if(ov)ov.remove();}
       state.pendingType='iscilik';state.pendingResult=state.iscResult;
-      if(hasLeadInfo())showIscResult();else showLeadModal('iscilik');
+      {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else showLeadModal('iscilik');}
     })();
 }
 
@@ -2533,7 +2533,7 @@ function calcGeneric(){
   const r=cfg.calculate(d);
   state.pendingType=currentGenericModule;state.pendingResult=r;
   const mid=currentGenericModule;
-  if(hasLeadInfo())showGenericResult();else showLeadModal(mid);
+  {const _ci=getStoredContactInfo();if(_ci)finalizeLead(_ci,'');else showLeadModal(mid);}
   (async()=>{
     if(AI_MODULE_PROMPTS[mid]){
       try{
@@ -2542,7 +2542,7 @@ function calcGeneric(){
         let si=0;const sii=setInterval(()=>{if(si<stages.length)setLoadingStage(ov,stages[si]);si++;},3000);
         const aiR=await aiGenericCalc(mid,cfg.title||'Tazminat',cfg.fields,r);
         clearInterval(sii);hideLoadingOverlay(ov);
-        if(aiR){state.pendingResult={...r,total:aiR.ort,ai:aiR};r.ai=aiR;if(hasLeadInfo())showGenericResult();}
+        if(aiR){state.pendingResult={...r,total:aiR.ort,ai:aiR};r.ai=aiR;if(getStoredContactInfo())showGenericResult();}
       }catch(e){const ov=document.querySelector('.loading-overlay');if(ov)ov.remove();}
     }
   })();
@@ -2581,6 +2581,21 @@ function submitLead(){
   const ve=document.getElementById('vekaletError');if(!vekalet){if(ve)ve.textContent='Lütfen bu soruyu yanıtlayın.';valid=false;}else if(ve)ve.textContent='';
   const ke=document.getElementById('kvkkError');if(!kvkkOk){if(ke)ke.textContent='KVKK Aydınlatma Metni\'ni kabul etmelisiniz.';valid=false;}else if(ke)ke.textContent='';
   if(!valid)return;
+  const contactInfo={name,phone,email,city,district,plate,vekalet};
+  storeContactInfo(contactInfo);
+  markLeadCaptured();
+  closeLeadModal();
+  finalizeLead(contactInfo,description);
+  }catch(e){try{closeLeadModal()}catch(ee){}showValidationError('Bir hata oluştu, lütfen tekrar deneyin.');}
+}
+
+/* Sonucu Supabase'e "leads" kaydı olarak yazar ve ilgili sonuç ekranını
+   gösterir. İlk hesaplamada modal'dan gelen contactInfo ile, aynı
+   oturumdaki SONRAKİ hesaplamalarda ise getStoredContactInfo()'nun
+   döndürdüğü aynı bilgiyle çağrılır — böylece bir oturumda birden fazla
+   hesaplama yapan ziyaretçinin HER hesaplaması (modal tekrar sorulmadan)
+   ad/telefon/e-posta ile admin panelinde ayrı bir başvuru olarak görünür. */
+function finalizeLead(contactInfo,description){
   if(!state.pendingType||!state.pendingResult){showValidationError('Hesaplama bulunamadı. Lütfen tekrar hesaplama yapın.');return;}
   const type=state.pendingType,result=state.pendingResult,now=new Date(),tarih=now.toLocaleDateString('tr-TR'),saat=now.toLocaleTimeString('tr-TR');
   let sonucOzeti='';
@@ -2593,7 +2608,7 @@ function submitLead(){
 
   const ref=getUrlParam('ref')||'';
   const etiket=getUrlParam('etiket')||'';
-  const leadData={tarih,saat,ad:name,telefon:phone,email,sehir:city,ilce:district,plaka:plate,tur:type,sonuc:sonucOzeti,vekalet,aciklama:description,ref,etiket};
+  const leadData={tarih,saat,ad:contactInfo.name,telefon:contactInfo.phone,email:contactInfo.email,sehir:contactInfo.city,ilce:contactInfo.district||'',plaka:contactInfo.plate||'',tur:type,sonuc:sonucOzeti,vekalet:contactInfo.vekalet,aciklama:description||'',ref,etiket};
 
   const leads=JSON.parse(localStorage.getItem('muvekkilbilgi_leads')||'[]');
   leads.push(leadData);
@@ -2605,21 +2620,21 @@ function submitLead(){
   const {ref:_ref,etiket:_etiket,...leadDataForDb}=leadData;
   sbInsert('leads',leadDataForDb);
   trackFormComplete(ref,etiket,type);
-  postToGoogleForms({name,phone,city,vekalet,tur:type,tutar:sonucOzeti,tarih,saat});
-  markLeadCaptured();
-  closeLeadModal();
+  postToGoogleForms({name:contactInfo.name,phone:contactInfo.phone,city:contactInfo.city,vekalet:contactInfo.vekalet,tur:type,tutar:sonucOzeti,tarih,saat});
   if(type==='arac')showAracResult();
   else if(type==='iscilik')showIscResult();
   else if(type==='fesih'){const rr=document.getElementById('fesihResult');if(rr)rr.style.display='block';showFesihResult(result.fesih);}
   else if(type==='iseIade'){const rr=document.getElementById('iseIadeResult');if(rr)rr.style.display='block';showIseIadeResult(result.iseIade);}
   else if(type==='kusur'){const rr=document.getElementById('kusurResult');if(rr)rr.style.display='block';showKusurResult(result.kusur,result._parties);}
   else showGenericResult();
-  }catch(e){try{closeLeadModal()}catch(ee){}showValidationError('Bir hata oluştu, lütfen tekrar deneyin.');}
 }
 
-/* Sonucu görmeden önce ad/telefon/e-posta + KVKK onayı zorunlu — bir oturumda bir kez alınır */
-function hasLeadInfo(){return sessionStorage.getItem('mb_lead_captured')==='1';}
+/* İlk hesaplamada ad/telefon/e-posta + KVKK onayı zorunlu; alınan bilgi
+   sessionStorage'da saklanır ki aynı oturumdaki SONRAKİ hesaplamalar da
+   modal'ı tekrar sormadan aynı kişi adına ayrı bir başvuru kaydı oluştursun. */
 function markLeadCaptured(){sessionStorage.setItem('mb_lead_captured','1');}
+function getStoredContactInfo(){try{return JSON.parse(sessionStorage.getItem('mb_lead_contact')||'null');}catch(e){return null;}}
+function storeContactInfo(info){try{sessionStorage.setItem('mb_lead_contact',JSON.stringify(info));}catch(e){}}
 
 function postToGoogleForms(data){try{const fd=new FormData();fd.append('entry.2092238618',data.name);fd.append('entry.1556369182',data.phone);fd.append('entry.479301265',data.city);fd.append('entry.1841588407',data.vekalet);fd.append('entry.491333203',data.tur);fd.append('entry.1102816692',data.tutar);fetch('https://docs.google.com/forms/d/e/1FAIpQLSfIdcDlLyKtq1_mm6_cVLN0nHMCuRRSIUbUYkHp8uymoPGOUg/formResponse',{method:'POST',mode:'no-cors',body:fd}).catch(()=>{});}catch(e){}}
 function validateName(name){const p=name.trim().split(/\s+/);return p.length>=2&&p.every(x=>x.length>=2);}
