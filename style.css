@@ -1224,7 +1224,9 @@ a.contact-info-item:hover { color: var(--primary); }
 
 /* ===== KATEGORİ SEÇİM EKRANI =====
    Araçlar tek uzun liste yerine önce hukuk dalına göre seçiliyor. */
-.cat-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; max-width: 1000px; margin: 0 auto; }
+/* Kapsayıcı 900px ile sınırlı; 260px'lik minimum 3 sütun üretip 4. kartı
+   tek başına alta atıyordu. 360px minimumla 4 kategori 2x2 diziliyor. */
+.cat-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 18px; max-width: 1000px; margin: 0 auto; }
 .cat-card { position: relative; overflow: hidden; text-align: left; cursor: pointer; padding: 28px 24px 22px;
   background: linear-gradient(150deg, color-mix(in srgb, var(--group-accent, var(--primary)) 10%, var(--bg-card)), var(--bg-elevated));
   border: 1px solid var(--border); border-left: 4px solid var(--group-accent, var(--primary)); border-radius: var(--radius-xl);
