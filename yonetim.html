@@ -611,6 +611,28 @@
       }catch(e){lastErr='Sunucuya bağlanılamadı: '+e.message;return null}
     }
 
+    /* Gözetim başvurularında yüklenen gümrük beyannamesi: açıklama alanı
+       "BEYANNAME: 2026-09-02/abc123def456-dosya.pdf | ..." biçiminde
+       başlar. Dosyanın kendisi özel bir Supabase bucket'ında; indirmek
+       için sunucudan 10 dakika geçerli imzalı link alınıyor. */
+    function beyannameYolu(aciklama){
+      const m=/^BEYANNAME:\s*(\d{4}-\d{2}-\d{2}\/[0-9a-f]{12}-[\w.\-]{1,80})/.exec(String(aciklama||''));
+      return m?m[1]:null;
+    }
+    async function beyannameIndir(path,btn){
+      if(!path)return;
+      const eski=btn?btn.innerHTML:'';
+      if(btn){btn.disabled=true;btn.textContent='Link alınıyor…'}
+      try{
+        const r=await fetch('/api/admin/beyanname?path='+encodeURIComponent(path),{headers:{Authorization:'Bearer '+token()}});
+        if(r.status===401){doLogout(true);return}
+        const j=await r.json();
+        if(!r.ok||!j.url){alert(j.error||'İndirme linki alınamadı.');return}
+        window.open(j.url,'_blank','noopener');
+      }catch(e){alert('Sunucuya bağlanılamadı: '+e.message)}
+      finally{if(btn){btn.disabled=false;btn.innerHTML=eski}}
+    }
+
     function rowDate(r){
       if(r.created_at){const d=new Date(r.created_at);if(!isNaN(d))return d}
       if(r.tarih){
@@ -1092,6 +1114,13 @@
       acts+='<button class="btn" id="drPdfBtn">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>'+
         ' PDF</button>';
+      /* Gözetim başvurusunda müvekkil gümrük beyannamesini yüklediyse
+         açıklama "BEYANNAME: <yol> | ..." ile başlar. Dosya özel bir
+         bucket'ta durduğu için süreli imzalı link üzerinden indiriliyor. */
+      const beyPath=beyannameYolu(l.aciklama);
+      if(beyPath)acts+='<button class="btn" id="drBeyBtn" data-path="'+esc(beyPath)+'">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>'+
+        ' Beyannameyi indir</button>';
       acts+='</div>';
 
       const fields=[
@@ -1130,6 +1159,8 @@
       });
       const pdfBtn=document.getElementById('drPdfBtn');
       if(pdfBtn)pdfBtn.addEventListener('click',function(){printLead(openLeadId)});
+      const beyBtn=document.getElementById('drBeyBtn');
+      if(beyBtn)beyBtn.addEventListener('click',function(){beyannameIndir(this.getAttribute('data-path'),this)});
 
       document.getElementById('drBody').querySelectorAll('.st-opt').forEach(function(b){
         b.addEventListener('click',function(){

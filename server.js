@@ -235,6 +235,123 @@ app.post('/api/ai/vision', apiLimiter, async (req, res) => {
   }
 });
 
+/* ===================================================================
+   GÜMRÜK BEYANNAMESİ YÜKLEME
+   Gözetim modülünde kullanıcı beyannamesini seçtiğinde dosya gerçekten
+   sunucuya gelmiyordu, sadece tarayıcıda kalıyordu. Dosya Supabase
+   Storage'daki özel (public olmayan) bir bucket'a yazılıyor; bucket yoksa
+   ilk yüklemede oluşturuluyor. Servis anahtarı yalnızca sunucuda,
+   tarayıcıya hiç düşmüyor. Admin panelinde dosyaya, süreli imzalı link
+   üzerinden erişiliyor.
+   =================================================================== */
+const BEYANNAME_BUCKET = 'beyannameler';
+const BEYANNAME_MAX_BYTES = 3 * 1024 * 1024;
+const BEYANNAME_TYPES = {
+  'application/pdf': 'pdf',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp'
+};
+
+async function ensureBeyannameBucket(svcKey) {
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BEYANNAME_BUCKET}`, {
+    headers: { apikey: svcKey, Authorization: `Bearer ${svcKey}` },
+    signal: AbortSignal.timeout(10000)
+  });
+  if (r.ok) return true;
+  const c = await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
+    method: 'POST',
+    headers: { apikey: svcKey, Authorization: `Bearer ${svcKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: BEYANNAME_BUCKET,
+      name: BEYANNAME_BUCKET,
+      public: false,
+      file_size_limit: BEYANNAME_MAX_BYTES,
+      allowed_mime_types: Object.keys(BEYANNAME_TYPES)
+    }),
+    signal: AbortSignal.timeout(10000)
+  });
+  if (c.ok) return true;
+  const body = await c.text();
+  // Yarış durumunda "already exists" dönebilir; bu bir hata değil.
+  if (/already exists|Duplicate/i.test(body)) return true;
+  throw new Error('bucket oluşturulamadı (' + c.status + '): ' + body.slice(0, 200));
+}
+
+app.post('/api/beyanname', apiLimiter, async (req, res) => {
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!svcKey) return res.status(500).json({ error: 'Sunucu yapılandırması eksik (SUPABASE_SERVICE_ROLE_KEY).' });
+  try {
+    const { filename, mimeType, dataBase64, ad, telefon } = req.body || {};
+    const ext = BEYANNAME_TYPES[mimeType];
+    if (!ext) return res.status(400).json({ error: 'Yalnızca PDF, JPG, PNG veya WEBP yükleyebilirsiniz.' });
+    if (typeof dataBase64 !== 'string' || !dataBase64) return res.status(400).json({ error: 'Dosya içeriği alınamadı.' });
+    let buf;
+    try { buf = Buffer.from(dataBase64, 'base64'); } catch (e) { return res.status(400).json({ error: 'Dosya içeriği okunamadı.' }); }
+    if (!buf.length) return res.status(400).json({ error: 'Dosya boş görünüyor.' });
+    if (buf.length > BEYANNAME_MAX_BYTES) return res.status(413).json({ error: 'Dosya en fazla 3 MB olabilir.' });
+
+    await ensureBeyannameBucket(svcKey);
+
+    const safe = String(filename || 'beyanname')
+      .replace(/[^\w.\-]+/g, '_')
+      .replace(/_{2,}/g, '_')
+      .slice(-60);
+    const stamp = new Date().toISOString().slice(0, 10);
+    const rand = crypto.randomBytes(6).toString('hex');
+    const objectPath = `${stamp}/${rand}-${safe.endsWith('.' + ext) ? safe : safe + '.' + ext}`;
+
+    const up = await fetch(`${SUPABASE_URL}/storage/v1/object/${BEYANNAME_BUCKET}/${encodeURI(objectPath)}`, {
+      method: 'POST',
+      headers: {
+        apikey: svcKey,
+        Authorization: `Bearer ${svcKey}`,
+        'Content-Type': mimeType,
+        'x-upsert': 'false',
+        'cache-control': '3600'
+      },
+      body: buf,
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!up.ok) {
+      const t = await up.text();
+      console.error('Beyanname upload error:', up.status, t);
+      return res.status(502).json({ error: 'Dosya yüklenemedi (' + up.status + ').' });
+    }
+    console.log('Beyanname yüklendi:', objectPath, buf.length + ' bayt', (ad || '-') + ' / ' + (telefon || '-'));
+    res.json({ ok: true, path: objectPath, size: buf.length });
+  } catch (e) {
+    console.error('Beyanname endpoint hatası:', e.message);
+    res.status(500).json({ error: 'Dosya yüklenirken bir hata oluştu.' });
+  }
+});
+
+/* Admin panelinden beyannameyi indirmek için 10 dakika geçerli imzalı link. */
+app.get('/api/admin/beyanname', async (req, res) => {
+  const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!ADMIN_JWT_SECRET) return res.status(500).json({ error: 'Sunucu yapılandırması eksik (ADMIN_JWT_SECRET).' });
+  const authHeader = req.headers['authorization'] || '';
+  if (!verifyAdminToken(authHeader.replace(/^Bearer\s+/i, ''), ADMIN_JWT_SECRET)) return res.status(401).json({ error: 'Yetkisiz.' });
+  if (!svcKey) return res.status(500).json({ error: 'Sunucu yapılandırması eksik (SUPABASE_SERVICE_ROLE_KEY).' });
+  const p = String(req.query.path || '');
+  // Yol yalnızca bizim ürettiğimiz biçimde olabilir: 2026-01-31/abc123-dosya.pdf
+  if (!/^\d{4}-\d{2}-\d{2}\/[0-9a-f]{12}-[\w.\-]{1,80}$/.test(p)) return res.status(400).json({ error: 'Geçersiz dosya yolu.' });
+  try {
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${BEYANNAME_BUCKET}/${encodeURI(p)}`, {
+      method: 'POST',
+      headers: { apikey: svcKey, Authorization: `Bearer ${svcKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expiresIn: 600 }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!r.ok) return res.status(502).json({ error: 'İndirme linki alınamadı (' + r.status + ').' });
+    const j = await r.json();
+    res.json({ url: SUPABASE_URL + '/storage/v1' + j.signedURL });
+  } catch (e) {
+    res.status(500).json({ error: 'Sunucu hatası: ' + e.message });
+  }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', keySet: !!GROQ_API_KEY });
 });

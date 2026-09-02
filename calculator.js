@@ -3266,26 +3266,36 @@ function gozSure(){
 
 /* İade uygunluk skoru: dosyanın hukuki incelemeye ne kadar elverişli
    göründüğüne dair göstergesel bir puan (kesin sonuç değildir). */
+/* Skorun ağırlık merkezi, kullanıcının hatırladığı evrak detayları değil,
+   objektif olarak tespit edilen EKLENEN KIYMET. Çünkü fatura bedelinin
+   üzerine eklenmiş bir kıymet varsa iade talebinin konusu zaten doğmuş
+   olur; ihtirazi kayıt/gözetim belgesi gibi ayrıntılar beyannameden
+   kontrol edilebilir. Bu yüzden "Bilmiyorum" cevapları cezalandırılmıyor,
+   nötr sayılıyor — yalnızca talebi gerçekten zayıflatan cevaplar
+   (bedelin satıcıya fiilen ödenmiş olması gibi) puanı düşürüyor. */
 function gozSkor(){
   const q=gozState.q,ek=gozEklenenKiymet(),sure=gozSure();
   let s=0;const lines=[];
-  if(q.kiymetUstu==='evet'){s+=30;lines.push({ok:1,t:'Malın gerçek bedelinin üzerinde kıymet beyan edilmiş.'});}
-  else if(q.kiymetUstu==='bilmiyorum')lines.push({ok:2,t:'Beyan edilen kıymetin fatura bedelini aşıp aşmadığı beyannameden teyit edilmeli.'});
-  else lines.push({ok:0,t:'Fatura bedelinin üzerinde kıymet beyanı belirtilmemiş.'});
 
-  if(q.satciyaOdendi==='hayir'){s+=30;lines.push({ok:1,t:'Eklenen bedelin satıcıya fiilen ödenmediği belirtilmiş.'});}
-  else if(q.satciyaOdendi==='evet')lines.push({ok:0,t:'Eklenen bedel satıcıya fiilen ödenmiş olarak belirtilmiş.'});
+  if(ek>0){s+=45;lines.push({ok:1,t:'Beyan kıymetine eklenmiş '+fmt(ek)+' tutarında kıymet tespit edildi — iade talebinin konusu bu tutar.'});}
+  else lines.push({ok:0,t:'Eklenen kıymet tespit edilemedi; beyanname üzerinden yeniden değerlendirilmeli.'});
 
-  if(q.ihtirazi==='evet'){s+=20;lines.push({ok:1,t:'Beyannamenin ihtirazi kayıtla verildiği belirtilmiş.'});}
-  else if(q.ihtirazi==='bilmiyorum')lines.push({ok:2,t:'İhtirazi kayıt bulunup bulunmadığı beyannameden kontrol edilmeli.'});
-  else lines.push({ok:2,t:'İhtirazi kayıt belirtilmemiş — bu durum sürecin yönetimini etkiler, ayrıca değerlendirilmeli.'});
+  if(q.kiymetUstu==='evet'){s+=20;lines.push({ok:1,t:'Malın gerçek bedelinin üzerinde kıymet beyan edilmiş.'});}
+  else if(q.kiymetUstu==='bilmiyorum'){s+=10;lines.push({ok:2,t:'Kıymetin fatura bedelini aşıp aşmadığı beyannameden teyit edilecek.'});}
+  else{s-=10;lines.push({ok:0,t:'Fatura bedelinin üzerinde kıymet beyanı belirtilmemiş.'});}
 
-  if(q.gozetimBelge==='hayir'){s+=10;lines.push({ok:1,t:'Gözetim belgesi bulunmadığı belirtilmiş.'});}
-  else if(q.gozetimBelge==='bilmiyorum')lines.push({ok:2,t:'Gözetim belgesi durumu teyit edilmeli.'});
+  if(q.satciyaOdendi==='hayir'){s+=25;lines.push({ok:1,t:'Eklenen bedelin satıcıya fiilen ödenmediği belirtilmiş — talebi güçlendiren en önemli unsur.'});}
+  else if(q.satciyaOdendi==='evet'){s-=15;lines.push({ok:0,t:'Eklenen bedel satıcıya fiilen ödenmiş; bu durum talebi zayıflatır.'});}
 
-  if(ek>0){s+=10;lines.push({ok:1,t:'Beyan kıymetine eklenmiş '+fmt(ek)+' tutarında kıymet tespit edildi.'});}
-  if(sure.renk==='sari')s-=5;
-  if(sure.renk==='kirmizi')s-=10;
+  if(q.ihtirazi==='evet'){s+=10;lines.push({ok:1,t:'Beyannamenin ihtirazi kayıtla verildiği belirtilmiş.'});}
+  else if(q.ihtirazi==='bilmiyorum'){s+=5;lines.push({ok:2,t:'İhtirazi kayıt bulunup bulunmadığı beyannameden kontrol edilecek.'});}
+  else lines.push({ok:2,t:'İhtirazi kayıt belirtilmemiş — bu tek başına yolu kapatmaz, izlenecek usul buna göre belirlenir.'});
+
+  if(q.gozetimBelge==='hayir'){s+=5;lines.push({ok:1,t:'Gözetim belgesi bulunmadığı belirtilmiş.'});}
+  else if(q.gozetimBelge==='bilmiyorum'){s+=2;lines.push({ok:2,t:'Gözetim belgesi durumu teyit edilecek.'});}
+
+  if(sure.renk==='sari')s-=3;
+  if(sure.renk==='kirmizi')s-=8;
   lines.push({ok:2,t:sure.metin});
   s=Math.max(0,Math.min(100,s));
   return {skor:s,lines:lines,sure:sure};
@@ -3444,17 +3454,105 @@ function gozDosyaBox(){
     +'<span class="doc-upload-badge oneri">Önerilen</span></div>'
     +'<div class="doc-upload-drop" onclick="document.getElementById(\'gozDosyaInput\').click()">'
     +'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="doc-upload-drop-icon"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    +'<div class="doc-upload-drop-text">'+(d?'Dosyayı değiştir':'Beyannanizi seçin')+'</div>'
+    +'<div class="doc-upload-drop-text">'+(d?'Dosyayı değiştir':'Beyannamenizi seçin')+'</div>'
     +'<input type="file" id="gozDosyaInput" class="doc-upload-input" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="gozDosyaSec(this.files)"/>'
-    +(d?'<div class="doc-file-info" style="display:flex"><div class="doc-file-icon">📄</div><div class="doc-file-details"><span class="doc-file-name">'+sanitizeHtml(d.name)+'</span><span class="doc-file-size">'+(d.size/1024).toFixed(0)+' KB · dosya cihazınızda, WhatsApp ile iletebilirsiniz</span></div></div>':'')
-    +'</div></div>';
+    +(d?gozDosyaDurum(d):'')
+    +'</div>'
+    +(d&&d.durum==='gonderildi'&&gozPaylasilabilir(d)?'<button type="button" class="btn-whatsapp" style="margin:12px 16px 16px;width:calc(100% - 32px)" onclick="event.stopPropagation();gozDosyaPaylas()"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Bir kopyasını WhatsApp\'tan da gönder</button>':'')
+    +'</div>';
 }
+
+/* Durum satırı: yükleniyor / gönderildi / hata */
+function gozDosyaDurum(d){
+  let alt,renk='';
+  if(d.durum==='yukleniyor'){alt='Gönderiliyor…';}
+  else if(d.durum==='gonderildi'){alt='✓ Avukata ulaştı — inceleme sırasına alındı';renk='color:#22c55e';}
+  else if(d.durum==='hata'){alt='Gönderilemedi: '+(d.hata||'')+' — tekrar deneyin';renk='color:#ef4444';}
+  else alt=(d.size/1024).toFixed(0)+' KB';
+  return '<div class="doc-file-info" style="display:flex"><div class="doc-file-icon">'+(d.durum==='gonderildi'?'✅':(d.durum==='hata'?'⚠️':'📄'))+'</div>'
+    +'<div class="doc-file-details"><span class="doc-file-name">'+sanitizeHtml(d.name)+'</span>'
+    +'<span class="doc-file-size" style="'+renk+'">'+sanitizeHtml(alt)+'</span></div></div>';
+}
+
+/* Mobilde (iOS/Android) dosyayı doğrudan WhatsApp'a iliştirerek paylaşma.
+   Masaüstü tarayıcılarda dosya paylaşımı desteklenmediği için buton
+   yalnızca destekleniyorsa gösteriliyor — sunucuya yükleme her durumda
+   yapıldığı için bu sadece ek bir kolaylık. */
+function gozPaylasilabilir(d){
+  try{return !!(d&&d.file&&navigator.canShare&&navigator.canShare({files:[d.file]}));}catch(e){return false;}
+}
+function gozDosyaPaylas(){
+  const d=gozState.dosya;
+  if(!gozPaylasilabilir(d))return;
+  const r=state.gozResult;
+  navigator.share({
+    files:[d.file],
+    title:'Gümrük Beyannamesi',
+    text:'Gözetim kaynaklı fazla vergi iadesi için beyannamem.'+(r?' Eklenen kıymet: '+fmt(r.ek)+', potansiyel fazla vergi: '+fmt(r.fv.tutar)+'.':'')
+  }).catch(function(){});
+}
+/* Dosya seçilince gerçekten sunucuya gönderiliyor (eskiden yalnızca
+   tarayıcıda kalıyordu). Yükleme bitince yol, başvuru kaydının açıklama
+   alanına ekleniyor ki avukat admin panelinden indirebilsin. */
 function gozDosyaSec(files){
   if(!files||!files.length)return;
   const f=files[0];
-  if(f.size>10*1024*1024){showValidationError('Dosya en fazla 10 MB olabilir.');return;}
-  gozState.dosya={name:f.name,size:f.size};
+  if(f.size>3*1024*1024){showValidationError('Dosya en fazla 3 MB olabilir.');return;}
+  const izin=['application/pdf','image/jpeg','image/png','image/webp'];
+  if(izin.indexOf(f.type)===-1){showValidationError('Yalnızca PDF, JPG, PNG veya WEBP gönderebilirsiniz.');return;}
+  gozState.dosya={name:f.name,size:f.size,durum:'yukleniyor',file:f};
   showGozetimResult();
+  const reader=new FileReader();
+  reader.onload=function(){
+    const b64=String(reader.result||'').split(',')[1]||'';
+    const ci=getStoredContactInfo()||{};
+    fetch('/api/beyanname',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({filename:f.name,mimeType:f.type,dataBase64:b64,ad:ci.name||'',telefon:ci.phone||''})
+    }).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+      .then(function(res){
+        if(res.ok&&res.j&&res.j.path){
+          gozState.dosya.durum='gonderildi';
+          gozState.dosya.path=res.j.path;
+          gozBeyannameKaydet(res.j.path);
+        }else{
+          gozState.dosya.durum='hata';
+          gozState.dosya.hata=(res.j&&res.j.error)||'Gönderilemedi.';
+        }
+        showGozetimResult();
+      })
+      .catch(function(){
+        gozState.dosya.durum='hata';
+        gozState.dosya.hata='Bağlantı kurulamadı.';
+        showGozetimResult();
+      });
+  };
+  reader.onerror=function(){gozState.dosya.durum='hata';gozState.dosya.hata='Dosya okunamadı.';showGozetimResult();};
+  reader.readAsDataURL(f);
+}
+
+/* Beyanname, sonuç ekranında (yani başvuru kaydı oluştuktan sonra)
+   yükleniyor. Kaydı tekrar yazmak yerine aynı kişi/aynı hesaplama için
+   dosya yolunu taşıyan ikinci bir satır bırakıyoruz; leads tablosunda
+   ayrı sütun olmadığı için bilgi açıklama alanında tutuluyor. */
+function gozBeyannameKaydet(path){
+  const ci=getStoredContactInfo();
+  if(!ci||!state.gozResult)return;
+  const now=new Date();
+  const rec={
+    tarih:now.toLocaleDateString('tr-TR'),saat:now.toLocaleTimeString('tr-TR'),
+    ad:ci.name,telefon:ci.phone,email:ci.email,sehir:ci.city,ilce:ci.district||'',plaka:'',
+    tur:'gozetim',
+    sonuc:'Gümrük beyannamesi yüklendi · '+fmt(state.gozResult.fv.tutar)+' potansiyel fazla vergi',
+    vekalet:ci.vekalet,
+    aciklama:'BEYANNAME: '+path+' | Skor: '+state.gozResult.sk.skor+'/100 · Eklenen kıymet: '+fmt(state.gozResult.ek)
+  };
+  try{
+    const leads=JSON.parse(localStorage.getItem('muvekkilbilgi_leads')||'[]');
+    leads.push(rec);localStorage.setItem('muvekkilbilgi_leads',JSON.stringify(leads));
+  }catch(e){}
+  sbInsert('leads',rec);
 }
 
 /* =====================================================================
