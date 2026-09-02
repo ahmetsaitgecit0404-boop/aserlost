@@ -410,28 +410,34 @@ const TURKISH_CITIES = ['Adana','Adıyaman','Afyonkarahisar','Ağrı','Amasya','
 const TESTIMONIALS=[];
 
 const MODULES = [
-  // ===== TRAFİK KAZASI TAZMİNATLARI =====
+  // ===== TRAFİK KAZASI HUKUKU — iki temel araç =====
+  {id:'trafikSihirbaz',title:'Trafik Kazası\nHesaplama',icon:'🚗',desc:'Tek akışta: sorulara verdiğiniz yanıtlara göre araç değer kaybı, hasar bedeli ve yaralanma varsa bedeni tazminatlar birlikte hesaplanır.',tags:['Soru-Cevap','Tüm Tazminatlar','Tek Ekran'],screen:'trafikSihirbaz',category:'trafik'},
   {id:'kusur',title:'Trafik Kazası Kusur Oranı\nve Tazminat Hakları Tespiti',icon:'🚦',desc:'Kazanızı anlatın: yapay zeka hem kusur oranınızı belirlesin hem de değer kaybı, mahrumiyet, sakatlık gibi hangi tazminat haklarına sahip olduğunuzu söylesin.',tags:['AI Analiz','Kusur Tespiti','Hak Tespiti'],screen:'kusur',category:'trafik'},
-  {id:'arac',title:'Araç Değer Kaybı\nTazminatı',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik'},
-  {id:'hasar',title:'Araç Gerçek Hasar\nBedeli Hesaplama',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik'},
-  {id:'mahrumiyet',title:'Araç Mahrumiyet\nTazminatı Hesaplama',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik'},
-  {id:'pertBedeli',title:'Pert Araç Bedeli\nHesaplama',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik'},
-  {id:'sakatlik',title:'Sürekli Sakatlık\nTazminatı',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'yoksun',title:'Destekten Yoksun\nKalma Tazminatı',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'maddi',title:'Maddi Hasar\nHesaplama',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
-  {id:'kasko',title:'Kasko Hasar\nTazminatı',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik'},
-  {id:'manevi',title:'Manevi Tazminat\nHesaplama',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik'},
-  {id:'gecici',title:'Geçici İş\nGöremezlik',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik'},
-  {id:'kalici',title:'Kalıcı İş\nGöremezlik',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'trafikCezasi',title:'Trafik Cezası\nİtiraz Hesaplama',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik'},
-  // ===== İŞÇİ ALACAKLARI =====
-  {id:'fesih',title:'İşçi Haklı Fesih ve\nKıdem Tazminatı Uygunluk Testi',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci'},
-  {id:'iseIade',title:'İşe İade Davası\nAçabilir Miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci'},
-  {id:'iscilik',title:'İşçilik Alacakları\nHesaplama',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci'},
-  {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci'},
-  {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci'},
-  {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci'},
-  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci'},
+  // Aşağıdaki tekil trafik araçları artık sihirbazın içinden çalışıyor; kategori
+  // listesini kalabalıklaştırmasınlar diye gizli, ama aramadan hâlâ bulunabilirler.
+  {id:'arac',title:'Araç Değer Kaybı\nTazminatı',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik',hidden:true},
+  {id:'hasar',title:'Araç Gerçek Hasar\nBedeli Hesaplama',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik',hidden:true},
+  {id:'mahrumiyet',title:'Araç Mahrumiyet\nTazminatı Hesaplama',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik',hidden:true},
+  {id:'pertBedeli',title:'Pert Araç Bedeli\nHesaplama',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik',hidden:true},
+  {id:'sakatlik',title:'Sürekli Sakatlık\nTazminatı',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
+  {id:'yoksun',title:'Destekten Yoksun\nKalma Tazminatı',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
+  {id:'maddi',title:'Maddi Hasar\nHesaplama',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik',hidden:true},
+  {id:'kasko',title:'Kasko Hasar\nTazminatı',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik',hidden:true},
+  {id:'manevi',title:'Manevi Tazminat\nHesaplama',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik',hidden:true},
+  {id:'gecici',title:'Geçici İş\nGöremezlik',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik',hidden:true},
+  {id:'kalici',title:'Kalıcı İş\nGöremezlik',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
+  {id:'trafikCezasi',title:'Trafik Cezası\nİtiraz Hesaplama',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik',hidden:true},
+  // ===== VERGİ & GÜMRÜK HUKUKU =====
+  {id:'gozetim',title:'Gözetim Kaynaklı Fazla\nVergi İade Hesaplama',icon:'🧾',desc:'Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.',tags:['Gözetim Kıymeti','İade İhtimali','Dosya Skoru'],screen:'gozetim',category:'vergi'},
+  // ===== İŞ HUKUKU — tek soru-cevap akışı =====
+  {id:'isHukukuSihirbaz',title:'İş Hukuku\nHesaplama',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
+  {id:'fesih',title:'İşçi Haklı Fesih ve\nKıdem Tazminatı Uygunluk Testi',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci',hidden:true},
+  {id:'iseIade',title:'İşe İade Davası\nAçabilir Miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci',hidden:true},
+  {id:'iscilik',title:'İşçilik Alacakları\nHesaplama',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci',hidden:true},
+  {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci',hidden:true},
+  {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci',hidden:true},
+  {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci',hidden:true},
+  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci',hidden:true},
   // ===== DİĞER TAZMİNATLAR =====
   {id:'bosanma',title:'Boşanma Tazminatı\nve Mal Paylaşımı',icon:'👨‍⚖️',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.',tags:['Boşanma','Nafaka','Mal Paylaşımı'],screen:'generic',category:'diger'},
   {id:'miras',title:'Miras Payı\nHesaplama',icon:'📜',desc:'Türk Medeni Kanunu\'na göre miras paylarını hesaplayın. Yasal mirasçılar ve miras oranları.',tags:['Miras Hukuku','Pay Hesaplama','Yasal Düzenleme'],screen:'generic',category:'diger'},
@@ -698,6 +704,9 @@ function navigate(screen){
   if(screen==='home'){back.style.display='none';if(nav)nav.style.display='';updateRouteUrl('/','Müvekkil Bilgi – Tazminat Hesaplama Platformu','Trafik kazası araç değer kaybı, işçilik, hasar bedeli, iş gücü kaybı, sakatlık ve tazminat hesaplamalarınızı yasal mevzuata uygun, ücretsiz hesaplayın.');}
   else{back.style.display='flex';if(nav)nav.style.display='none';if(SCREEN_TO_PATH[screen]){const r=ROUTE_MAP[SCREEN_TO_PATH[screen]]||{};updateRouteUrl(SCREEN_TO_PATH[screen],r.title,r.desc);}}
   window.scrollTo({top:0});if(screen==='blog')renderBlogPage();if(screen==='kusur'){setTimeout(renderKusurParties,50);}
+  if(screen==='gozetim')openGozetim();
+  if(screen==='trafikSihirbaz')openTrafikWizard();
+  if(screen==='isHukuku')openIsHukuku();
   setTimeout(()=>{_navLock=false;},D+200);
 }
 
@@ -856,29 +865,56 @@ function initBrands(){
 }
 
 const MODULE_CATS={
-  trafik:{title:'Trafik Kazası Tazminatları',icon:'🚗',accent:'#8B5CF6',desc:'Araç değer kaybı, hasar bedeli, sakatlık ve diğer trafik kazası tazminatları'},
-  isci:{title:'İşçi Alacakları Tazminatları',icon:'💼',accent:'#22c55e',desc:'Kıdem, ihbar, iş kazası ve iş gücü kaybı tazminatları'},
-  diger:{title:'Diğer Tazminatlar',icon:'📋',accent:'#C5A880',desc:'Boşanma, miras, kamulaştırma ve diğer hukuki tazminatlar'}
+  trafik:{title:'Trafik Kazası Hukuku',icon:'🚗',accent:'#8B5CF6',desc:'Kazanızı anlatın; değer kaybı, hasar ve yaralanma tazminatları tek akışta hesaplansın'},
+  isci:{title:'İş Hukuku',icon:'💼',accent:'#22c55e',desc:'İşten ayrılma/çıkarılma durumunuza göre kıdem, ihbar ve diğer alacaklarınız'},
+  vergi:{title:'Vergi & Gümrük Hukuku',icon:'🧾',accent:'#3B82F6',desc:'Gözetim uygulaması kaynaklı fazla ödenen vergilerin iadesi'},
+  diger:{title:'Diğer Hukuk Alanları',icon:'📋',accent:'#C5A880',desc:'Boşanma, miras, kamulaştırma, tüketici ve tapu işlemleri'}
 };
+const SCREEN_MODULES=['kusur','fesih','iseIade','arac','iscilik','gozetim','trafikSihirbaz','isHukuku'];
 function moduleAction(m){
-  if(m.screen==='kusur'||m.screen==='fesih'||m.screen==='iseIade'||m.screen==='arac'||m.screen==='iscilik')return `navigate('${m.screen}')`;
+  if(SCREEN_MODULES.indexOf(m.screen)!==-1)return `navigate('${m.screen}')`;
   return `openGenericCalc('${m.id}')`;
 }
 function renderModuleCard(m){
   const isAiWizard=m.screen==='kusur'||m.screen==='fesih'||m.screen==='iseIade';
   return `<div class="module-card" onclick="${moduleAction(m)}" role="button" tabindex="0"><div class="module-card-glow"></div><div class="module-card-icon">${m.icon}</div><div class="module-card-body"><h2 class="module-card-title">${m.title.replace(/\n/g,'<br/>')}</h2><p class="module-card-desc">${m.desc}</p><div class="module-tags">${m.tags.map(t=>`<span class="module-tag">${t}</span>`).join('')}</div></div><div class="module-cta-btn">${isAiWizard?'Analizi Başlat':'Hesaplamayı Başlat'} <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`;
 }
+/* Araçlar artık tek uzun liste hâlinde değil; önce "hangi uyuşmazlık" seçilir,
+   hesaplama botları yalnızca o ana başlığa girildiğinde görünür. */
+let activeModuleCat=null;
+function catVisibleModules(cat){return MODULES.filter(m=>m.category===cat&&!m.hidden);}
+function selectModuleCat(cat){
+  activeModuleCat=cat;
+  renderModuleCards();
+  const sec=document.getElementById('modules');
+  if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function clearModuleCat(){activeModuleCat=null;renderModuleCards();}
 function renderModuleCards(){
   const g=document.getElementById('modulesGrid');if(!g)return;
   let html='';
-  Object.keys(MODULE_CATS).forEach(cat=>{
-    const items=MODULES.filter(m=>m.category===cat);
-    if(!items.length)return;
-    const c=MODULE_CATS[cat];
-    html+=`<div class="module-group"><div class="module-group-header" style="--group-accent:${c.accent}"><div class="module-group-icon">${c.icon}</div><div class="module-group-text"><h3 class="module-group-title">${c.title}</h3><p class="module-group-desc">${c.desc}</p></div><span class="module-group-count">${items.length} araç</span></div><div class="modules-grid-inner">`;
-    items.forEach(m=>{html+=renderModuleCard(m);});
-    html+=`</div></div>`;
-  });
+  if(!activeModuleCat){
+    html+=`<div class="cat-picker">`;
+    Object.keys(MODULE_CATS).forEach(cat=>{
+      const items=catVisibleModules(cat);
+      if(!items.length)return;
+      const c=MODULE_CATS[cat];
+      html+=`<div class="cat-card" style="--group-accent:${c.accent}" onclick="selectModuleCat('${cat}')" role="button" tabindex="0">
+        <div class="cat-card-icon">${c.icon}</div>
+        <h3 class="cat-card-title">${c.title}</h3>
+        <p class="cat-card-desc">${c.desc}</p>
+        <div class="cat-card-foot"><span class="cat-card-count">${items.length} hesaplama aracı</span><span class="cat-card-go">Devam et <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      </div>`;
+    });
+    html+=`</div>`;
+    g.innerHTML=html;
+    return;
+  }
+  const c=MODULE_CATS[activeModuleCat],items=catVisibleModules(activeModuleCat);
+  html+=`<button type="button" class="cat-back" onclick="clearModuleCat()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Tüm hukuk alanları</button>`;
+  html+=`<div class="module-group"><div class="module-group-header" style="--group-accent:${c.accent}"><div class="module-group-icon">${c.icon}</div><div class="module-group-text"><h3 class="module-group-title">${c.title}</h3><p class="module-group-desc">${c.desc}</p></div><span class="module-group-count">${items.length} araç</span></div><div class="modules-grid-inner">`;
+  items.forEach(m=>{html+=renderModuleCard(m);});
+  html+=`</div></div>`;
   g.innerHTML=html;
 }
 function filterModules(query){
@@ -2557,7 +2593,14 @@ function showLeadModal(type){
   document.querySelectorAll('#vekaletToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
   ['nameError','phoneError','emailError','cityError','vekaletError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
   const plateField=document.getElementById('leadPlateField');
-  if(plateField)plateField.style.display=type==='arac'?'':'none';
+  if(plateField)plateField.style.display=(type==='arac'||type==='trafikSihirbaz')?'':'none';
+  /* Gözetim dosyalarında firma adı, sıradan başvurulardan daha değerli;
+     açıklama alanının etiketi ve yer tutucusu modüle göre değişiyor. */
+  const dLabel=document.querySelector('label[for="leadDescription"]'),dInput=document.getElementById('leadDescription');
+  if(dLabel&&dInput){
+    if(type==='gozetim'){dLabel.textContent='Firma adı ve eklemek istedikleriniz';dInput.placeholder='Firma adınız ve beyannameyle ilgili eklemek istedikleriniz...';}
+    else{dLabel.textContent='Açıklama';dInput.placeholder='Eklemek istediğiniz detaylar...';}
+  }
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
   const modalBox=document.querySelector('#leadModal .modal-box');if(modalBox)modalBox.scrollTop=0;
   document.getElementById('leadModal').style.display='flex';
@@ -2604,11 +2647,18 @@ function finalizeLead(contactInfo,description){
   else if(type==='fesih')sonucOzeti='Haklı Fesih Analizi: '+(result.fesih?.haklıFesihVarMi?'Var':'Belirsiz/Yok')+' (Güven %'+(parseInt(result.fesih?.guvenSkoru)||0)+')';
   else if(type==='kusur'){const ps=(result.kusur?.parties||[]).map(p=>p.harf+': %'+p.kusurYuzde).join(', ');sonucOzeti='Kusur Oranı Analizi: '+(ps||'Sonuç mevcut');}
   else if(type==='iseIade')sonucOzeti='İşe İade Uygunluk Analizi: '+(result.iseIade?.sartlariTasiyorMu?'Şartlar Uygun':'Belirsiz/Uygun Değil')+' (Güven %'+(parseInt(result.iseIade?.guvenSkoru)||0)+')';
+  else if(type==='gozetim')sonucOzeti='Gözetim Fazla Vergi: eklenen kıymet '+new Intl.NumberFormat('tr-TR').format(result.gozetim?.ek||0)+' TL, potansiyel fazla vergi '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL (skor '+(result.gozetim?.sk?.skor||0)+'/100)';
+  else if(type==='trafikSihirbaz')sonucOzeti='Trafik Kazası Tazminatı: '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL';
+  else if(type==='isHukukuSihirbaz')sonucOzeti='İş Hukuku Alacağı: '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL';
   else sonucOzeti='Tahmini Tazminat: '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL';
 
   const ref=getUrlParam('ref')||'';
   const etiket=getUrlParam('etiket')||'';
-  const leadData={tarih,saat,ad:contactInfo.name,telefon:contactInfo.phone,email:contactInfo.email,sehir:contactInfo.city,ilce:contactInfo.district||'',plaka:contactInfo.plate||'',tur:type,sonuc:sonucOzeti,vekalet:contactInfo.vekalet,aciklama:description||'',ref,etiket};
+  /* Modüle özel ek bilgiler (gözetim dosya detayı, çıkış şekli vb.) leads
+     tablosunda ayrı sütun olmadığı için açıklamaya ekleniyor — şemaya
+     bilinmeyen kolon göndermek INSERT'ün tamamını reddettiriyor. */
+  const aciklamaFull=[description||'',state.pendingExtra||''].filter(Boolean).join(' | ');
+  const leadData={tarih,saat,ad:contactInfo.name,telefon:contactInfo.phone,email:contactInfo.email,sehir:contactInfo.city,ilce:contactInfo.district||'',plaka:contactInfo.plate||'',tur:type,sonuc:sonucOzeti,vekalet:contactInfo.vekalet,aciklama:aciklamaFull,ref,etiket};
 
   const leads=JSON.parse(localStorage.getItem('muvekkilbilgi_leads')||'[]');
   leads.push(leadData);
@@ -2626,7 +2676,11 @@ function finalizeLead(contactInfo,description){
   else if(type==='fesih'){const rr=document.getElementById('fesihResult');if(rr)rr.style.display='block';showFesihResult(result.fesih);}
   else if(type==='iseIade'){const rr=document.getElementById('iseIadeResult');if(rr)rr.style.display='block';showIseIadeResult(result.iseIade);}
   else if(type==='kusur'){const rr=document.getElementById('kusurResult');if(rr)rr.style.display='block';showKusurResult(result.kusur,result._parties);}
+  else if(type==='gozetim')showGozetimResult();
+  else if(type==='trafikSihirbaz')showTrafikResult();
+  else if(type==='isHukukuSihirbaz')showIsHukukuResult();
   else showGenericResult();
+  state.pendingExtra='';
 }
 
 /* İlk hesaplamada ad/telefon/e-posta + KVKK onayı zorunlu; alınan bilgi
@@ -3136,3 +3190,661 @@ async function sendChatMsg(){
   document.getElementById('chatSendBtn').disabled=false;
 }
 
+
+/* =====================================================================
+   GÖZETİM KAYNAKLI FAZLA VERGİ İADE HESAPLAMA
+   Gümrükte gözetim uygulaması nedeniyle beyan kıymetine eklenen tutar
+   üzerinden ödenen vergilerin iade ihtimalini değerlendirir.
+   Akış: (1) rakamlar -> (2) dosya kalitesi soruları -> (3) tarih/süre
+   -> sonuç (vurucu tutar + dosya skoru) -> ön değerlendirme talebi.
+   ===================================================================== */
+const gozState={step:1,f:{},q:{},tarih:'',dosya:null};
+const GOZ_STEPS=3;
+
+function openGozetim(){gozState.step=1;gozState.f={};gozState.q={};gozState.tarih='';gozState.dosya=null;renderGozetim();}
+
+function gozProgress(){let h='<div class="wz-progress">';for(let i=1;i<=GOZ_STEPS;i++)h+='<span class="'+(i<=gozState.step?'done':'')+'"></span>';return h+'</div>';}
+
+function gozNum(id){const el=document.getElementById(id);if(!el)return null;const v=(el.value||'').trim();if(v==='')return null;const n=parseFloat(v);return isNaN(n)?null:n;}
+
+function gozSaveStep1(){
+  gozState.f={
+    fatura:gozNum('goz_fatura'),
+    kiymet:gozNum('goz_kiymet'),
+    eklenen:gozNum('goz_eklenen'),
+    gv:gozNum('goz_gv'),
+    igv:gozNum('goz_igv'),
+    kdv:gozNum('goz_kdv')
+  };
+}
+
+/* Eklenen kıymet: kullanıcı doğrudan yazdıysa onu, yazmadıysa
+   (beyan kıymeti - fatura bedeli) farkını kullanır. */
+function gozEklenenKiymet(){
+  const f=gozState.f;
+  if(f.eklenen!==null&&f.eklenen!==undefined&&f.eklenen>0)return f.eklenen;
+  if(f.kiymet!==null&&f.kiymet!==undefined&&f.fatura!==null&&f.fatura!==undefined&&f.kiymet>f.fatura)return f.kiymet-f.fatura;
+  return 0;
+}
+
+/* Fazla vergi tahmini: kullanıcı gerçek vergi tutarlarını girdiyse eklenen
+   kıymetin beyan kıymetine oranı kadarını alır (şeffaf ve savunulabilir).
+   Vergi tutarları girilmediyse tipik oranlarla tahmin eder ve bunu sonuç
+   ekranında açıkça "tahmini" olarak etiketler. */
+function gozFazlaVergi(){
+  const f=gozState.f,ek=gozEklenenKiymet();
+  if(ek<=0)return {tutar:0,yontem:'yok',rows:[]};
+  const odenen=(f.gv||0)+(f.igv||0)+(f.kdv||0);
+  const beyan=(f.kiymet!==null&&f.kiymet>0)?f.kiymet:((f.fatura!==null&&f.fatura>0)?f.fatura+ek:ek);
+  if(odenen>0&&beyan>0){
+    const oran=Math.min(1,ek/beyan);
+    const rows=[];
+    if(f.gv)rows.push({label:'Gümrük Vergisi payı',value:fmt(f.gv*oran)});
+    if(f.igv)rows.push({label:'İlave Gümrük Vergisi payı',value:fmt(f.igv*oran)});
+    if(f.kdv)rows.push({label:'KDV payı',value:fmt(f.kdv*oran)});
+    rows.push({label:'Eklenen kıymetin beyan kıymetine oranı',value:'%'+(oran*100).toFixed(1)});
+    return {tutar:Math.round(odenen*oran),yontem:'beyan',oran:oran,rows:rows};
+  }
+  var igvT=ek*0.20,kdvT=(ek+igvT)*0.20;
+  return {tutar:Math.round(igvT+kdvT),yontem:'tahmin',rows:[
+    {label:'Tahmini İlave Gümrük Vergisi (%20)',value:fmt(igvT)},
+    {label:'Tahmini KDV (%20)',value:fmt(kdvT)}
+  ]};
+}
+
+/* Süre sınıflandırması — bilinçli olarak "hakkınızı kaybettiniz" demiyoruz;
+   dosyanın usul geçmişine göre değerlendirme değişebilir. */
+function gozSure(){
+  if(!gozState.tarih)return {renk:'sari',sinif:'sure-sari',metin:'Süre konusunda uzman değerlendirmesi gerekli',ikon:'🟡'};
+  const t=new Date(gozState.tarih);
+  if(isNaN(t.getTime()))return {renk:'sari',sinif:'sure-sari',metin:'Süre konusunda uzman değerlendirmesi gerekli',ikon:'🟡'};
+  const gun=Math.floor((Date.now()-t.getTime())/86400000);
+  if(gun<=30)return {renk:'yesil',sinif:'sure-yesil',metin:'Süre yönünden hızlı inceleme gerekli',ikon:'🟢',gun:gun};
+  if(gun<=1825)return {renk:'sari',sinif:'sure-sari',metin:'Süre konusunda uzman değerlendirmesi gerekli',ikon:'🟡',gun:gun};
+  return {renk:'kirmizi',sinif:'sure-kirmizi',metin:'İtiraz/dava süreleri bakımından ayrıca inceleme gerekli',ikon:'🔴',gun:gun};
+}
+
+/* İade uygunluk skoru: dosyanın hukuki incelemeye ne kadar elverişli
+   göründüğüne dair göstergesel bir puan (kesin sonuç değildir). */
+function gozSkor(){
+  const q=gozState.q,ek=gozEklenenKiymet(),sure=gozSure();
+  let s=0;const lines=[];
+  if(q.kiymetUstu==='evet'){s+=30;lines.push({ok:1,t:'Malın gerçek bedelinin üzerinde kıymet beyan edilmiş.'});}
+  else if(q.kiymetUstu==='bilmiyorum')lines.push({ok:2,t:'Beyan edilen kıymetin fatura bedelini aşıp aşmadığı beyannameden teyit edilmeli.'});
+  else lines.push({ok:0,t:'Fatura bedelinin üzerinde kıymet beyanı belirtilmemiş.'});
+
+  if(q.satciyaOdendi==='hayir'){s+=30;lines.push({ok:1,t:'Eklenen bedelin satıcıya fiilen ödenmediği belirtilmiş.'});}
+  else if(q.satciyaOdendi==='evet')lines.push({ok:0,t:'Eklenen bedel satıcıya fiilen ödenmiş olarak belirtilmiş.'});
+
+  if(q.ihtirazi==='evet'){s+=20;lines.push({ok:1,t:'Beyannamenin ihtirazi kayıtla verildiği belirtilmiş.'});}
+  else if(q.ihtirazi==='bilmiyorum')lines.push({ok:2,t:'İhtirazi kayıt bulunup bulunmadığı beyannameden kontrol edilmeli.'});
+  else lines.push({ok:2,t:'İhtirazi kayıt belirtilmemiş — bu durum sürecin yönetimini etkiler, ayrıca değerlendirilmeli.'});
+
+  if(q.gozetimBelge==='hayir'){s+=10;lines.push({ok:1,t:'Gözetim belgesi bulunmadığı belirtilmiş.'});}
+  else if(q.gozetimBelge==='bilmiyorum')lines.push({ok:2,t:'Gözetim belgesi durumu teyit edilmeli.'});
+
+  if(ek>0){s+=10;lines.push({ok:1,t:'Beyan kıymetine eklenmiş '+fmt(ek)+' tutarında kıymet tespit edildi.'});}
+  if(sure.renk==='sari')s-=5;
+  if(sure.renk==='kirmizi')s-=10;
+  lines.push({ok:2,t:sure.metin});
+  s=Math.max(0,Math.min(100,s));
+  return {skor:s,lines:lines,sure:sure};
+}
+
+function gozOptRow(qKey,val,label,sub){
+  const sel=gozState.q[qKey]===val?' sel':'';
+  return '<button type="button" class="wz-opt'+sel+'" onclick="gozPick(\''+qKey+'\',\''+val+'\')"><span class="wz-opt-dot"></span><span>'+label+(sub?'<span class="wz-opt-sub">'+sub+'</span>':'')+'</span></button>';
+}
+function gozPick(k,v){gozState.q[k]=v;renderGozetim();}
+
+function gozInput(key,label,ph,hint){
+  const cur=gozState.f?gozState.f[key]:null;
+  const v=(cur===null||cur===undefined)?'':cur;
+  return '<div class="form-group"><label for="goz_'+key+'">'+label+'</label><div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="goz_'+key+'" placeholder="'+ph+'" min="0" value="'+v+'"/></div>'+(hint?'<p class="field-hint">'+hint+'</p>':'')+'</div>';
+}
+
+function renderGozetim(){
+  const w=document.getElementById('gozetimWrapper');if(!w)return;
+  let h='<div class="calc-page-header"><div class="step-number-badge">Vergi &amp; Gümrük Hukuku</div><h2>Gözetim Kaynaklı Fazla Vergi İade Hesaplama</h2><p>Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.</p></div>';
+  h+='<div class="wz-card">'+gozProgress();
+
+  if(gozState.step===1){
+    h+='<div class="wz-step-label">Adım 1 / 3 · Temel bilgiler</div>';
+    h+='<div class="wz-q">İthalata ilişkin rakamlar</div>';
+    h+='<p class="wz-hint">Bu bilgiler gümrük beyannamenizde yazıyor. Bilmediğiniz alanları boş bırakabilirsiniz — eksik bilgiyle de bir ön değerlendirme çıkarırız.</p>';
+    h+='<div class="form-grid">';
+    h+=gozInput('fatura','İthal edilen ürünün fatura bedeli','Örn: 1000000','Satıcının kestiği faturadaki gerçek mal bedeli');
+    h+=gozInput('kiymet','Beyannamede gösterilen gümrük kıymeti','Örn: 1600000','Beyannamede kabul edilen/gösterilen kıymet');
+    h+=gozInput('eklenen','Gözetim nedeniyle eklenen tutar','Örn: 600000','Bilmiyorsanız boş bırakın; iki kıymet farkından hesaplarız');
+    h+=gozInput('gv','Ödenen Gümrük Vergisi','Örn: 0');
+    h+=gozInput('igv','Ödenen İlave Gümrük Vergisi','Örn: 120000');
+    h+=gozInput('kdv','Ödenen KDV','Örn: 144000');
+    h+='</div>';
+    h+='<div class="wz-note"><span>💡</span><div><b>Rakamları bilmiyor musunuz?</b> Fatura bedeli ile beyan edilen kıymeti girmeniz bile eklenen kıymeti tespit etmemiz için yeterli. Vergi tutarlarını da girerseniz fazla ödeme tahmini daha isabetli çıkar.</div></div>';
+    h+='<div class="wz-actions"><button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button><button class="btn-next" onclick="gozNext()">Devam <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>';
+  }
+
+  else if(gozState.step===2){
+    h+='<div class="wz-step-label">Adım 2 / 3 · Dosyanızın durumu</div>';
+    h+='<div class="wz-q">Beyanname ve ödeme detayları</div>';
+    h+='<p class="wz-hint">Bu yanıtlar dosyanızın hukuki incelemeye uygunluğunu belirleyen en kritik bilgiler. Emin olmadığınız sorularda "Bilmiyorum" seçebilirsiniz.</p>';
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:10px">Beyanname ihtirazi kayıtla mı verildi?</p><div class="wz-opts">';
+    h+=gozOptRow('ihtirazi','evet','Evet')+gozOptRow('ihtirazi','hayir','Hayır')+gozOptRow('ihtirazi','bilmiyorum','Bilmiyorum');
+    h+='</div>';
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Gözetim belgeniz var mıydı?</p><div class="wz-opts">';
+    h+=gozOptRow('gozetimBelge','evet','Evet')+gozOptRow('gozetimBelge','hayir','Hayır')+gozOptRow('gozetimBelge','bilmiyorum','Bilmiyorum');
+    h+='</div>';
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Malın gerçek fatura bedelinin üzerinde kıymet beyan edildi mi?</p><div class="wz-opts">';
+    h+=gozOptRow('kiymetUstu','evet','Evet')+gozOptRow('kiymetUstu','hayir','Hayır')+gozOptRow('kiymetUstu','bilmiyorum','Bilmiyorum');
+    h+='</div>';
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Bu ilave bedeli gerçekten yurt dışındaki satıcıya ödediniz mi?</p><div class="wz-opts">';
+    h+=gozOptRow('satciyaOdendi','evet','Evet','Bedel fiilen satıcıya transfer edildi')+gozOptRow('satciyaOdendi','hayir','Hayır','Sadece gümrükte kıymete eklendi, satıcıya ödenmedi');
+    h+='</div>';
+    h+='<div class="wz-actions"><button class="btn-back" onclick="gozPrev()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button><button class="btn-next" onclick="gozNext()">Devam <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>';
+  }
+
+  else if(gozState.step===3){
+    h+='<div class="wz-step-label">Adım 3 / 3 · Tarih</div>';
+    h+='<div class="wz-q">Vergi tahakkuku / beyanname tarihi nedir?</div>';
+    h+='<p class="wz-hint">Süre yönünden hangi yolun açık olduğunu değerlendirebilmemiz için gerekli. Tarihi tam hatırlamıyorsanız yaklaşık girin.</p>';
+    h+='<div class="form-group" style="max-width:300px"><label for="goz_tarih">Beyanname / tahakkuk tarihi</label><input type="date" id="goz_tarih" value="'+(gozState.tarih||'')+'" style="width:100%;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font);font-size:14px"/></div>';
+    h+='<div class="wz-note"><span>ℹ️</span><div>Süre değerlendirmesi dosyanızın usul geçmişine (düzeltme talebi, itiraz, dava vb.) göre değişebilir. Bu nedenle burada kesin bir süre sonucu vermiyoruz; sınıflandırma yalnızca incelemenin aciliyetini gösterir.</div></div>';
+    h+='<div class="wz-actions"><button class="btn-back" onclick="gozPrev()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button><button class="btn-next" onclick="gozNext()">Sonucu Gör <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>';
+  }
+
+  h+='</div><div id="gozResultPanel" style="margin-top:24px"></div>';
+  w.innerHTML=h;
+  if(gozState.step===3){const el=document.getElementById('goz_tarih');if(el)el.onchange=function(){gozState.tarih=el.value;};}
+}
+
+function gozNext(){
+  if(gozState.step===1){
+    gozSaveStep1();
+    if(gozEklenenKiymet()<=0){
+      showValidationError('Eklenen kıymeti tespit edebilmemiz için fatura bedeli ve beyan kıymetini (ya da eklenen tutarı) girin.');return;
+    }
+    gozState.step=2;renderGozetim();window.scrollTo({top:0,behavior:'smooth'});return;
+  }
+  if(gozState.step===2){
+    const q=gozState.q;
+    if(!q.ihtirazi||!q.gozetimBelge||!q.kiymetUstu||!q.satciyaOdendi){showValidationError('Lütfen dört sorunun tamamını yanıtlayın.');return;}
+    gozState.step=3;renderGozetim();window.scrollTo({top:0,behavior:'smooth'});return;
+  }
+  if(gozState.step===3){
+    const el=document.getElementById('goz_tarih');if(el)gozState.tarih=el.value;
+    gozHesapla();
+  }
+}
+function gozPrev(){if(gozState.step>1){gozState.step--;renderGozetim();window.scrollTo({top:0,behavior:'smooth'});}}
+
+function gozHesapla(){
+  const ek=gozEklenenKiymet(),fv=gozFazlaVergi(),sk=gozSkor();
+  const rows=[];
+  if(gozState.f.fatura!==null&&gozState.f.fatura!==undefined)rows.push({label:'Gerçek mal bedeli (fatura)',value:fmt(gozState.f.fatura)});
+  if(gozState.f.kiymet!==null&&gozState.f.kiymet!==undefined)rows.push({label:'Beyan edilen gümrük kıymeti',value:fmt(gozState.f.kiymet)});
+  rows.push({label:'Gözetim nedeniyle eklenen kıymet',value:fmt(ek),highlight:true});
+  fv.rows.forEach(function(r){rows.push(r);});
+  rows.push({label:'Potansiyel fazla vergi tutarı',value:fmt(fv.tutar),highlight:true});
+  state.gozResult={ek:ek,fv:fv,sk:sk,rows:rows,total:fv.tutar};
+  state.pendingType='gozetim';
+  state.pendingResult={total:fv.tutar,rows:rows,gozetim:state.gozResult};
+  state.pendingExtra='Gözetim dosyası · Eklenen kıymet: '+fmt(ek)+' · Potansiyel fazla vergi: '+fmt(fv.tutar)+' · Skor: '+sk.skor+'/100 · Beyanname tarihi: '+(gozState.tarih||'belirtilmedi')+' · İhtirazi kayıt: '+(gozState.q.ihtirazi||'-')+' · Satıcıya ödendi: '+(gozState.q.satciyaOdendi||'-');
+  const ci=getStoredContactInfo();
+  if(ci)finalizeLead(ci,'');else showLeadModal('gozetim');
+}
+
+function showGozetimResult(){
+  const p=document.getElementById('gozResultPanel');if(!p||!state.gozResult)return;
+  const r=state.gozResult,ek=r.ek,fv=r.fv,sk=r.sk;
+  const C=2*Math.PI*52,off=C-(C*sk.skor/100);
+  let h='<div class="isc-result-card">';
+  h+='<div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Ön değerlendirme tamamlandı</h3><p>Gözetim kaynaklı fazla vergi analizi</p></div></div>';
+
+  h+='<div class="isc-total-block" style="text-align:left"><div class="hero-amount-label">Tespit edilen eklenen kıymet</div><div class="hero-amount">'+fmt2(ek)+' TL</div><p class="hero-amount-sub">Gerçek mal bedelinizin üzerine eklenmiş kıymet tespit edildi. Bu ek kıymet nedeniyle ödediğiniz vergilerin bir kısmı için iade talep etme ihtimaliniz bulunabilir.</p></div>';
+
+  if(fv.tutar>0){
+    h+='<div class="cmp-diff-callout" style="margin-bottom:16px"><div class="cmp-diff-icon">🧾</div><div><div class="cmp-diff-num">'+fmt(fv.tutar)+'</div><div class="cmp-diff-pct">'+(fv.yontem==='tahmin'?'<strong>Tahmini</strong> inceleme konusu vergi tutarı — vergi rakamlarını girerseniz daha isabetli çıkar.':'<strong>Potansiyel</strong> fazla vergi tutarı (girdiğiniz vergi tutarları üzerinden)')+'</div></div></div>';
+  }
+
+  h+='<div class="score-ring-wrap"><div class="score-ring"><svg width="118" height="118" viewBox="0 0 118 118"><circle cx="59" cy="59" r="52" fill="none" stroke="var(--bg-hover)" stroke-width="9"/><circle cx="59" cy="59" r="52" fill="none" stroke="url(#gozGrad)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/><defs><linearGradient id="gozGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E2C992"/><stop offset="100%" stop-color="#A88B60"/></linearGradient></defs></svg><div class="score-ring-val"><span class="score-ring-num">'+sk.skor+'</span><span class="score-ring-max">/ 100</span></div></div>';
+  h+='<div class="score-lines"><div style="font-size:12px;font-weight:800;color:var(--primary);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">İade uygunluk skorunuz</div>';
+  sk.lines.forEach(function(l){
+    const ico=l.ok===1?'<span class="score-ico">✅</span>':(l.ok===0?'<span class="score-ico">❌</span>':'<span class="score-ico">⚠️</span>');
+    h+='<div class="score-line">'+ico+'<span>'+l.t+'</span></div>';
+  });
+  h+='</div></div>';
+
+  h+='<div style="margin-bottom:18px"><span class="sure-badge '+sk.sure.sinif+'">'+sk.sure.ikon+' '+sk.sure.metin+'</span></div>';
+
+  h+='<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>';
+  r.rows.forEach(function(row){h+='<div class="isc-breakdown-row"><span>'+row.label+'</span><span class="'+(row.highlight?'isc-amount':'')+'">'+row.value+'</span></div>';});
+  h+='</div>';
+
+  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Bu tutarlar <strong>kesin alacağınız tutar değildir</strong>; beyanname, ödeme belgeleri ve dosyanın usul geçmişine göre değişir. Sonuç, incelemeye konu edilebilecek potansiyel tutarı gösterir.</p></div>';
+
+  h+=gozDosyaBox();
+  h+='<div class="cmp-actions" style="margin-top:16px">';
+  h+='<a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+whatsappLink('Merhaba, gözetim kaynaklı fazla vergi iadesi için beyannamemi incelemeye göndermek istiyorum. Eklenen kıymet: '+fmt(ek)+', potansiyel fazla vergi: '+fmt(fv.tutar)+', dosya skoru: '+sk.skor+'/100, beyanname tarihi: '+(gozState.tarih||'-')+'.'+(gozState.dosya?' Beyanname dosyamı ('+gozState.dosya.name+') buradan iletiyorum.':''))+'"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Beyannamemi Avukata Gönder</a>';
+  h+='</div>';
+  h+='<div style="text-align:center;margin-top:18px"><a style="font-size:12.5px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.7" onclick="openGozetim()">Yeni hesaplama yap</a></div>';
+  h+='</div>';
+  p.innerHTML=h;
+  p.style.display='block';
+  scrollToResult(p);
+}
+
+/* Beyanname dosyası: sunucuda saklanmıyor — kullanıcı dosyayı seçtikten
+   sonra WhatsApp üzerinden iletiyor; burada yalnızca dosya bilgisi
+   gösterilip başvuru kaydına not olarak ekleniyor. */
+function gozDosyaBox(){
+  const d=gozState.dosya;
+  return '<div class="doc-upload-card" style="margin-top:18px">'
+    +'<div class="doc-upload-header"><div class="doc-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2v6h6M16 13H8M16 17H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>'
+    +'<div class="doc-upload-info"><span class="doc-upload-label">Gümrük beyannamemi incelemeye göndermek istiyorum</span><span class="doc-upload-hint">PDF, JPG veya PNG · Dosyayı seçin, WhatsApp butonuyla iletin</span></div>'
+    +'<span class="doc-upload-badge oneri">Önerilen</span></div>'
+    +'<div class="doc-upload-drop" onclick="document.getElementById(\'gozDosyaInput\').click()">'
+    +'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="doc-upload-drop-icon"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    +'<div class="doc-upload-drop-text">'+(d?'Dosyayı değiştir':'Beyannanizi seçin')+'</div>'
+    +'<input type="file" id="gozDosyaInput" class="doc-upload-input" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="gozDosyaSec(this.files)"/>'
+    +(d?'<div class="doc-file-info" style="display:flex"><div class="doc-file-icon">📄</div><div class="doc-file-details"><span class="doc-file-name">'+sanitizeHtml(d.name)+'</span><span class="doc-file-size">'+(d.size/1024).toFixed(0)+' KB · dosya cihazınızda, WhatsApp ile iletebilirsiniz</span></div></div>':'')
+    +'</div></div>';
+}
+function gozDosyaSec(files){
+  if(!files||!files.length)return;
+  const f=files[0];
+  if(f.size>10*1024*1024){showValidationError('Dosya en fazla 10 MB olabilir.');return;}
+  gozState.dosya={name:f.name,size:f.size};
+  showGozetimResult();
+}
+
+/* =====================================================================
+   TRAFİK KAZASI HESAPLAMA — soru-cevap akışı
+   Tekil araçlar (değer kaybı, hasar bedeli, iş göremezlik, destekten
+   yoksun kalma) tek modülde birleşti. Kullanıcının yanıtlarına göre
+   hangi tazminat kalemlerinin hesaplanacağı dinamik belirlenir.
+   ===================================================================== */
+const trfState={step:1,a:{},v:{}};
+function openTrafikWizard(){trfState.step=1;trfState.a={};trfState.v={};renderTrafikWizard();}
+
+/* Akış: hangi adımların görüneceği verilen yanıtlara bağlı */
+function trfSteps(){
+  const a=trfState.a,s=['durum'];
+  if(a.aracHasar==='evet'||a.aracHasar===undefined)s.push('arac');
+  if(a.durum==='yaralanma')s.push('yaralanma');
+  if(a.durum==='vefat')s.push('vefat');
+  s.push('kusur');
+  return s;
+}
+function trfCur(){return trfSteps()[trfState.step-1];}
+function trfProgress(){
+  const n=trfSteps().length;let h='<div class="wz-progress">';
+  for(let i=1;i<=n;i++)h+='<span class="'+(i<=trfState.step?'done':'')+'"></span>';
+  return h+'</div>';
+}
+function trfPick(k,v){trfState.a[k]=v;renderTrafikWizard();}
+function trfOpt(k,v,label,sub){
+  const sel=trfState.a[k]===v?' sel':'';
+  return '<button type="button" class="wz-opt'+sel+'" onclick="trfPick(\''+k+'\',\''+v+'\')"><span class="wz-opt-dot"></span><span>'+label+(sub?'<span class="wz-opt-sub">'+sub+'</span>':'')+'</span></button>';
+}
+function trfNum(id){const el=document.getElementById(id);if(!el)return 0;const n=parseFloat(el.value);return isNaN(n)?0:n;}
+function trfField(key,label,ph,prefix,hint){
+  const v=trfState.v[key]===undefined?'':trfState.v[key];
+  return '<div class="form-group"><label for="trf_'+key+'">'+label+'</label><div class="input-wrapper"><span class="input-prefix">'+(prefix||'₺')+'</span><input type="number" id="trf_'+key+'" placeholder="'+ph+'" min="0" value="'+v+'"/></div>'+(hint?'<p class="field-hint">'+hint+'</p>':'')+'</div>';
+}
+function trfSaveVisible(){
+  ['aracDeger','onarim','km','yas','gelir','gunSayisi','sakatlik','merhumGelir','destekOran','merhumYas','kusur'].forEach(function(k){
+    const el=document.getElementById('trf_'+k);
+    if(el&&el.value!=='')trfState.v[k]=parseFloat(el.value);
+  });
+}
+
+function renderTrafikWizard(){
+  const w=document.getElementById('trafikWizardWrapper');if(!w)return;
+  const cur=trfCur(),a=trfState.a;
+  let h='<div class="calc-page-header"><div class="step-number-badge">Trafik Kazası Hukuku</div><h2>Trafik Kazası Hesaplama</h2><p>Birkaç soruyla, kazanızda hangi tazminat kalemlerine hak kazandığınızı ve tahmini tutarları birlikte hesaplayalım.</p></div>';
+  h+='<div class="wz-card">'+trfProgress();
+
+  if(cur==='durum'){
+    h+='<div class="wz-step-label">Kazanın sonucu</div><div class="wz-q">Kazada yaralanma veya vefat var mı?</div>';
+    h+='<p class="wz-hint">Buna göre yalnızca araç tazminatlarını mı yoksa bedeni tazminatları da mı hesaplayacağımızı belirliyoruz.</p><div class="wz-opts">';
+    h+=trfOpt('durum','maddi','Sadece maddi hasar var','Araçta hasar, kişisel yaralanma yok');
+    h+=trfOpt('durum','yaralanma','Yaralanma var','İş göremezlik / sakatlık söz konusu');
+    h+=trfOpt('durum','vefat','Vefat var','Destekten yoksun kalma tazminatı');
+    h+='</div>';
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Aracınızda hasar oluştu mu?</p><div class="wz-opts">';
+    h+=trfOpt('aracHasar','evet','Evet, araçta hasar var')+trfOpt('aracHasar','hayir','Hayır, araç hasarı yok');
+    h+='</div>';
+  }
+
+  else if(cur==='arac'){
+    h+='<div class="wz-step-label">Araç bilgileri</div><div class="wz-q">Aracınız ve hasar hakkında</div>';
+    h+='<p class="wz-hint">Bu bilgilerle hem değer kaybını hem de hasar bedelini hesaplayacağız.</p><div class="form-grid">';
+    h+=trfField('aracDeger','Aracın kazasız piyasa değeri (TL)','Örn: 900000','₺','Kaza öncesi ikinci el rayiç değeri');
+    h+=trfField('onarim','Onarım / hasar tutarı (TL)','Örn: 85000','₺','Servis veya eksper tarafından belirlenen tutar');
+    h+=trfField('km','Araç kilometresi','Örn: 60000','km');
+    h+=trfField('yas','Araç yaşı','Örn: 4','yaş');
+    h+='</div>';
+  }
+
+  else if(cur==='yaralanma'){
+    h+='<div class="wz-step-label">Yaralanma</div><div class="wz-q">Yaralanmanın sonuçları</div>';
+    h+='<p class="wz-hint">Geçici iş göremezlik ve kalıcı sakatlık tazminatı için gerekli.</p><div class="form-grid">';
+    h+=trfField('gelir','Aylık brüt geliriniz (TL)','Örn: 35000','₺');
+    h+=trfField('gunSayisi','İş göremezlik süresi (gün)','Örn: 45','gün','Doktor raporuyla belirlenen istirahat süresi');
+    h+=trfField('sakatlik','Kalıcı sakatlık oranı (%)','Örn: 12','%','Yoksa 0 yazın veya boş bırakın');
+    h+='</div>';
+  }
+
+  else if(cur==='vefat'){
+    h+='<div class="wz-step-label">Destekten yoksun kalma</div><div class="wz-q">Vefat eden yakınınız hakkında</div>';
+    h+='<p class="wz-hint">Destekten yoksun kalma tazminatı bu bilgilerle hesaplanır.</p><div class="form-grid">';
+    h+=trfField('merhumGelir','Merhumun aylık brüt geliri (TL)','Örn: 30000','₺');
+    h+=trfField('destekOran','Size ayrılan destek oranı (%)','Örn: 50','%');
+    h+=trfField('merhumYas','Merhumun yaşı','Örn: 45','yaş');
+    h+='</div>';
+  }
+
+  else if(cur==='kusur'){
+    h+='<div class="wz-step-label">Kusur durumu</div><div class="wz-q">Kazadaki kusur oranınız nedir?</div>';
+    h+='<p class="wz-hint">Kusur oranınız kadar tazminattan indirim yapılır. Kusursuzsanız 0 girin. Bilmiyorsanız kusur tespit aracımızı kullanabilirsiniz.</p><div class="form-grid">';
+    h+=trfField('kusur','Sizin kusur oranınız (%)','0','%');
+    h+='</div>';
+    h+='<div class="wz-note"><span>🚦</span><div>Kusur oranınızı bilmiyor musunuz? <a onclick="navigate(\'kusur\')" style="color:var(--primary);font-weight:700;cursor:pointer;text-decoration:underline">Yapay zekâ destekli kusur tespiti</a> ile kaza anlatımınızdan belirleyebiliriz.</div></div>';
+  }
+
+  const ilk=trfState.step===1,son=trfState.step===trfSteps().length;
+  h+='<div class="wz-actions">';
+  h+=ilk?'<button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button>':'<button class="btn-back" onclick="trfPrev()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>';
+  h+='<button class="btn-next" onclick="trfNext()">'+(son?'Hesapla':'Devam')+' <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="'+(son?'M10 3l7 7-7 7M3 10h14':'M7 4l6 6-6 6')+'" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+  h+='</div></div><div id="trfResultPanel" style="margin-top:24px"></div>';
+  w.innerHTML=h;
+}
+
+function trfNext(){
+  const cur=trfCur();
+  trfSaveVisible();
+  if(cur==='durum'){
+    if(!trfState.a.durum){showValidationError('Lütfen kazanın sonucunu seçin.');return;}
+    if(!trfState.a.aracHasar){showValidationError('Lütfen araç hasarı olup olmadığını seçin.');return;}
+  }
+  if(cur==='arac'&&!trfState.v.aracDeger){showValidationError('Aracın piyasa değerini girin.');return;}
+  if(cur==='yaralanma'&&!trfState.v.gelir){showValidationError('Aylık brüt gelirinizi girin.');return;}
+  if(cur==='vefat'&&!trfState.v.merhumGelir){showValidationError('Merhumun aylık gelirini girin.');return;}
+  if(trfState.step<trfSteps().length){trfState.step++;renderTrafikWizard();window.scrollTo({top:0,behavior:'smooth'});return;}
+  trfHesapla();
+}
+function trfPrev(){if(trfState.step>1){trfSaveVisible();trfState.step--;renderTrafikWizard();window.scrollTo({top:0,behavior:'smooth'});}}
+
+function trfHesapla(){
+  trfSaveVisible();
+  const a=trfState.a,v=trfState.v,rows=[];let brut=0;
+  const kusur=Math.min(100,Math.max(0,v.kusur||0));
+
+  if(a.aracHasar==='evet'&&v.aracDeger){
+    const kmF=(KM_FACTORS.find(function(x){return (v.km||0)<=x.max;})||KM_FACTORS[KM_FACTORS.length-1]).factor;
+    const yasF=(AGE_FACTORS.find(function(x){return (v.yas||0)<=x.max;})||AGE_FACTORS[AGE_FACTORS.length-1]).factor;
+    const onarim=v.onarim||0;
+    const oran=Math.min(0.30,Math.max(0.03,(onarim/v.aracDeger)*0.9));
+    const dk=Math.round(v.aracDeger*oran*kmF*yasF);
+    rows.push({label:'Araç piyasa değeri',value:fmt(v.aracDeger)});
+    if(onarim)rows.push({label:'Onarım / hasar bedeli',value:fmt(onarim)});
+    rows.push({label:'Araç değer kaybı (tahmini)',value:fmt(dk),highlight:true});
+    brut+=dk+onarim;
+  }
+
+  if(a.durum==='yaralanma'&&v.gelir){
+    const gunluk=v.gelir/30,gun=v.gunSayisi||0;
+    const gecici=Math.round(gunluk*gun);
+    if(gecici){rows.push({label:'Geçici iş göremezlik ('+gun+' gün)',value:fmt(gecici),highlight:true});brut+=gecici;}
+    const sk=v.sakatlik||0;
+    if(sk>0){
+      const yillik=v.gelir*12,kalici=Math.round(yillik*(sk/100)*3);
+      rows.push({label:'Sürekli sakatlık tazminatı (%'+sk+')',value:fmt(kalici),highlight:true});
+      brut+=kalici;
+    }
+  }
+
+  if(a.durum==='vefat'&&v.merhumGelir){
+    const yg=v.merhumGelir*12,dr=v.destekOran||50,yas=v.merhumYas||45;
+    const ky=Math.max(5,65-yas),f=0.21;
+    const isk=(1-Math.pow(1+f,-ky))/f;
+    const dy=Math.round(yg*(dr/100)*isk);
+    rows.push({label:'Merhumun yıllık geliri',value:fmt(yg)});
+    rows.push({label:'Destek oranı',value:'%'+dr});
+    rows.push({label:'Destekten yoksun kalma tazminatı',value:fmt(dy),highlight:true});
+    brut+=dy;
+  }
+
+  const indirim=Math.round(brut*kusur/100),net=brut-indirim;
+  rows.push({label:'Toplam brüt tazminat',value:fmt(brut)});
+  if(kusur>0)rows.push({label:'Kusur indirimi (%'+kusur+')',value:'-'+fmt(indirim)});
+  rows.push({label:'Tahmini net tazminat',value:fmt(net),highlight:true});
+
+  state.trfResult={rows:rows,total:net,brut:brut,kusur:kusur,a:a};
+  state.pendingType='trafikSihirbaz';
+  state.pendingResult={total:net,rows:rows,trafik:state.trfResult};
+  state.pendingExtra='Trafik kazası · Durum: '+(a.durum||'-')+' · Araç hasarı: '+(a.aracHasar||'-')+' · Kusur: %'+kusur;
+  const ci=getStoredContactInfo();
+  if(ci)finalizeLead(ci,'');else showLeadModal('trafikSihirbaz');
+}
+
+function showTrafikResult(){
+  const p=document.getElementById('trfResultPanel');if(!p||!state.trfResult)return;
+  const r=state.trfResult;
+  let h='<div class="isc-result-card">';
+  h+='<div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama tamamlandı</h3><p>Kazanıza göre hesaplanan tazminat kalemleri</p></div></div>';
+  h+='<div class="isc-total-block"><div class="isc-total-label">Tahmini toplam tazminat</div><div class="isc-total-amount">'+fmt2(r.total)+' TL</div><div class="isc-total-note">Kusur indirimi uygulanmış net tutar</div></div>';
+  h+='<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>';
+  r.rows.forEach(function(row){h+='<div class="isc-breakdown-row"><span>'+row.label+'</span><span class="'+(row.highlight?'isc-amount':'')+'">'+row.value+'</span></div>';});
+  h+='</div>';
+  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Tutarlar tahminidir; kesin tutar bilirkişi raporu ve mahkeme kararına göre değişir.</p></div>';
+  h+=renderCompareWidget(Math.round(r.total*0.8),Math.round(r.total*1.2));
+  h+='<div class="cmp-actions" style="margin-top:16px"><a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+whatsappLink('Merhaba, trafik kazası tazminat hesaplaması yaptım. Tahmini tutar: '+fmt(r.total)+'. Dosyamı değerlendirmenizi istiyorum.')+'"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Dosyamı Değerlendirin</a></div>';
+  h+='<div style="text-align:center;margin-top:18px"><a style="font-size:12.5px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.7" onclick="openTrafikWizard()">Yeni hesaplama yap</a></div>';
+  h+='</div>';
+  p.innerHTML=h;p.style.display='block';scrollToResult(p);
+}
+
+/* =====================================================================
+   İŞ HUKUKU HESAPLAMA — soru-cevap + mantık ağacı
+   "İşten siz mi ayrıldınız, çıkarıldınız mı?" sorusuna göre hangi
+   kalemin hesaplanacağı belirlenir: örneğin kendi isteğiyle istifa eden
+   işçiye ihbar tazminatı hesaplanmaz, işveren çıkardıysa hesaplanır.
+   ===================================================================== */
+const ishState={step:1,a:{},v:{}};
+const KIDEM_TAVAN_2026=73729.87;
+function openIsHukuku(){ishState.step=1;ishState.a={};ishState.v={};renderIsHukuku();}
+const ISH_STEPS=['cikis','sure','ucret','ekler'];
+function ishProgress(){let h='<div class="wz-progress">';for(let i=1;i<=ISH_STEPS.length;i++)h+='<span class="'+(i<=ishState.step?'done':'')+'"></span>';return h+'</div>';}
+function ishPick(k,v){ishState.a[k]=v;renderIsHukuku();}
+function ishOpt(k,v,label,sub){
+  const sel=ishState.a[k]===v?' sel':'';
+  return '<button type="button" class="wz-opt'+sel+'" onclick="ishPick(\''+k+'\',\''+v+'\')"><span class="wz-opt-dot"></span><span>'+label+(sub?'<span class="wz-opt-sub">'+sub+'</span>':'')+'</span></button>';
+}
+function ishField(key,label,ph,prefix,hint){
+  const v=ishState.v[key]===undefined?'':ishState.v[key];
+  return '<div class="form-group"><label for="ish_'+key+'">'+label+'</label><div class="input-wrapper"><span class="input-prefix">'+(prefix||'₺')+'</span><input type="number" id="ish_'+key+'" placeholder="'+ph+'" min="0" step="any" value="'+v+'"/></div>'+(hint?'<p class="field-hint">'+hint+'</p>':'')+'</div>';
+}
+function ishSaveVisible(){
+  ['yil','ay','maas','ekler','izin','mesai','haftaTatili','resmiTatil','calisanSayisi'].forEach(function(k){
+    const el=document.getElementById('ish_'+k);
+    if(el&&el.value!=='')ishState.v[k]=parseFloat(el.value);
+  });
+}
+
+/* Mantık ağacı: hangi kalem hesaplanır? */
+function ishHaklar(){
+  const c=ishState.a.cikis,yil=ishState.v.yil||0,ay=ishState.v.ay||0;
+  const toplamAy=yil*12+ay;
+  const kidemSartı=toplamAy>=12;
+  const h={kidem:false,ihbar:false,izin:true,mesai:true,notlar:[]};
+  if(c==='isveren'){
+    h.kidem=kidemSartı;h.ihbar=true;
+    h.notlar.push({ok:1,t:'İşveren tarafından çıkarıldığınız için ihbar tazminatı hesaplamaya dahil edildi.'});
+    if(!kidemSartı)h.notlar.push({ok:0,t:'Kıdem tazminatı için en az 1 yıl çalışma şartı sağlanmıyor ('+toplamAy+' ay).'});
+  } else if(c==='istifa'){
+    h.kidem=false;h.ihbar=false;
+    h.notlar.push({ok:0,t:'Kendi isteğinizle istifa ettiğiniz için ihbar tazminatı hesaplanmadı.'});
+    h.notlar.push({ok:0,t:'Haklı bir neden belirtilmediğinden kıdem tazminatı hesaplamaya dahil edilmedi.'});
+  } else if(c==='hakli'){
+    h.kidem=kidemSartı;h.ihbar=false;
+    h.notlar.push({ok:1,t:'Haklı nedenle fesih (İş K. m.24) belirttiğiniz için kıdem tazminatı hesaplandı.'});
+    h.notlar.push({ok:2,t:'Haklı nedenle de olsa fesih işçiden geldiği için ihbar tazminatı hesaplanmaz.'});
+    if(!kidemSartı)h.notlar.push({ok:0,t:'Kıdem için en az 1 yıl şartı sağlanmıyor ('+toplamAy+' ay).'});
+  } else if(c==='isverenHakli'){
+    h.kidem=false;h.ihbar=false;
+    h.notlar.push({ok:0,t:'İşverenin haklı nedenle feshi (İş K. m.25/II) halinde kıdem ve ihbar tazminatı doğmaz.'});
+  } else if(c==='belirliSure'){
+    h.kidem=false;h.ihbar=false;
+    h.notlar.push({ok:2,t:'Belirli süreli sözleşmenin kendiliğinden sona ermesi halinde kural olarak kıdem/ihbar doğmaz; sözleşme süresinden önce feshedildiyse bakiye süre ücreti gündeme gelir.'});
+  }
+  h.notlar.push({ok:1,t:'Kullanılmayan yıllık izin ve fazla mesai alacakları, çıkış şeklinden bağımsız olarak talep edilebilir.'});
+  return h;
+}
+
+function renderIsHukuku(){
+  const w=document.getElementById('isHukukuWrapper');if(!w)return;
+  const step=ISH_STEPS[ishState.step-1];
+  let h='<div class="calc-page-header"><div class="step-number-badge">İş Hukuku</div><h2>İş Hukuku Hesaplama</h2><p>Birkaç soruyla hangi alacaklara hak kazandığınızı belirleyip tutarları birlikte hesaplayalım.</p></div>';
+  h+='<div class="wz-card">'+ishProgress();
+
+  if(step==='cikis'){
+    h+='<div class="wz-step-label">En belirleyici soru</div><div class="wz-q">İşten siz mi ayrıldınız, çıkarıldınız mı?</div>';
+    h+='<p class="wz-hint">Bu yanıt, hangi tazminatların hesaplanacağını doğrudan belirler.</p><div class="wz-opts">';
+    h+=ishOpt('cikis','isveren','İşveren beni çıkardı','Kıdem + ihbar tazminatı gündeme gelir');
+    h+=ishOpt('cikis','istifa','Kendi isteğimle istifa ettim','Kural olarak kıdem ve ihbar doğmaz');
+    h+=ishOpt('cikis','hakli','Haklı nedenle ben feshettim','Maaş ödenmemesi, mobbing vb. (İş K. m.24)');
+    h+=ishOpt('cikis','isverenHakli','İşveren haklı nedenle çıkardı','Devamsızlık, güven ihlali vb. (İş K. m.25/II)');
+    h+=ishOpt('cikis','belirliSure','Belirli süreli sözleşmem sona erdi','Örn. okul öğretmenliği sözleşmesi');
+    h+='</div>';
+    if(ishState.a.cikis==='hakli')h+='<div class="wz-note"><span>📋</span><div>Haklı fesih sebebinizin hukuken geçerli olup olmadığından emin değilseniz <a onclick="navigate(\'fesih\')" style="color:var(--primary);font-weight:700;cursor:pointer;text-decoration:underline">Haklı Fesih Uygunluk Testi</a> ile yapay zekâ destekli değerlendirme alabilirsiniz.</div></div>';
+    if(ishState.a.cikis==='isveren')h+='<div class="wz-note"><span>⚖️</span><div>İşe iade davası açma şartlarını taşıyıp taşımadığınızı <a onclick="navigate(\'iseIade\')" style="color:var(--primary);font-weight:700;cursor:pointer;text-decoration:underline">İşe İade Testi</a> ile öğrenebilirsiniz.</div></div>';
+  }
+
+  else if(step==='sure'){
+    h+='<div class="wz-step-label">Çalışma süresi</div><div class="wz-q">Bu işyerinde ne kadar çalıştınız?</div>';
+    h+='<p class="wz-hint">Kıdem tazminatı için en az 1 yıl çalışma şartı aranır.</p><div class="form-grid">';
+    h+=ishField('yil','Yıl','Örn: 3','yıl');
+    h+=ishField('ay','Ay','Örn: 6','ay');
+    h+='</div>';
+  }
+
+  else if(step==='ucret'){
+    h+='<div class="wz-step-label">Ücret bilgileri</div><div class="wz-q">Son ücretiniz neydi?</div>';
+    h+='<p class="wz-hint">Tazminatlar giydirilmiş brüt ücret üzerinden hesaplanır.</p><div class="form-grid">';
+    h+=ishField('maas','Son net maaşınız (TL)','Örn: 30000','₺','Brüt maaş otomatik hesaplanır (net × 1.4)');
+    h+=ishField('ekler','Aylık ek haklar — yol/yemek/prim (TL)','0','₺','Opsiyonel');
+    h+='</div>';
+  }
+
+  else if(step==='ekler'){
+    h+='<div class="wz-step-label">Diğer alacaklar</div><div class="wz-q">Ödenmemiş izin ve mesai alacaklarınız</div>';
+    h+='<p class="wz-hint">Bu kalemler, işten nasıl ayrıldığınızdan bağımsız olarak talep edilebilir. Yoksa boş bırakın.</p><div class="form-grid">';
+    h+=ishField('izin','Kullanılmayan yıllık izin (gün)','0','gün');
+    h+=ishField('mesai','Haftalık ortalama fazla mesai (saat)','0','saat','45 saat üzerindeki çalışma');
+    h+=ishField('haftaTatili','Hafta tatilinde çalışma (gün)','0','gün');
+    h+=ishField('resmiTatil','Resmi tatilde çalışma (gün)','0','gün');
+    h+='</div>';
+  }
+
+  const ilk=ishState.step===1,son=ishState.step===ISH_STEPS.length;
+  h+='<div class="wz-actions">';
+  h+=ilk?'<button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button>':'<button class="btn-back" onclick="ishPrev()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>';
+  h+='<button class="btn-next" onclick="ishNext()">'+(son?'Hesapla':'Devam')+' <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="'+(son?'M10 3l7 7-7 7M3 10h14':'M7 4l6 6-6 6')+'" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+  h+='</div></div><div id="ishResultPanel" style="margin-top:24px"></div>';
+  w.innerHTML=h;
+}
+
+function ishNext(){
+  const step=ISH_STEPS[ishState.step-1];
+  ishSaveVisible();
+  if(step==='cikis'&&!ishState.a.cikis){showValidationError('Lütfen işten ayrılma şeklinizi seçin.');return;}
+  if(step==='sure'&&!(ishState.v.yil||ishState.v.ay)){showValidationError('Çalışma sürenizi girin.');return;}
+  if(step==='ucret'&&!ishState.v.maas){showValidationError('Son net maaşınızı girin.');return;}
+  if(ishState.step<ISH_STEPS.length){ishState.step++;renderIsHukuku();window.scrollTo({top:0,behavior:'smooth'});return;}
+  ishHesapla();
+}
+function ishPrev(){if(ishState.step>1){ishSaveVisible();ishState.step--;renderIsHukuku();window.scrollTo({top:0,behavior:'smooth'});}}
+
+function ishHesapla(){
+  ishSaveVisible();
+  const v=ishState.v,haklar=ishHaklar();
+  const net=v.maas||0,brut=net*1.4,ekAylik=v.ekler||0;
+  const giydirilmis=brut+ekAylik;
+  const yil=v.yil||0,ay=v.ay||0,toplamAy=yil*12+ay;
+  const rows=[];let toplam=0;
+
+  rows.push({label:'Son net maaş',value:fmt(net)});
+  rows.push({label:'Giydirilmiş brüt ücret',value:fmt(giydirilmis)});
+  rows.push({label:'Toplam çalışma süresi',value:yil+' yıl '+ay+' ay'});
+
+  if(haklar.kidem){
+    const tavan=Math.min(giydirilmis,KIDEM_TAVAN_2026);
+    const kidem=Math.round(tavan*(toplamAy/12));
+    rows.push({label:'Kıdem tazminatı',value:fmt(kidem),highlight:true});
+    toplam+=kidem;
+    if(giydirilmis>KIDEM_TAVAN_2026)rows.push({label:'(Kıdem tavanı uygulandı)',value:fmt(KIDEM_TAVAN_2026)});
+  } else rows.push({label:'Kıdem tazminatı',value:'Hesaplanmadı'});
+
+  if(haklar.ihbar){
+    let hafta=2;
+    if(toplamAy>=6&&toplamAy<18)hafta=4;
+    else if(toplamAy>=18&&toplamAy<36)hafta=6;
+    else if(toplamAy>=36)hafta=8;
+    const ihbar=Math.round(giydirilmis/30*7*hafta);
+    rows.push({label:'İhbar tazminatı ('+hafta+' hafta)',value:fmt(ihbar),highlight:true});
+    toplam+=ihbar;
+  } else rows.push({label:'İhbar tazminatı',value:'Hesaplanmadı'});
+
+  const izinGun=v.izin||0;
+  if(izinGun>0){
+    const izin=Math.round(brut/30*izinGun);
+    rows.push({label:'Kullanılmayan yıllık izin ('+izinGun+' gün)',value:fmt(izin),highlight:true});
+    toplam+=izin;
+  }
+  const saatlik=brut/225;
+  const fm=v.mesai||0;
+  if(fm>0){
+    const hafta=Math.max(1,Math.round(toplamAy*4.33));
+    const mesai=Math.round(saatlik*1.5*fm*hafta);
+    rows.push({label:'Fazla mesai ('+fm+' saat/hafta)',value:fmt(mesai),highlight:true});
+    toplam+=mesai;
+  }
+  const ht=v.haftaTatili||0;
+  if(ht>0){const t=Math.round(brut/30*1.5*ht);rows.push({label:'Hafta tatili çalışması ('+ht+' gün)',value:fmt(t),highlight:true});toplam+=t;}
+  const rt=v.resmiTatil||0;
+  if(rt>0){const t=Math.round(brut/30*2*rt);rows.push({label:'Resmi tatil çalışması ('+rt+' gün)',value:fmt(t),highlight:true});toplam+=t;}
+
+  rows.push({label:'Tahmini toplam alacak',value:fmt(toplam),highlight:true});
+
+  state.ishResult={rows:rows,total:toplam,haklar:haklar};
+  state.pendingType='isHukukuSihirbaz';
+  state.pendingResult={total:toplam,rows:rows,isHukuku:state.ishResult};
+  state.pendingExtra='İş hukuku · Çıkış şekli: '+(ishState.a.cikis||'-')+' · Süre: '+yil+' yıl '+ay+' ay · Kıdem: '+(haklar.kidem?'var':'yok')+' · İhbar: '+(haklar.ihbar?'var':'yok');
+  const ci=getStoredContactInfo();
+  if(ci)finalizeLead(ci,'');else showLeadModal('isHukukuSihirbaz');
+}
+
+function showIsHukukuResult(){
+  const p=document.getElementById('ishResultPanel');if(!p||!state.ishResult)return;
+  const r=state.ishResult;
+  let h='<div class="isc-result-card">';
+  h+='<div class="isc-result-header"><div class="success-animation small"><div class="success-ring"></div><svg class="success-check" viewBox="0 0 50 50" fill="none"><path d="M14 26l9 9 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><h3>Hesaplama tamamlandı</h3><p>Durumunuza göre belirlenen alacak kalemleri</p></div></div>';
+  h+='<div class="isc-total-block"><div class="isc-total-label">Tahmini toplam alacağınız</div><div class="isc-total-amount">'+fmt2(r.total)+' TL</div><div class="isc-total-note">Brüt tutar üzerinden tahmini hesaplama</div></div>';
+
+  h+='<div class="score-lines" style="margin-bottom:18px">';
+  r.haklar.notlar.forEach(function(n){
+    const ico=n.ok===1?'<span class="score-ico">✅</span>':(n.ok===0?'<span class="score-ico">❌</span>':'<span class="score-ico">⚠️</span>');
+    h+='<div class="score-line">'+ico+'<span>'+n.t+'</span></div>';
+  });
+  h+='</div>';
+
+  h+='<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>';
+  r.rows.forEach(function(row){h+='<div class="isc-breakdown-row"><span>'+row.label+'</span><span class="'+(row.highlight?'isc-amount':'')+'">'+row.value+'</span></div>';});
+  h+='</div>';
+  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Tutarlar tahminidir; kesin tutar bordro, SGK kayıtları ve bilirkişi incelemesine göre değişir.</p></div>';
+  h+='<div class="cmp-actions" style="margin-top:16px"><a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+whatsappLink('Merhaba, iş hukuku alacak hesaplaması yaptım. Tahmini tutar: '+fmt(r.total)+'. Dosyamı değerlendirmenizi istiyorum.')+'"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Dosyamı Değerlendirin</a></div>';
+  h+='<div style="text-align:center;margin-top:18px"><a style="font-size:12.5px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.7" onclick="openIsHukuku()">Yeni hesaplama yap</a></div>';
+  h+='</div>';
+  p.innerHTML=h;p.style.display='block';scrollToResult(p);
+}
