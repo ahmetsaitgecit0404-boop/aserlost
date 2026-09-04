@@ -1169,11 +1169,11 @@ a.contact-info-item:hover { color: var(--primary); }
 
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; } }
 
-/* ===== PERFORMANCE OPTIMIZATIONS ===== */
-.home-hero-content, .modules-section, .trust-section, .blog-section,
-.testimonials-section, .contact-section, .faq-section, .footer {
-  content-visibility: auto; contain-intrinsic-size: 500px;
-}
+/* ===== PERFORMANCE OPTIMIZATIONS =====
+   content-visibility kaldırıldı: bölümlere 500px yer ayrılıyordu ama
+   gerçek boyları 3000px'i aşıyordu (araç listesi 3191px, blog 2869px).
+   Bölüm görünür alana girince yükseklik birden büyüyor ve sayfa kaydırırken
+   binlerce piksel zıplıyordu. Bu sayfada tasarruf marjinal, bedeli ağırdı. */
 .module-card, .method-card, .blog-card, .testimonial-card,
 .header, .bg-orb, .btn-next, .btn-back { will-change: transform; }
 
@@ -1222,8 +1222,55 @@ a.contact-info-item:hover { color: var(--primary); }
 .module-group-count { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--group-accent, var(--primary)); background: color-mix(in srgb, var(--group-accent, var(--primary)) 14%, transparent); border: 1px solid color-mix(in srgb, var(--group-accent, var(--primary)) 30%, transparent); border-radius: 50px; padding: 6px 14px; white-space: nowrap; }
 .modules-grid-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 
-/* ===== KATEGORİ SEÇİM EKRANI =====
-   Araçlar tek uzun liste yerine önce hukuk dalına göre seçiliyor. */
+/* ===== EN ÇOK KULLANILANLAR (hızlı erişim) =====
+   Ziyaretçi sayfaya inince aramadan/filtreden geçmeden tek tıkla
+   başlayabilsin diye en üstte duruyor. */
+.pop-wrap { max-width: 1000px; margin: 0 auto 26px; text-align: left; }
+.pop-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.2px; margin-bottom: 12px; }
+.pop-head small { font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
+.pop-star { font-size: 15px; }
+.pop-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 10px; }
+.pop-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; padding: 13px 15px;
+  background: linear-gradient(140deg, var(--primary-soft), var(--bg-elevated)); border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md); color: var(--text-primary); font-family: var(--font); font-size: 13.5px; font-weight: 700;
+  transition: all 0.25s cubic-bezier(0.22,1,0.36,1); }
+.pop-item:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.35); }
+.pop-item:active { transform: translateY(0) scale(0.98); }
+.pop-ico { font-size: 19px; flex-shrink: 0; }
+.pop-t { flex: 1; line-height: 1.3; }
+.pop-item svg { color: var(--primary); flex-shrink: 0; }
+
+/* ===== KOMPAKT ARAÇ SATIRLARI =====
+   Öne çıkan sihirbazlar kart kalıyor; diğer araçlar tek satır olarak
+   listeleniyor ki tüm liste bir bakışta taranabilsin. */
+.mod-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 8px; margin-top: 12px; }
+.mod-row { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; cursor: pointer; padding: 13px 16px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary);
+  font-family: var(--font); transition: all 0.2s cubic-bezier(0.22,1,0.36,1); }
+.mod-row:hover { border-color: var(--border-light); background: var(--bg-elevated); transform: translateX(3px); }
+.mod-row:active { transform: translateX(0) scale(0.99); }
+.mod-row-ico { font-size: 20px; flex-shrink: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+  background: var(--primary-glow); border-radius: var(--radius-sm); }
+.mod-row-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mod-row-t { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.mod-row-d { font-size: 11.5px; color: var(--text-muted); line-height: 1.45; overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.mod-row svg { color: var(--text-muted); flex-shrink: 0; }
+.mod-row:hover svg { color: var(--primary); }
+
+/* ===== KATEGORİ FİLTRE ÇUBUĞU =====
+   Kategori bir kapı değil, filtre: araçlar ilk açılışta görünür. */
+.cat-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 1000px; margin: 0 auto 30px; }
+.cat-chip { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; padding: 9px 16px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; color: var(--text-secondary);
+  font-family: var(--font); font-size: 13px; font-weight: 700; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); }
+.cat-chip:hover { border-color: var(--border-light); color: var(--text-primary); }
+.cat-chip:active { transform: scale(0.96); }
+.cat-chip.on { border-color: var(--group-accent, var(--primary)); color: var(--group-accent, var(--primary));
+  background: color-mix(in srgb, var(--group-accent, var(--primary)) 12%, transparent); }
+.cat-chip-n { font-size: 11px; font-weight: 800; opacity: 0.65; }
+
+/* ===== KATEGORİ KARTLARI (arama sonuçları / eski görünüm) ===== */
 /* Kapsayıcı 900px ile sınırlı; 260px'lik minimum 3 sütun üretip 4. kartı
    tek başına alta atıyordu. 360px minimumla 4 kategori 2x2 diziliyor. */
 .cat-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 18px; max-width: 1000px; margin: 0 auto; }

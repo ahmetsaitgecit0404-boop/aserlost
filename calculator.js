@@ -415,29 +415,29 @@ const MODULES = [
   {id:'kusur',title:'Trafik Kazası Kusur Oranı\nve Tazminat Hakları Tespiti',icon:'🚦',desc:'Kazanızı anlatın: yapay zeka hem kusur oranınızı belirlesin hem de değer kaybı, mahrumiyet, sakatlık gibi hangi tazminat haklarına sahip olduğunuzu söylesin.',tags:['AI Analiz','Kusur Tespiti','Hak Tespiti'],screen:'kusur',category:'trafik'},
   // Aşağıdaki tekil trafik araçları artık sihirbazın içinden çalışıyor; kategori
   // listesini kalabalıklaştırmasınlar diye gizli, ama aramadan hâlâ bulunabilirler.
-  {id:'arac',title:'Araç Değer Kaybı\nTazminatı',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik',hidden:true},
-  {id:'hasar',title:'Araç Gerçek Hasar\nBedeli Hesaplama',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik',hidden:true},
-  {id:'mahrumiyet',title:'Araç Mahrumiyet\nTazminatı Hesaplama',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik',hidden:true},
-  {id:'pertBedeli',title:'Pert Araç Bedeli\nHesaplama',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik',hidden:true},
-  {id:'sakatlik',title:'Sürekli Sakatlık\nTazminatı',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
-  {id:'yoksun',title:'Destekten Yoksun\nKalma Tazminatı',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
-  {id:'maddi',title:'Maddi Hasar\nHesaplama',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik',hidden:true},
-  {id:'kasko',title:'Kasko Hasar\nTazminatı',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik',hidden:true},
-  {id:'manevi',title:'Manevi Tazminat\nHesaplama',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik',hidden:true},
-  {id:'gecici',title:'Geçici İş\nGöremezlik',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik',hidden:true},
-  {id:'kalici',title:'Kalıcı İş\nGöremezlik',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik',hidden:true},
-  {id:'trafikCezasi',title:'Trafik Cezası\nİtiraz Hesaplama',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik',hidden:true},
+  {id:'arac',title:'Araç Değer Kaybı\nTazminatı',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik'},
+  {id:'hasar',title:'Araç Gerçek Hasar\nBedeli Hesaplama',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik'},
+  {id:'mahrumiyet',title:'Araç Mahrumiyet\nTazminatı Hesaplama',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik'},
+  {id:'pertBedeli',title:'Pert Araç Bedeli\nHesaplama',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik'},
+  {id:'sakatlik',title:'Sürekli Sakatlık\nTazminatı',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'yoksun',title:'Destekten Yoksun\nKalma Tazminatı',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'maddi',title:'Maddi Hasar\nHesaplama',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
+  {id:'kasko',title:'Kasko Hasar\nTazminatı',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik'},
+  {id:'manevi',title:'Manevi Tazminat\nHesaplama',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik'},
+  {id:'gecici',title:'Geçici İş\nGöremezlik',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik'},
+  {id:'kalici',title:'Kalıcı İş\nGöremezlik',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'trafikCezasi',title:'Trafik Cezası\nİtiraz Hesaplama',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik'},
   // ===== VERGİ & GÜMRÜK HUKUKU =====
   {id:'gozetim',title:'Gözetim Kaynaklı Fazla\nVergi İade Hesaplama',icon:'🧾',desc:'Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.',tags:['Gözetim Kıymeti','İade İhtimali','Dosya Skoru'],screen:'gozetim',category:'vergi'},
   // ===== İŞ HUKUKU — tek soru-cevap akışı =====
   {id:'isHukukuSihirbaz',title:'İş Hukuku\nHesaplama',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
-  {id:'fesih',title:'İşçi Haklı Fesih ve\nKıdem Tazminatı Uygunluk Testi',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci',hidden:true},
-  {id:'iseIade',title:'İşe İade Davası\nAçabilir Miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci',hidden:true},
-  {id:'iscilik',title:'İşçilik Alacakları\nHesaplama',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci',hidden:true},
-  {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci',hidden:true},
-  {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci',hidden:true},
-  {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci',hidden:true},
-  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci',hidden:true},
+  {id:'fesih',title:'İşçi Haklı Fesih ve\nKıdem Tazminatı Uygunluk Testi',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci'},
+  {id:'iseIade',title:'İşe İade Davası\nAçabilir Miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci'},
+  {id:'iscilik',title:'İşçilik Alacakları\nHesaplama',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci'},
+  {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci'},
+  {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci'},
+  {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci'},
+  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci'},
   // ===== DİĞER TAZMİNATLAR =====
   {id:'bosanma',title:'Boşanma Tazminatı\nve Mal Paylaşımı',icon:'👨‍⚖️',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.',tags:['Boşanma','Nafaka','Mal Paylaşımı'],screen:'generic',category:'diger'},
   {id:'miras',title:'Miras Payı\nHesaplama',icon:'📜',desc:'Türk Medeni Kanunu\'na göre miras paylarını hesaplayın. Yasal mirasçılar ve miras oranları.',tags:['Miras Hukuku','Pay Hesaplama','Yasal Düzenleme'],screen:'generic',category:'diger'},
@@ -879,42 +879,71 @@ function renderModuleCard(m){
   const isAiWizard=m.screen==='kusur'||m.screen==='fesih'||m.screen==='iseIade';
   return `<div class="module-card" onclick="${moduleAction(m)}" role="button" tabindex="0"><div class="module-card-glow"></div><div class="module-card-icon">${m.icon}</div><div class="module-card-body"><h2 class="module-card-title">${m.title.replace(/\n/g,'<br/>')}</h2><p class="module-card-desc">${m.desc}</p><div class="module-tags">${m.tags.map(t=>`<span class="module-tag">${t}</span>`).join('')}</div></div><div class="module-cta-btn">${isAiWizard?'Analizi Başlat':'Hesaplamayı Başlat'} <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`;
 }
-/* Araçlar artık tek uzun liste hâlinde değil; önce "hangi uyuşmazlık" seçilir,
-   hesaplama botları yalnızca o ana başlığa girildiğinde görünür. */
+/* Kategori artık kapı değil, filtre: araçlar ilk açılışta görünür durumda.
+   Önceki sürümde araçları görmek için önce kategori tıklamak gerekiyordu;
+   bu fazladan adım ziyaretçiyi sonuçtan uzaklaştırıyordu. Şimdi üstte
+   kompakt bir filtre çubuğu var, altında araçlar kategori kategori listeli
+   ve HİÇBİRİ gizli değil. Ayrıca en çok kullanılan dört araç en üstte
+   tek tıkla erişilebilir şekilde duruyor. */
 let activeModuleCat=null;
-function catVisibleModules(cat){return MODULES.filter(m=>m.category===cat&&!m.hidden);}
+const POPULER_ARACLAR=['trafikSihirbaz','isHukukuSihirbaz','arac','iscilik'];
+function catVisibleModules(cat){return MODULES.filter(m=>m.category===cat);}
 function selectModuleCat(cat){
-  activeModuleCat=cat;
+  activeModuleCat=(activeModuleCat===cat)?null:cat;
   renderModuleCards();
   const sec=document.getElementById('modules');
   if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function clearModuleCat(){activeModuleCat=null;renderModuleCards();}
+
+function renderCatFilterBar(){
+  let h='<div class="cat-bar">';
+  h+=`<button type="button" class="cat-chip${activeModuleCat?'':' on'}" onclick="clearModuleCat()">Tümü <span class="cat-chip-n">${MODULES.length}</span></button>`;
+  Object.keys(MODULE_CATS).forEach(cat=>{
+    const items=catVisibleModules(cat);if(!items.length)return;
+    const c=MODULE_CATS[cat];
+    h+=`<button type="button" class="cat-chip${activeModuleCat===cat?' on':''}" style="--group-accent:${c.accent}" onclick="selectModuleCat('${cat}')">${c.icon} ${c.title} <span class="cat-chip-n">${items.length}</span></button>`;
+  });
+  return h+'</div>';
+}
+
+function renderPopulerRow(){
+  const items=POPULER_ARACLAR.map(id=>MODULES.find(m=>m.id===id)).filter(Boolean);
+  if(!items.length)return '';
+  let h='<div class="pop-wrap"><div class="pop-head"><span class="pop-star">⚡</span> En çok kullanılanlar <small>— tek tıkla başlayın</small></div><div class="pop-row">';
+  items.forEach(m=>{
+    h+=`<button type="button" class="pop-item" onclick="${moduleAction(m)}"><span class="pop-ico">${m.icon}</span><span class="pop-t">${m.title.replace(/\n/g,' ')}</span><svg width="15" height="15" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
+  });
+  return h+'</div></div>';
+}
+
+/* Her araç için koca kart basıldığında liste 6000 pikseli aşıyor ve
+   ziyaretçi aradığını bulmadan sayfayı terk ediyordu. Öne çıkan
+   sihirbazlar kart olarak kalıyor, geri kalan araçlar tek satırlık
+   kompakt satırlara indi — böylece tüm liste bir bakışta taranabiliyor. */
+const ONE_CIKAN=['trafikSihirbaz','kusur','isHukukuSihirbaz','gozetim'];
+function renderModuleRow(m){
+  return `<button type="button" class="mod-row" onclick="${moduleAction(m)}">
+    <span class="mod-row-ico">${m.icon}</span>
+    <span class="mod-row-txt"><span class="mod-row-t">${m.title.replace(/\n/g,' ')}</span><span class="mod-row-d">${m.desc}</span></span>
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>`;
+}
 function renderModuleCards(){
   const g=document.getElementById('modulesGrid');if(!g)return;
-  let html='';
-  if(!activeModuleCat){
-    html+=`<div class="cat-picker">`;
-    Object.keys(MODULE_CATS).forEach(cat=>{
-      const items=catVisibleModules(cat);
-      if(!items.length)return;
-      const c=MODULE_CATS[cat];
-      html+=`<div class="cat-card" style="--group-accent:${c.accent}" onclick="selectModuleCat('${cat}')" role="button" tabindex="0">
-        <div class="cat-card-icon">${c.icon}</div>
-        <h3 class="cat-card-title">${c.title}</h3>
-        <p class="cat-card-desc">${c.desc}</p>
-        <div class="cat-card-foot"><span class="cat-card-count">${items.length} hesaplama aracı</span><span class="cat-card-go">Devam et <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-      </div>`;
-    });
+  let html=renderPopulerRow()+renderCatFilterBar();
+  const cats=activeModuleCat?[activeModuleCat]:Object.keys(MODULE_CATS);
+  cats.forEach(cat=>{
+    const items=catVisibleModules(cat);
+    if(!items.length)return;
+    const c=MODULE_CATS[cat];
+    const one=items.filter(m=>ONE_CIKAN.indexOf(m.id)!==-1);
+    const digerleri=items.filter(m=>ONE_CIKAN.indexOf(m.id)===-1);
+    html+=`<div class="module-group"><div class="module-group-header" style="--group-accent:${c.accent}"><div class="module-group-icon">${c.icon}</div><div class="module-group-text"><h3 class="module-group-title">${c.title}</h3><p class="module-group-desc">${c.desc}</p></div><span class="module-group-count">${items.length} araç</span></div>`;
+    if(one.length)html+=`<div class="modules-grid-inner">${one.map(renderModuleCard).join('')}</div>`;
+    if(digerleri.length)html+=`<div class="mod-rows">${digerleri.map(renderModuleRow).join('')}</div>`;
     html+=`</div>`;
-    g.innerHTML=html;
-    return;
-  }
-  const c=MODULE_CATS[activeModuleCat],items=catVisibleModules(activeModuleCat);
-  html+=`<button type="button" class="cat-back" onclick="clearModuleCat()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Tüm hukuk alanları</button>`;
-  html+=`<div class="module-group"><div class="module-group-header" style="--group-accent:${c.accent}"><div class="module-group-icon">${c.icon}</div><div class="module-group-text"><h3 class="module-group-title">${c.title}</h3><p class="module-group-desc">${c.desc}</p></div><span class="module-group-count">${items.length} araç</span></div><div class="modules-grid-inner">`;
-  items.forEach(m=>{html+=renderModuleCard(m);});
-  html+=`</div></div>`;
+  });
   g.innerHTML=html;
 }
 function filterModules(query){
@@ -2620,8 +2649,12 @@ function submitLead(){
   const nOk=validateName(name);const ne=document.getElementById('nameError');if(ne)ne.textContent=nOk?'':'Lütfen adınızı ve soyadınızı tam girin.';if(!nOk)valid=false;
   const pOk=!!phone&&validatePhone(phone);const pe=document.getElementById('phoneError');if(pe)pe.textContent=pOk?'':'Lütfen geçerli bir telefon numarası girin.';if(!pOk)valid=false;
   const eOk=!!email&&validateEmail(email);const ee=document.getElementById('emailError');if(ee)ee.textContent=eOk?'':'Lütfen geçerli bir e-posta adresi girin.';if(!eOk)valid=false;
-  const ce=document.getElementById('cityError');if(!city){if(ce)ce.textContent='Lütfen şehir seçin.';valid=false;}else if(ce)ce.textContent='';
-  const ve=document.getElementById('vekaletError');if(!vekalet){if(ve)ve.textContent='Lütfen bu soruyu yanıtlayın.';valid=false;}else if(ve)ve.textContent='';
+  /* Şehir ve vekalet sorusu bilinçli olarak zorunlu değil: sonucu görmek
+     için doldurulması gereken alan sayısı arttıkça ziyaretçi formu yarıda
+     bırakıyor. Kimliğe dair asgari bilgi (ad, telefon, e-posta) ve KVKK
+     onayı zorunlu kalıyor; bu ikisi boş gelirse kayıt yine oluşuyor. */
+  const ce=document.getElementById('cityError');if(ce)ce.textContent='';
+  const ve=document.getElementById('vekaletError');if(ve)ve.textContent='';
   const ke=document.getElementById('kvkkError');if(!kvkkOk){if(ke)ke.textContent='KVKK Aydınlatma Metni\'ni kabul etmelisiniz.';valid=false;}else if(ke)ke.textContent='';
   if(!valid)return;
   const contactInfo={name,phone,email,city,district,plate,vekalet};
