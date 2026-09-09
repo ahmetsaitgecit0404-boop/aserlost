@@ -411,40 +411,40 @@ const TESTIMONIALS=[];
 
 const MODULES = [
   // ===== TRAFİK KAZASI HUKUKU — iki temel araç =====
-  {id:'trafikSihirbaz',title:'Trafik Kazası\nHesaplama',icon:'🚗',desc:'Tek akışta: sorulara verdiğiniz yanıtlara göre araç değer kaybı, hasar bedeli ve yaralanma varsa bedeni tazminatlar birlikte hesaplanır.',tags:['Soru-Cevap','Tüm Tazminatlar','Tek Ekran'],screen:'trafikSihirbaz',category:'trafik'},
-  {id:'kusur',title:'Trafik Kazası Kusur Oranı\nve Tazminat Hakları Tespiti',icon:'🚦',desc:'Kazanızı anlatın: yapay zeka hem kusur oranınızı belirlesin hem de değer kaybı, mahrumiyet, sakatlık gibi hangi tazminat haklarına sahip olduğunuzu söylesin.',tags:['AI Analiz','Kusur Tespiti','Hak Tespiti'],screen:'kusur',category:'trafik'},
+  {id:'trafikSihirbaz',title:'Trafik kazasında maddi zararlarım nedir?',icon:'🚗',desc:'Tek akışta: sorulara verdiğiniz yanıtlara göre araç değer kaybı, hasar bedeli ve yaralanma varsa bedeni tazminatlar birlikte hesaplanır.',tags:['Soru-Cevap','Tüm Tazminatlar','Tek Ekran'],screen:'trafikSihirbaz',category:'trafik'},
+  {id:'kusur',title:'Trafik kazasında kusur oranım kaç?',icon:'🚦',desc:'Kazanızı anlatın: yapay zeka hem kusur oranınızı belirlesin hem de değer kaybı, mahrumiyet, sakatlık gibi hangi tazminat haklarına sahip olduğunuzu söylesin.',tags:['AI Analiz','Kusur Tespiti','Hak Tespiti'],screen:'kusur',category:'trafik'},
   // Aşağıdaki tekil trafik araçları artık sihirbazın içinden çalışıyor; kategori
   // listesini kalabalıklaştırmasınlar diye gizli, ama aramadan hâlâ bulunabilirler.
-  {id:'arac',title:'Araç Değer Kaybı\nTazminatı',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik'},
-  {id:'hasar',title:'Araç Gerçek Hasar\nBedeli Hesaplama',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik'},
-  {id:'mahrumiyet',title:'Araç Mahrumiyet\nTazminatı Hesaplama',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik'},
-  {id:'pertBedeli',title:'Pert Araç Bedeli\nHesaplama',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik'},
-  {id:'sakatlik',title:'Sürekli Sakatlık\nTazminatı',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'yoksun',title:'Destekten Yoksun\nKalma Tazminatı',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'maddi',title:'Maddi Hasar\nHesaplama',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
-  {id:'kasko',title:'Kasko Hasar\nTazminatı',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik'},
-  {id:'manevi',title:'Manevi Tazminat\nHesaplama',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik'},
-  {id:'gecici',title:'Geçici İş\nGöremezlik',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik'},
-  {id:'kalici',title:'Kalıcı İş\nGöremezlik',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'trafikCezasi',title:'Trafik Cezası\nİtiraz Hesaplama',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik'},
+  {id:'arac',title:'Aracım kaza yaptı, değer kaybım ne kadar?',icon:'🚙',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle hesaplayın.',tags:['4 Adımlı Form','Otomatik Değerleme','Anlık Sonuç'],screen:'arac',category:'trafik'},
+  {id:'hasar',title:'Aracımın hasar bedeli ne kadar?',icon:'🔨',desc:'Kaza sonrası araç hasar onarım bedelini hesaplayın. Yedek parça ve işçilik maliyetleri dahil.',tags:['Onarım Maliyeti','Parça Fiyatı','Hızlı Sonuç'],screen:'generic',category:'trafik'},
+  {id:'mahrumiyet',title:'Aracım serviste kaldı, kira bedeli alabilir miyim?',icon:'🚘',desc:'Kaza sonrası aracınızın mahrumiyet (yatma) bedelini hesaplayın. Kiralık araç ve günlük kira bedellerine göre.',tags:['Günlük Kira','Mahrumiyet Süresi','Net Tazminat'],screen:'generic',category:'trafik'},
+  {id:'pertBedeli',title:'Aracım pert oldu, ne kadar alırım?',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik'},
+  {id:'sakatlik',title:'Kazada sakat kaldım, tazminatım ne kadar?',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'yoksun',title:'Kazada yakınımı kaybettim, tazminat hakkım nedir?',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'maddi',title:'Kazadaki maddi zararımı nasıl hesaplarım?',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
+  {id:'kasko',title:'Kaskodan ne kadar hasar bedeli alırım?',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik'},
+  {id:'manevi',title:'Manevi tazminat olarak ne kadar isteyebilirim?',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik'},
+  {id:'gecici',title:'Çalışamadığım günlerin parasını alabilir miyim?',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik'},
+  {id:'kalici',title:'Kalıcı iş göremezlik tazminatım ne kadar?',icon:'⚖',desc:'Kaza sonrası kalıcı iş göremezlik oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Yaşam Boyu','Hesaplama'],screen:'generic',category:'trafik'},
+  {id:'trafikCezasi',title:'Trafik cezasına itiraz etmeye değer mi?',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik'},
   // ===== VERGİ & GÜMRÜK HUKUKU =====
-  {id:'gozetim',title:'Gözetim Kaynaklı Fazla\nVergi İade Hesaplama',icon:'🧾',desc:'Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.',tags:['Gözetim Kıymeti','İade İhtimali','Dosya Skoru'],screen:'gozetim',category:'vergi'},
+  {id:'gozetim',title:'Gümrükte fazla vergi mi ödedim?',icon:'🧾',desc:'Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.',tags:['Gözetim Kıymeti','İade İhtimali','Dosya Skoru'],screen:'gozetim',category:'vergi'},
   // ===== İŞ HUKUKU — tek soru-cevap akışı =====
-  {id:'isHukukuSihirbaz',title:'İş Hukuku\nHesaplama',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
-  {id:'fesih',title:'İşçi Haklı Fesih ve\nKıdem Tazminatı Uygunluk Testi',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci'},
-  {id:'iseIade',title:'İşe İade Davası\nAçabilir Miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci'},
-  {id:'iscilik',title:'İşçilik Alacakları\nHesaplama',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci'},
-  {id:'iseIadeTazminat',title:'İşe İade Davası\nTazminatlarını Hesaplama',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci'},
-  {id:'isgucu',title:'İş Gücü Kaybı\nHesaplama',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci'},
-  {id:'isKazasi',title:'İş Kazası\nTazminatı',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci'},
-  {id:'bakiyeSure',title:'Bakiye Süre Ücreti\nTazminatı',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci'},
+  {id:'isHukukuSihirbaz',title:'İşten ayrıldım, ne kadar alacağım var?',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
+  {id:'fesih',title:'İş yerinde tazminat alma hakkım var mı?',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci'},
+  {id:'iseIade',title:'İşe iade davası açabilir miyim?',icon:'⚖️',desc:'İşten çıkarıldıysanız işe iade davası/başvurusu açma şartlarını taşıyıp taşımadığınızı yapay zeka ile öğrenin.',tags:['AI Analiz','Madde 18-21','İşe İade'],screen:'iseIade',category:'isci'},
+  {id:'iscilik',title:'Kıdem ve ihbar tazminatım ne kadar?',icon:'💵',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı hesaplayın.',tags:['Kıdem & İhbar','Fazla Mesai','Net Tutar'],screen:'iscilik',category:'isci'},
+  {id:'iseIadeTazminat',title:'İşe iade davasını kazanırsam ne kadar alırım?',icon:'⚖️',desc:'İşe iade davasını kazanmanız durumunda alacağınız boşta geçen süre ücreti ve işe başlatmama tazminatını hesaplayın.',tags:['Boşta Geçen Süre','İşe Başlatmama','Net Tutar'],screen:'generic',category:'isci'},
+  {id:'isgucu',title:'İş gücü kaybı tazminatım ne kadar?',icon:'🔶',desc:'Kaza sonucu uğradığınız iş gücü kaybı tazminatını hesaplayın.',tags:['Günlük Gelir','Kaza Dönemi','Tazminat'],screen:'generic',category:'isci'},
+  {id:'isKazasi',title:'İş kazası tazminatım ne kadar?',icon:'🦺',desc:'İş kazası sonucu hak ettiğiniz tazminatı hesaplayın. SGK ve işveren sorumluluğu dahil.',tags:['SGK Hakları','İşveren Sorumluluğu','Rapor Süresi'],screen:'generic',category:'isci'},
+  {id:'bakiyeSure',title:'Sözleşmem erken bitti, kalan ücreti alabilir miyim?',icon:'📆',desc:'Belirli süreli iş sözleşmeniz (örn. özel okul öğretmenliği) süresinden önce feshedildiyse kalan sürenin ücretini hesaplayın.',tags:['Belirli Süreli Sözleşme','5580 Sayılı Kanun','Kalan Süre'],screen:'generic',category:'isci'},
   // ===== DİĞER TAZMİNATLAR =====
-  {id:'bosanma',title:'Boşanma Tazminatı\nve Mal Paylaşımı',icon:'👨‍⚖️',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.',tags:['Boşanma','Nafaka','Mal Paylaşımı'],screen:'generic',category:'diger'},
-  {id:'miras',title:'Miras Payı\nHesaplama',icon:'📜',desc:'Türk Medeni Kanunu\'na göre miras paylarını hesaplayın. Yasal mirasçılar ve miras oranları.',tags:['Miras Hukuku','Pay Hesaplama','Yasal Düzenleme'],screen:'generic',category:'diger'},
-  {id:'kamulastirma',title:'Kamulaştırmasız\nEl Atma Tazminatı',icon:'🏗️',desc:'Kamulaştırmasız el atma durumunda taşınmaz bedeli ve tazminat hesaplaması yapın.',tags:['El Atma','Taşınmaz Bedeli','Tazminat'],screen:'generic',category:'diger'},
-  {id:'nafaka',title:'Nafaka\nHesaplama',icon:'👨‍⚖️',desc:'Boşanma davalarında iştirak ve yoksulluk nafakası hesaplaması yapın.',tags:['Boşanma','Nafaka Türü','Aylık Tutar'],screen:'generic',category:'diger'},
-  {id:'tuketici',title:'Tüketici Hakları\nTazminatı',icon:'🏷',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.',tags:['Ayıplı Mal','İade Hakkı','Tazminat'],screen:'generic',category:'diger'},
-  {id:'tapu',title:'Tapu Harcı ve\nVergi Hesaplama',icon:'🏠',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.',tags:['Tapu Harcı','KDV','Vergi Oranı'],screen:'generic',category:'diger'}
+  {id:'bosanma',title:'Boşanmada ne kadar tazminat ve mal alırım?',icon:'👨‍⚖️',desc:'Boşanma davasında maddi/manevi tazminat, nafaka ve mal paylaşımı hesaplaması yapın.',tags:['Boşanma','Nafaka','Mal Paylaşımı'],screen:'generic',category:'diger'},
+  {id:'miras',title:'Mirastan payım ne kadar?',icon:'📜',desc:'Türk Medeni Kanunu\'na göre miras paylarını hesaplayın. Yasal mirasçılar ve miras oranları.',tags:['Miras Hukuku','Pay Hesaplama','Yasal Düzenleme'],screen:'generic',category:'diger'},
+  {id:'kamulastirma',title:'Arazime izinsiz el konuldu, ne kadar alırım?',icon:'🏗️',desc:'Kamulaştırmasız el atma durumunda taşınmaz bedeli ve tazminat hesaplaması yapın.',tags:['El Atma','Taşınmaz Bedeli','Tazminat'],screen:'generic',category:'diger'},
+  {id:'nafaka',title:'Ne kadar nafaka alabilirim?',icon:'👨‍⚖️',desc:'Boşanma davalarında iştirak ve yoksulluk nafakası hesaplaması yapın.',tags:['Boşanma','Nafaka Türü','Aylık Tutar'],screen:'generic',category:'diger'},
+  {id:'tuketici',title:'Ayıplı ürün aldım, haklarım neler?',icon:'🏷',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.',tags:['Ayıplı Mal','İade Hakkı','Tazminat'],screen:'generic',category:'diger'},
+  {id:'tapu',title:'Tapu harcı ve vergi ne kadar tutar?',icon:'🏠',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.',tags:['Tapu Harcı','KDV','Vergi Oranı'],screen:'generic',category:'diger'}
 ];
 
 const BLOG_POSTS = [
@@ -827,6 +827,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   trackVisit();
   initYears();initBrands();initCarParts();initSlider();initCities();initWorkDuration();injectSvgDefs();renderModuleCards();renderFaq();renderBlogPosts();renderTestimonials();handleInitialRoute();
   setTimeout(initLazySections,100);
+  revealInit();
 });
 
 function injectSvgDefs(){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('width','0');s.setAttribute('height','0');s.style.position='absolute';s.innerHTML='<defs><linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4BC98"/><stop offset="100%" stop-color="#A88B60"/></linearGradient></defs>';document.body.prepend(s);}
@@ -910,7 +911,7 @@ function renderCatFilterBar(){
 function renderPopulerRow(){
   const items=POPULER_ARACLAR.map(id=>MODULES.find(m=>m.id===id)).filter(Boolean);
   if(!items.length)return '';
-  let h='<div class="pop-wrap"><div class="pop-head"><span class="pop-star">⚡</span> En çok kullanılanlar <small>— tek tıkla başlayın</small></div><div class="pop-row">';
+  let h='<div class="pop-wrap"><div class="pop-head"><span class="pop-star">⚡</span> En çok sorulanlar <small>— tek tıkla başlayın</small></div><div class="pop-row">';
   items.forEach(m=>{
     h+=`<button type="button" class="pop-item" onclick="${moduleAction(m)}"><span class="pop-ico">${m.icon}</span><span class="pop-t">${m.title.replace(/\n/g,' ')}</span><svg width="15" height="15" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
   });
@@ -945,6 +946,7 @@ function renderModuleCards(){
     html+=`</div>`;
   });
   g.innerHTML=html;
+  revealScan();
 }
 function filterModules(query){
   const g=document.getElementById('modulesGrid');if(!g)return;
@@ -957,7 +959,10 @@ function filterModules(query){
     return hay.includes(q);
   });
   if(!matches.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted)"><p style="font-size:15px;font-weight:600;margin-bottom:6px">Sonuç bulunamadı</p><p style="font-size:13px">"${sanitizeHtml(query)}" ile eşleşen bir hesaplama aracı yok. Farklı bir kelime deneyin.</p></div>`;return;}
-  g.innerHTML=`<div class="module-group"><div class="module-group-header" style="--group-accent:#C5A880"><div class="module-group-icon">🔍</div><div class="module-group-text"><h3 class="module-group-title">Arama Sonuçları</h3><p class="module-group-desc">"${sanitizeHtml(query)}" için bulunan araçlar</p></div><span class="module-group-count">${matches.length} araç</span></div><div class="modules-grid-inner">${matches.map(renderModuleCard).join('')}</div></div>`;
+  /* Arama sonuçları da kompakt satır olarak: koca kartlarla üç sonuç bile
+     ekranı dolduruyor, kullanıcı eşleşmeleri karşılaştıramıyordu. */
+  g.innerHTML=`<div class="module-group"><div class="module-group-header" style="--group-accent:#C5A880"><div class="module-group-icon">🔍</div><div class="module-group-text"><h3 class="module-group-title">Arama Sonuçları</h3><p class="module-group-desc">"${sanitizeHtml(query)}" için bulunan araçlar</p></div><span class="module-group-count">${matches.length} araç</span></div><div class="mod-rows">${matches.map(renderModuleRow).join('')}</div></div>`;
+  revealScan();
 }
 
 function showPartPickerModal(pid) {
@@ -3978,4 +3983,64 @@ function showIsHukukuResult(){
   h+='<div style="text-align:center;margin-top:18px"><a style="font-size:12.5px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.7" onclick="openIsHukuku()">Yeni hesaplama yap</a></div>';
   h+='</div>';
   p.innerHTML=h;p.style.display='block';scrollToResult(p);
+}
+
+/* =====================================================================
+   KAYDIRMA İLE BELİRME (scroll reveal)
+   Öğeler görünür alana girdiğinde .rv-in kazanıp süzülerek beliriyor.
+   Aynı grupta sıra sıra gecikme veriliyor ki liste dalga hâlinde açılsın.
+   Modül listesi JS ile yeniden basıldığı için render sonrası tekrar
+   bağlanabiliyor (revealScan). prefers-reduced-motion açıksa hiç
+   dokunulmuyor — CSS tarafında da ayrıca nötrleniyor.
+   ===================================================================== */
+const RV_SELECTORS='.section-badge,.section-title,.section-subtitle,.pop-wrap,.cat-bar,.module-group-header,.module-card,.mod-row,.method-card,.blog-card,.testimonial-card,.faq-item,.contact-form-card,.contact-info-card,.cat-card';
+let _rvObserver=null;
+/* Tek tek geçiş tetiklemek yerine gizleme katmanını komple kaldırıyor:
+   böylece CSS geçişi hiç ilerlemese bile içerik anında görünür oluyor. */
+function revealAll(){
+  document.documentElement.classList.remove('rv-on');
+  document.querySelectorAll('.rv').forEach(function(el){el.style.transitionDelay='';});
+}
+function revealInit(){
+  if(!('IntersectionObserver' in window))return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('rv-on');
+  _rvObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      const el=e.target;
+      const d=parseInt(el.dataset.rvDelay||'0',10);
+      if(d)el.style.transitionDelay=(d/1000)+'s';
+      el.classList.add('rv-in');
+      _rvObserver.unobserve(el);
+    });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.06});
+  revealScan();
+  /* Emniyet ağı: gözlemci herhangi bir sebeple tetiklenmezse (compositing
+     yapmayan ortam, tarayıcı tuhaflığı) içerik saydam kalmasın. */
+  setTimeout(function(){
+    if(!document.querySelector('.rv.rv-in'))revealAll();
+  },2200);
+  window.addEventListener('pagehide',revealAll);
+}
+function revealScan(){
+  if(!_rvObserver)return;
+  /* Aynı ebeveyn altındaki kardeşlere kademeli gecikme; en fazla 6 kademe
+     ki uzun listelerde son öğe dakikalarca beklemesin. */
+  const groups=new Map();
+  const vh=window.innerHeight||800;
+  document.querySelectorAll(RV_SELECTORS).forEach(function(el){
+    if(el.classList.contains('rv'))return;
+    el.classList.add('rv');
+    /* Zaten ekranda olan öğe hiç gizlenmiyor: hem açılışta içeriğin bir an
+       kaybolması engelleniyor, hem de gözlemci bozuk olsa bile ilk ekran
+       her koşulda dolu geliyor. */
+    const r=el.getBoundingClientRect();
+    if(r.top<vh&&r.bottom>0){el.classList.add('rv-in');return;}
+    const key=el.parentElement||document.body;
+    const i=groups.get(key)||0;
+    groups.set(key,i+1);
+    el.dataset.rvDelay=String(Math.min(i,6)*55);
+    _rvObserver.observe(el);
+  });
 }
