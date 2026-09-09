@@ -418,6 +418,8 @@ const TESTIMONIALS=[];
    kategori rengini alıyor.
    ===================================================================== */
 const ICON_PATHS = {
+  konteyner: '<rect x="2.6" y="7.4" width="18.8" height="10.4" rx="1.6"/><path d="M7.2 7.4v10.4M12 7.4v10.4M16.8 7.4v10.4"/><path d="M5 17.8v1.8M19 17.8v1.8"/>',
+  yuzde: '<circle cx="7.8" cy="7.8" r="2.7"/><circle cx="16.2" cy="16.2" r="2.7"/><path d="M18.6 5.4L5.4 18.6"/>',
   arac:      '<path d="M4 16l1.4-4.6A2 2 0 0 1 7.3 10h9.4a2 2 0 0 1 1.9 1.4L20 16"/><rect x="2.5" y="16" width="19" height="3.6" rx="1.4"/><circle cx="7" cy="19.6" r="1.3"/><circle cx="17" cy="19.6" r="1.3"/><path d="M9 7l1.5-2.4h3L15 7"/>',
   carpisma:  '<path d="M12 3l1.9 4.2L18 6l-1.2 4.1L21 12l-4.2 1.9L18 18l-4.1-1.2L12 21l-1.9-4.2L6 18l1.2-4.1L3 12l4.2-1.9L6 6l4.1 1.2z"/>',
   kusur:     '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5M12 16v.01"/>',
