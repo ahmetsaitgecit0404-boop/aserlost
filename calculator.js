@@ -904,10 +904,17 @@ function renderCatFilterBar(){
   return h+'</div>';
 }
 
+/* Soru kartı: ikon + soru + tek satır destek metni + ok. Üç öğe, fazlası
+   değil — eskiden kartta ayrıca 3 etiket ve bir CTA butonu vardı ve 29
+   kart yan yana gelince gürültüye dönüşüyordu. */
 function renderModuleRow(m){
-  return `<button type="button" class="mod-row" onclick="${moduleAction(m)}">
-    <span class="mod-row-t">${m.title.replace(/\n/g,' ')}</span>
-    <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  return `<button type="button" class="qcard" onclick="${moduleAction(m)}">
+    <span class="qcard-ico">${m.icon}</span>
+    <span class="qcard-body">
+      <span class="qcard-q">${m.title.replace(/\n/g,' ')}</span>
+      <span class="qcard-h">${m.desc}</span>
+    </span>
+    <svg class="qcard-arrow" width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>`;
 }
 function renderModuleCards(){
@@ -918,7 +925,9 @@ function renderModuleCards(){
     const items=catVisibleModules(cat);
     if(!items.length)return;
     const c=MODULE_CATS[cat];
-    html+=`<div class="module-group"><div class="grp-label" style="--group-accent:${c.accent}">${c.title}</div>`;
+    /* Vurgu rengi grup sarmalayıcısında: hem etiket hem içindeki kartlar
+       aynı kategori rengini miras alıyor. */
+    html+=`<div class="module-group" style="--group-accent:${c.accent}"><div class="grp-label">${c.title}</div>`;
     html+=`<div class="mod-rows">${items.map(renderModuleRow).join('')}</div>`;
     html+=`</div>`;
   });
@@ -3970,38 +3979,56 @@ function showIsHukukuResult(){
    bağlanabiliyor (revealScan). prefers-reduced-motion açıksa hiç
    dokunulmuyor — CSS tarafında da ayrıca nötrleniyor.
    ===================================================================== */
-const RV_SELECTORS='.section-badge,.section-title,.section-subtitle,.cat-bar,.grp-label,.mod-row,.method-card,.blog-card,.testimonial-card,.faq-item,.contact-form-card,.contact-info-card';
-let _rvObserver=null;
-/* Tek tek geçiş tetiklemek yerine gizleme katmanını komple kaldırıyor:
-   böylece CSS geçişi hiç ilerlemese bile içerik anında görünür oluyor. */
+const RV_SELECTORS='.section-badge,.section-title,.section-subtitle,.cat-bar,.grp-label,.qcard,.method-card,.blog-card,.testimonial-card,.faq-item,.contact-form-card,.contact-info-card';
+let _rvActive=false,_rvTick=0;
+
+/* Gizleme katmanını komple kaldırır: CSS geçişi hiç ilerlemese bile
+   içerik anında görünür olur. Son çare her koşulda burası. */
 function revealAll(){
+  _rvActive=false;
   document.documentElement.classList.remove('rv-on');
   document.querySelectorAll('.rv').forEach(function(el){el.style.transitionDelay='';});
 }
-function revealInit(){
-  if(!('IntersectionObserver' in window))return;
-  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  document.documentElement.classList.add('rv-on');
-  _rvObserver=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(!e.isIntersecting)return;
-      const el=e.target;
-      const d=parseInt(el.dataset.rvDelay||'0',10);
-      if(d)el.style.transitionDelay=(d/1000)+'s';
-      el.classList.add('rv-in');
-      _rvObserver.unobserve(el);
-    });
-  },{rootMargin:'0px 0px -8% 0px',threshold:0.06});
-  revealScan();
-  /* Emniyet ağı: gözlemci herhangi bir sebeple tetiklenmezse (compositing
-     yapmayan ortam, tarayıcı tuhaflığı) içerik saydam kalmasın. */
-  setTimeout(function(){
-    if(!document.querySelector('.rv.rv-in'))revealAll();
-  },2200);
-  window.addEventListener('pagehide',revealAll);
+
+/* Görünür alana girmiş her öğeyi açar. IntersectionObserver yerine düz
+   kaydırma dinleyicisi kullanılıyor: davranışı tamamen öngörülebilir ve
+   her ortamda çalışıyor. (Önceki sürüm gözlemciye dayanıyordu; gözlemci
+   tetiklenmediğinde FAQ dahil 61 öğe kalıcı olarak saydam kalmıştı.) */
+function revealSweep(){
+  if(!_rvActive)return;
+  const vh=window.innerHeight||800;
+  const kalan=document.querySelectorAll('.rv:not(.rv-in)');
+  if(!kalan.length)return;
+  kalan.forEach(function(el){
+    const r=el.getBoundingClientRect();
+    if(r.top<vh*0.94&&r.bottom>0)el.classList.add('rv-in');
+  });
 }
+/* Kısıtlama zaman tabanlı: requestAnimationFrame'e bağlanmıyor. rAF'ın
+   çalışmadığı durumlarda (arka plan sekmesi, compositing yapmayan ortam)
+   süpürme hiç tetiklenmiyor ve içerik saydam kalıyordu. */
+function _rvOnScroll(){
+  const t=Date.now();
+  if(t-_rvTick<80)return;
+  _rvTick=t;
+  revealSweep();
+}
+
+function revealInit(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  _rvActive=true;
+  document.documentElement.classList.add('rv-on');
+  revealScan();
+  window.addEventListener('scroll',_rvOnScroll,{passive:true});
+  window.addEventListener('resize',_rvOnScroll,{passive:true});
+  window.addEventListener('pagehide',revealAll);
+  /* KOŞULSUZ emniyet: 6 saniye sonra gizleme katmanı her hâlükârda
+     kalkıyor. Animasyon uğruna içeriğin kaybolma riski sıfırlanıyor. */
+  setTimeout(revealAll,6000);
+}
+
 function revealScan(){
-  if(!_rvObserver)return;
+  if(!_rvActive)return;
   /* Aynı ebeveyn altındaki kardeşlere kademeli gecikme; en fazla 6 kademe
      ki uzun listelerde son öğe dakikalarca beklemesin. */
   const groups=new Map();
@@ -4009,15 +4036,19 @@ function revealScan(){
   document.querySelectorAll(RV_SELECTORS).forEach(function(el){
     if(el.classList.contains('rv'))return;
     el.classList.add('rv');
-    /* Zaten ekranda olan öğe hiç gizlenmiyor: hem açılışta içeriğin bir an
-       kaybolması engelleniyor, hem de gözlemci bozuk olsa bile ilk ekran
-       her koşulda dolu geliyor. */
+    /* Zaten ekranda olan öğe hiç gizlenmiyor: açılışta içerik bir an
+       kaybolmuyor. */
     const r=el.getBoundingClientRect();
     if(r.top<vh&&r.bottom>0){el.classList.add('rv-in');return;}
     const key=el.parentElement||document.body;
     const i=groups.get(key)||0;
     groups.set(key,i+1);
     el.dataset.rvDelay=String(Math.min(i,6)*55);
-    _rvObserver.observe(el);
   });
+  /* Gecikmeleri stil olarak yaz: sweep sırasında ek iş yapılmasın. */
+  document.querySelectorAll('.rv:not(.rv-in)').forEach(function(el){
+    const d=parseInt(el.dataset.rvDelay||'0',10);
+    if(d)el.style.transitionDelay=(d/1000)+'s';
+  });
+  revealSweep();
 }

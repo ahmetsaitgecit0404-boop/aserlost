@@ -1207,23 +1207,46 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none;
   html.rv-on .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
-/* ===== SORU LİSTESİ =====
-   Tek tip satır: sadece sorunun kendisi ve ok. İkon, açıklama, etiket ve
-   CTA butonu kaldırıldı — 29 satırda bunlar görsel gürültüye dönüşüyordu. */
-.mod-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 6px; }
-.mod-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left;
-  cursor: pointer; padding: 15px 18px; background: transparent; border: 1px solid var(--border);
-  border-radius: var(--radius-md); color: var(--text-primary); font-family: var(--font);
-  transition: background 0.2s cubic-bezier(0.22,1,0.36,1), border-color 0.2s cubic-bezier(0.22,1,0.36,1), transform 0.2s cubic-bezier(0.22,1,0.36,1); }
-.mod-row:hover { background: var(--bg-card); border-color: var(--border-light); transform: translateX(3px); }
-.mod-row:active { transform: translateX(0) scale(0.99); }
-.mod-row-t { font-size: 14.5px; font-weight: 600; line-height: 1.35; letter-spacing: -0.005em; }
-.mod-row svg { color: var(--text-muted); flex-shrink: 0; transition: color 0.2s; }
-.mod-row:hover svg { color: var(--primary); }
+/* ===== SORU KARTLARI =====
+   Kalabalığı çözerken tasarımı da silmiştim: 29 çıplak metin satırı
+   tabloya benziyordu. Kart geri geldi ama içinde üç öğe var — ikon, soru,
+   tek satır destek metni. Kategori vurgu rengi ikon ve hover'da taşınıyor,
+   böylece renk hiyerarşi kuruyor, gürültü yapmıyor. */
+.mod-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
+.qcard { position: relative; display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left;
+  cursor: pointer; padding: 17px 17px 16px;
+  background: linear-gradient(158deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border); border-radius: var(--radius-lg); color: var(--text-primary);
+  font-family: var(--font); overflow: hidden;
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1), border-color 0.32s cubic-bezier(0.22,1,0.36,1), box-shadow 0.32s cubic-bezier(0.22,1,0.36,1); }
+/* üstten inen ince vurgu ışığı — yalnızca hover'da */
+.qcard::before { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
+  background: radial-gradient(120% 80% at 50% -25%, color-mix(in srgb, var(--group-accent, var(--primary)) 22%, transparent), transparent 62%);
+  transition: opacity 0.32s ease; }
+.qcard:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--group-accent, var(--primary)) 42%, transparent);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.4), 0 0 22px color-mix(in srgb, var(--group-accent, var(--primary)) 15%, transparent); }
+.qcard:hover::before { opacity: 1; }
+.qcard:active { transform: translateY(-1px) scale(0.988); }
+.qcard-ico { position: relative; flex-shrink: 0; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+  font-size: 19px; border-radius: 11px;
+  background: color-mix(in srgb, var(--group-accent, var(--primary)) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--group-accent, var(--primary)) 26%, transparent);
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1); }
+.qcard:hover .qcard-ico { transform: scale(1.06); }
+.qcard-body { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.qcard-q { font-size: 14.5px; font-weight: 700; line-height: 1.32; letter-spacing: -0.011em; color: var(--text-primary); }
+.qcard-h { font-size: 11.5px; line-height: 1.5; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.qcard-arrow { position: relative; flex-shrink: 0; margin-top: 10px; color: var(--text-muted);
+  transition: color 0.32s ease, transform 0.32s cubic-bezier(0.22,1,0.36,1); }
+.qcard:hover .qcard-arrow { color: var(--group-accent, var(--primary)); transform: translateX(3px); }
 
-/* İnce grup ayırıcı: eski ikon + açıklama + sayaç bloğunun yerine */
-.grp-label { font-size: 11.5px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--group-accent, var(--text-muted)); padding: 0 0 10px 2px; text-align: left; }
+/* Grup ayırıcı: renk kodlu ince etiket + hafif çizgi */
+.grp-label { display: flex; align-items: center; gap: 10px; font-size: 11.5px; font-weight: 800;
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--group-accent, var(--text-muted));
+  padding: 0 0 12px 2px; text-align: left; }
+.grp-label::after { content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--group-accent, var(--primary)) 30%, transparent), transparent); }
 
 /* ===== KATEGORİ FİLTRE ÇUBUĞU =====
    Kategori bir kapı değil, filtre: araçlar ilk açılışta görünür. */
