@@ -284,6 +284,8 @@
       <h1>Müvekkil Bilgi Admin</h1>
       <p>Yönetim paneline erişim için şifrenizi girin</p>
       <input type="password" id="pwInput" placeholder="Şifre" autocomplete="current-password"/>
+      <input type="text" id="totpInput" placeholder="Doğrulama kodu (varsa)" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+             style="letter-spacing:.3em;text-align:center;font-variant-numeric:tabular-nums"/>
       <button id="loginBtn">Giriş Yap</button>
       <div class="login-error" id="loginErr"></div>
     </div>
@@ -562,18 +564,21 @@
     }
     ['click','keydown','mousemove'].forEach(function(ev){document.addEventListener(ev,resetSession)});
 
+    document.getElementById('totpInput').addEventListener('keydown',function(ev){if(ev.key==='Enter')doLogin();});
     async function doLogin(){
       const pw=document.getElementById('pwInput').value;
       const btn=document.getElementById('loginBtn'), err=document.getElementById('loginErr');
       if(pw.length>128){err.textContent='Geçersiz giriş.';return}
       btn.disabled=true;btn.style.opacity='.7';err.textContent='';err.style.color='var(--danger)';
       try{
-        const res=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+        const res=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,totp:(document.getElementById('totpInput').value||'').trim()})});
         const data=await res.json().catch(function(){return{}});
         if(!res.ok){
           err.textContent=data.error||'Giriş başarısız.';
           if(res.status===429)err.style.color='var(--warn)';
-          document.getElementById('pwInput').value='';return;
+          if(data.totpRequired){document.getElementById('totpInput').value='';document.getElementById('totpInput').focus();}
+          else document.getElementById('pwInput').value='';
+          return;
         }
         sessionStorage.setItem('admin_token',data.token);
         tokenExp=data.expiresAt||(Date.now()+4*60*60*1000);

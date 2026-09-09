@@ -31,6 +31,62 @@ function withReasoning(body) {
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hvsxeljnyxmhiwgsqhgx.supabase.co';
 const ADMIN_TOKEN_TTL_MS = 4 * 60 * 60 * 1000;
+
+/* =====================================================================
+   İKİ AŞAMALI DOĞRULAMA (TOTP — RFC 6238)
+   Admin paneline yalnızca şifreyle giriliyordu; şifre sızarsa tüm
+   başvuru kayıtlarına (ad, telefon, sağlık verisi dahil) erişilebiliyor.
+   Artık Google Authenticator / Microsoft Authenticator gibi bir
+   uygulamadan gelen 6 haneli kod da isteniyor.
+
+   ÖNEMLİ — kilitlenme riski yok: ADMIN_TOTP_SECRET ortam değişkeni
+   tanımlı DEĞİLSE 2FA hiç devreye girmez ve giriş eskisi gibi çalışır.
+   Yani anahtarı ekleyene kadar hiçbir şey değişmiyor.
+   ===================================================================== */
+const TOTP_STEP_SECONDS = 30;
+const TOTP_WINDOW = 1; /* saat kaymasına tolerans: ±1 adım (±30 sn) */
+
+function base32Decode(input) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const clean = String(input || '').toUpperCase().replace(/=+$/, '').replace(/\s+/g, '');
+  let bits = 0, value = 0;
+  const out = [];
+  for (const ch of clean) {
+    const idx = alphabet.indexOf(ch);
+    if (idx === -1) throw new Error('Geçersiz base32 karakteri');
+    value = (value << 5) | idx;
+    bits += 5;
+    if (bits >= 8) { out.push((value >>> (bits - 8)) & 0xff); bits -= 8; }
+  }
+  return Buffer.from(out);
+}
+
+function totpCode(secretBase32, counter) {
+  const key = base32Decode(secretBase32);
+  const buf = Buffer.alloc(8);
+  buf.writeUInt32BE(Math.floor(counter / 0x100000000), 0);
+  buf.writeUInt32BE(counter % 0x100000000, 4);
+  const hmac = crypto.createHmac('sha1', key).update(buf).digest();
+  const offset = hmac[hmac.length - 1] & 0x0f;
+  const bin = ((hmac[offset] & 0x7f) << 24) | (hmac[offset + 1] << 16)
+            | (hmac[offset + 2] << 8) | hmac[offset + 3];
+  return String(bin % 1000000).padStart(6, '0');
+}
+
+/* Kodu sabit süreli karşılaştırma ile doğrular; ±1 adım tolerans tanır. */
+function verifyTotp(secretBase32, code) {
+  const girilen = String(code || '').replace(/\s+/g, '');
+  if (!/^\d{6}$/.test(girilen)) return false;
+  const counter = Math.floor(Date.now() / 1000 / TOTP_STEP_SECONDS);
+  for (let d = -TOTP_WINDOW; d <= TOTP_WINDOW; d++) {
+    let beklenen;
+    try { beklenen = totpCode(secretBase32, counter + d); } catch (e) { return false; }
+    const a = Buffer.from(beklenen), b = Buffer.from(girilen);
+    if (a.length === b.length && crypto.timingSafeEqual(a, b)) return true;
+  }
+  return false;
+}
+
 const ADMIN_ALLOWED_TABLES = ['leads', 'contacts', 'tracking', 'login_attempts'];
 
 function b64url(buf) { return buf.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
@@ -353,7 +409,7 @@ app.get('/api/admin/beyanname', async (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', keySet: !!GROQ_API_KEY });
+  res.json({ status: 'ok', keySet: !!GROQ_API_KEY, totp: !!process.env.ADMIN_TOTP_SECRET });
 });
 
 const adminLoginLimiter = rateLimit({
@@ -384,7 +440,7 @@ app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
     return res.status(500).json({ error: 'Sunucu yapılandırması eksik (ADMIN_PASSWORD_HASH/ADMIN_JWT_SECRET).' });
   }
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
-  const { password } = req.body || {};
+  const { password, totp } = req.body || {};
   if (typeof password !== 'string' || password.length === 0 || password.length > 128) {
     return res.status(400).json({ error: 'Geçersiz giriş.' });
   }
@@ -392,6 +448,14 @@ app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
   await logLoginAttempt(ip, valid);
   if (!valid) {
     return res.status(401).json({ error: 'Yanlış şifre.' });
+  }
+  /* İki aşamalı doğrulama yalnızca ADMIN_TOTP_SECRET tanımlıysa devreye
+     girer — anahtar eklenmeden önce giriş akışı hiç değişmiyor, yani
+     kilitlenme riski yok. */
+  const TOTP_SECRET = process.env.ADMIN_TOTP_SECRET;
+  if (TOTP_SECRET && !verifyTotp(TOTP_SECRET, totp)) {
+    await logLoginAttempt(ip, false);
+    return res.status(401).json({ error: 'Doğrulama kodu geçersiz.', totpRequired: true });
   }
   const now = Date.now();
   const token = signAdminToken({ iat: now, exp: now + ADMIN_TOKEN_TTL_MS }, ADMIN_JWT_SECRET);
