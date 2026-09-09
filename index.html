@@ -282,8 +282,8 @@
     <footer class="footer">
       <div class="footer-inner">
         <div class="footer-logo"><div class="logo-icon small"><svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="lgf" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#C5A880"/><stop offset="100%" stop-color="#E2C992"/></linearGradient><linearGradient id="lgf2" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#8B6914"/><stop offset="100%" stop-color="#C5A880"/></linearGradient><filter id="lg-s2"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/></filter></defs><rect width="40" height="40" rx="10" fill="url(#lgf)"/><circle cx="17" cy="14" r="6" fill="#fff"/><path d="M7 34v-1.5C7 24.6 11.5 19 17 19s10 5.6 10 13.5V34H7z" fill="#fff"/><circle cx="29.5" cy="29.5" r="7.2" fill="url(#lgf2)" filter="url(#lg-s2)"/><circle cx="29.5" cy="26.1" r="1.55" fill="#fff"/><rect x="28.1" y="28.7" width="2.8" height="6" rx="1.4" fill="#fff"/></svg></div><span>Müvekkil Bilgi</span></div>
-        <div class="footer-links"><a href="#modules">Hesaplamalar</a><a href="#blogSection">Blog</a><a href="#faq">SSS</a><a href="#contactSection">İletişim</a></div>
-        <p class="footer-note">Bu hesaplama aracı bilgilendirme amaçlıdır ve hukuki tavsiye niteliği taşımaz.</p>
+        <div class="footer-links"><a href="#modules">Hesaplamalar</a><a href="#blogSection">Blog</a><a href="#faq">SSS</a><a href="#contactSection">İletişim</a><a style="cursor:pointer" onclick="showKvkkText()">KVKK Aydınlatma Metni</a><a style="cursor:pointer" onclick="showYasalUyari()">Yasal Uyarı</a></div>
+        <p class="footer-note">Bu site yalnızca genel bilgilendirme amaçlıdır; reklam veya iş sağlama amacı taşımaz. Hesaplamalar tahminîdir, hukuki tavsiye niteliği taşımaz ve avukat–müvekkil ilişkisi kurmaz.</p>
         <p class="footer-copy">&copy; 2026 Müvekkil Bilgi. Tüm hakları saklıdır.</p>
       </div>
     </footer>
@@ -739,27 +739,119 @@
   <div id="kvkkModal">
     <div class="kvkk-modal-box">
       <h2>KVKK Aydınlatma Metni</h2>
-      <p><strong>Veri Sorumlusu:</strong> Müvekkil Bilgi (İşletme adı)</p>
-      <p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, Müvekkil Bilgi olarak kişisel verilerinizin güvenliğine önem vermekteyiz. İşbu aydınlatma metni ile kişisel verilerinizin işlenme amaçları, hukuki sebepleri, aktarımı ve haklarınız hakkında sizi bilgilendirmek isteriz.</p>
-      <p><strong>Hangi Verileriniz İşlenmektedir?</strong></p>
+      <p class="kvkk-tarih">Son güncelleme: 09.09.2026</p>
+
+      <p><strong>1. Veri Sorumlusu</strong><br/>
+      6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca veri sorumlusu <strong>Av. M. Ali Geçit</strong>tir.<br/>
+      Adres: İçerenköy Mah. Eryılmazlar Sok. No:2 Kat:3 Ataşehir / İstanbul<br/>
+      E-posta: info@muvekkilbilgi.com &nbsp;·&nbsp; Telefon: 0551 012 69 04</p>
+
+      <p><strong>2. İşlenen Kişisel Veriler</strong></p>
       <ul>
-        <li>Kimlik verileri: Ad, soyad</li>
-        <li>İletişim verileri: Telefon numarası, e-posta adresi, şehir, ilçe</li>
-        <li>Araç bilgileri: Plaka (opsiyonel)</li>
-        <li>Hesaplama bilgileri: Tazminat hesaplama sonuçları</li>
+        <li><strong>Kimlik:</strong> ad, soyad</li>
+        <li><strong>İletişim:</strong> telefon, e-posta, şehir, ilçe</li>
+        <li><strong>Müşteri işlem:</strong> yaptığınız hesaplamalar, girdiğiniz tutarlar, hesaplama sonuçları, açıklama metinleri</li>
+        <li><strong>Hukuki işlem:</strong> avukata vekâlet verip vermediğiniz bilgisi, olay anlatımınız</li>
+        <li><strong>Araç ve sigorta:</strong> plaka (isteğe bağlı), araç bilgileri, hasar bilgileri, kaza tespit tutanağı ve ekspertiz raporu gibi yüklediğiniz belgeler</li>
+        <li><strong>Görsel:</strong> yüklediğiniz kaza/hasar fotoğrafları</li>
+        <li><strong>Finansal:</strong> maaş, gelir, gümrük kıymeti, ödenen vergi gibi hesaplama için girdiğiniz veriler</li>
+        <li><strong>İşlem güvenliği:</strong> IP adresi, tarayıcı bilgisi, kullanım kayıtları, takip bağlantısı parametreleri</li>
       </ul>
-      <p><strong>Verileriniz Hangi Amaçla İşlenmektedir?</strong></p>
+
+      <p><strong>3. Özel Nitelikli Kişisel Veriler — Sağlık Verisi</strong><br/>
+      Sakatlık oranı, iş göremezlik süresi, yaralanma durumu, tedavi ve sağlık giderleri gibi bilgiler KVKK madde 6 kapsamında <strong>özel nitelikli kişisel veridir</strong>. Bu veriler yalnızca <strong>açık rızanız</strong> ile işlenir. Bu tür bir bilgi girmek zorunda değilsiniz; girmediğinizde ilgili hesaplama yapılamaz, diğer araçları kullanmaya devam edebilirsiniz. Açık rızanızı her zaman geri alabilirsiniz.</p>
+
+      <p><strong>4. İşleme Amaçları</strong></p>
       <ul>
-        <li>Tazminat hesaplama hizmetinin sunulması ve sonuçların gösterilmesi</li>
-        <li>Hukuki danışmanlık hizmeti için avukat/yönlendirme yapılması</li>
-        <li>Talep ve şikayetlerinizin değerlendirilmesi</li>
-        <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+        <li>Talep ettiğiniz hesaplama ve ön değerlendirme hizmetinin sunulması</li>
+        <li>Sonuçların tarafınıza gösterilmesi ve talebiniz hâlinde tarafınıza dönülmesi</li>
+        <li>Dosyanızın hukuki incelemeye uygunluğunun değerlendirilmesi</li>
+        <li>Yüklediğiniz belge ve fotoğrafların hasar/kusur tespiti amacıyla analiz edilmesi</li>
+        <li>Talep, soru ve şikâyetlerinizin karşılanması</li>
+        <li>Hizmetin güvenliğinin sağlanması, kötüye kullanımın önlenmesi</li>
+        <li>Mevzuattan doğan yükümlülüklerin yerine getirilmesi ve gerektiğinde ispat</li>
       </ul>
-      <p><strong>Hukuki Sebep:</strong> KVKK madde 5/2(c) - Bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması kaydıyla, sözleşme taraflarına ait kişisel verilerin işlenmesinin gerekli olması.</p>
-      <p><strong>Verilerinizin Aktarımı:</strong> Kişisel verileriniz, yukarıdaki amaçların gerçekleştirilmesi kapsamında, hukuki danışmanlık almanız durumunda yönlendirileceğiniz avukatlar ile ve yasal zorunluluk hallerinde resmi mercilerle paylaşılabilir.</p>
-      <p><strong>Haklarınız:</strong> KVKK madde 11 uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenme amacını öğrenme, yurt içinde/yurt dışında aktarıldığı üçüncü kişileri bilme, eksik/yanlış işlenmişse düzeltilmesini isteme, KVKK madde 7'deki şartlar çerçevesinde silinmesini/yok edilmesini isteme, aktarıldığı üçüncü kişilere bildirilmesini isteme, aleyhinize sonuç doğuran otomatik analiz sonuçlarına itiraz etme ve kanuna aykırı işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme haklarına sahipsiniz.</p>
-      <p><strong>İletişim:</strong> KVKK kapsamındaki haklarınızı kullanmak için <strong>info@muvekkilbilgi.com</strong> adresine e-posta gönderebilirsiniz.</p>
-      <button onclick="document.getElementById('kvkkModal').style.display='none'">Kapat</button>
+
+      <p><strong>5. Toplama Yöntemi ve Hukuki Sebepler</strong><br/>
+      Verileriniz; internet sitesindeki formlar, hesaplama araçları, belge/fotoğraf yükleme alanları, sohbet asistanı ve iletişim kanalları üzerinden <strong>elektronik ortamda</strong>, doğrudan sizin tarafınızdan sağlanmak suretiyle toplanır. Hukuki sebepler:</p>
+      <ul>
+        <li><strong>m.5/2-c</strong> — sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması (hesaplama ve ön değerlendirme talebiniz)</li>
+        <li><strong>m.5/2-ç</strong> — veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi</li>
+        <li><strong>m.5/2-e</strong> — bir hakkın tesisi, kullanılması veya korunması için zorunlu olması</li>
+        <li><strong>m.5/2-f</strong> — meşru menfaat (hizmet güvenliği, kötüye kullanımın önlenmesi)</li>
+        <li><strong>m.5/1 ve m.6/2</strong> — <strong>açık rıza</strong> (sağlık verileri, yurt dışına aktarım ve isteğe bağlı belge/fotoğraf yüklemeleri bakımından)</li>
+      </ul>
+
+      <p><strong>6. Otomatik Sistemlerle Analiz ve Yapay Zekâ Kullanımı</strong><br/>
+      Hesaplama sonuçları ve bazı ön değerlendirmeler (kusur oranı tespiti, haklı fesih değerlendirmesi, belge ve fotoğraf analizi, sohbet asistanı yanıtları) <strong>yapay zekâ destekli otomatik sistemlerle</strong> üretilir. Bu çıktılar <strong>tahminî ve bilgilendirme amaçlıdır; hukuki mütalaa, bilirkişi raporu ya da kesin sonuç değildir</strong>. Hiçbir hukuki sonuç yalnızca otomatik sistemin çıktısına dayanılarak doğmaz; nihai değerlendirme avukat incelemesiyle yapılır. KVKK madde 11 uyarınca, münhasıran otomatik sistemler aracılığıyla analiz edilmesi sonucu aleyhinize bir sonuç doğması hâlinde buna itiraz etme hakkınız vardır.</p>
+
+      <p><strong>7. Yurt Dışına Aktarım</strong><br/>
+      Yapay zekâ analizlerinin çalıştırılması ve verilerin barındırılması için <strong>yurt dışında yerleşik hizmet sağlayıcılardan</strong> (yapay zekâ altyapısı ve bulut veri tabanı/dosya depolama hizmetleri) yararlanılmaktadır. Bu nedenle hesaplama için girdiğiniz metinler ile yüklediğiniz belge ve fotoğraflar <strong>yurt dışına aktarılabilmektedir</strong>. Bu aktarım KVKK madde 9 kapsamında <strong>açık rızanıza</strong> dayanır. Açık rıza vermek istemiyorsanız yapay zekâ destekli araçları ve belge/fotoğraf yükleme özelliklerini kullanmayınız; formül tabanlı hesaplama araçlarını kullanmaya devam edebilirsiniz.</p>
+
+      <p><strong>8. Aktarım Yapılan Taraflar</strong></p>
+      <ul>
+        <li>Dosyanızın değerlendirilmesi hâlinde ilgili avukat ve büro çalışanları</li>
+        <li>Barındırma, veri tabanı, dosya depolama ve yapay zekâ altyapısı sağlayıcıları</li>
+        <li>Talebiniz üzerine iletişim kurulan sigorta şirketi, eksper veya bilirkişi</li>
+        <li>Kanunen yetkili kamu kurum ve kuruluşları ile adli/idari merciler</li>
+      </ul>
+
+      <p><strong>9. Fotoğraf ve Belge Yüklerken Dikkat</strong><br/>
+      Yüklediğiniz fotoğraf ve belgelerde üçüncü kişilere ait bilgiler (yüz görüntüsü, plaka, imza, kimlik bilgisi) yer alabilir. Bu içerikleri yüklemekle, üçüncü kişilere ait verileri paylaşma konusunda gerekli yetkiye sahip olduğunuzu beyan etmiş sayılırsınız. Gerekli olmayan üçüncü kişi bilgilerini yüklemeden önce kapatmanızı öneririz.</p>
+
+      <p><strong>10. Saklama Süresi</strong><br/>
+      Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen zamanaşımı süreleri ile saklama yükümlülükleri dikkate alınarak muhafaza edilir. Amaç ortadan kalktığında ve yasal saklama süreleri dolduğunda verileriniz silinir, yok edilir veya anonim hâle getirilir. Tarayıcınızda tutulan veriler (yerel depolama) tarayıcı verilerini temizlediğinizde silinir.</p>
+
+      <p><strong>11. Çerezler ve Yerel Depolama</strong><br/>
+      Site, hizmetin çalışması için tarayıcınızın yerel depolama alanını kullanır (tema tercihi, oturum içinde tekrar form doldurmanızı önlemek üzere iletişim bilgileriniz, yaptığınız hesaplamaların kaydı, takip bağlantısı bilgisi). Bu veriler cihazınızda tutulur; tarayıcı ayarlarınızdan silebilirsiniz.</p>
+
+      <p><strong>12. KVKK Madde 11 Kapsamındaki Haklarınız</strong><br/>
+      Kişisel verilerinizin işlenip işlenmediğini öğrenme; işlenmişse buna ilişkin bilgi talep etme; işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme; yurt içinde/yurt dışında aktarıldığı üçüncü kişileri bilme; eksik veya yanlış işlenmişse düzeltilmesini isteme; kanundaki şartlar çerçevesinde silinmesini veya yok edilmesini isteme; düzeltme, silme ve yok etme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme; münhasıran otomatik sistemlerle analiz sonucu aleyhinize bir sonuç doğmasına itiraz etme; kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme haklarına sahipsiniz.</p>
+
+      <p><strong>13. Başvuru Usulü</strong><br/>
+      Haklarınızı kullanmak için taleplerinizi; yazılı olarak yukarıdaki adrese, kayıtlı elektronik posta (KEP) yoluyla, güvenli elektronik imza veya mobil imza ile ya da sistemimizde kayıtlı e-posta adresinizden <strong>info@muvekkilbilgi.com</strong> adresine iletebilirsiniz. Başvurunuzda ad-soyad, imza (yazılı başvuruda), T.C. kimlik numarası, adres/e-posta ve talebinizin konusu yer almalıdır. Talebiniz en kısa sürede ve <strong>en geç 30 gün</strong> içinde ücretsiz olarak sonuçlandırılır; işlemin ayrıca bir maliyet gerektirmesi hâlinde Kurul tarifesindeki ücret alınabilir. Cevabı yeterli bulmazsanız veya başvurunuz cevaplanmazsa Kişisel Verileri Koruma Kurulu'na şikâyette bulunma hakkınız vardır.</p>
+
+      <p><strong>14. Veri Güvenliği</strong><br/>
+      Verilerinizin hukuka aykırı işlenmesini ve erişilmesini önlemek amacıyla şifreli bağlantı (HTTPS), yetkilendirilmiş erişim, erişim kayıtlarının tutulması ve yüklenen belgelerin herkese kapalı alanda saklanması gibi teknik ve idari tedbirler uygulanır.</p>
+
+      <button onclick="document.getElementById('kvkkModal').style.display='none'">Okudum, kapat</button>
+    </div>
+  </div>
+
+  <!-- =================== YASAL UYARI =================== -->
+  <div id="yasalModal">
+    <div class="kvkk-modal-box">
+      <h2>Yasal Uyarı ve Bilgilendirme</h2>
+      <p class="kvkk-tarih">Son güncelleme: 09.09.2026</p>
+
+      <p><strong>1. Bu Site Reklam Değildir</strong><br/>
+      Bu internet sitesi, 1136 sayılı Avukatlık Kanunu ve Türkiye Barolar Birliği Reklam Yasağı Yönetmeliği çerçevesinde yalnızca <strong>genel bilgilendirme</strong> amacıyla hazırlanmıştır. İş sağlama, müvekkil edinme, kendini tanıtma veya reklam amacı taşımaz. Sitede yer alan içerikler herhangi bir teklif, taahhüt ya da icap niteliğinde değildir.</p>
+
+      <p><strong>2. Hukuki Tavsiye Değildir</strong><br/>
+      Sitedeki metinler, hesaplama sonuçları, testler ve sohbet asistanı yanıtları <strong>hukuki mütalaa veya hukuki tavsiye niteliği taşımaz</strong>. Her uyuşmazlık kendi somut olgularına, belgelerine ve usul geçmişine göre değerlendirilir. Somut durumunuz için mutlaka bir avukata danışınız.</p>
+
+      <p><strong>3. Avukat–Müvekkil İlişkisi Doğmaz</strong><br/>
+      Siteyi kullanmak, form doldurmak, hesaplama yapmak veya iletişime geçmek <strong>avukat–müvekkil ilişkisi kurmaz</strong>. Bu ilişki ancak karşılıklı görüşme, dosyanın kabulü ve yazılı vekâlet ile kurulur. Vekâlet ilişkisi kurulmadan önce ilettiğiniz bilgiler için avukatın sır saklama yükümlülüğü doğsa da, dosyanızın takip edileceği yönünde bir taahhüt oluşmaz.</p>
+
+      <p><strong>4. Hesaplamalar Tahminîdir, Sonuç Garantisi Verilmez</strong><br/>
+      Araçlardaki hesaplamalar yürürlükteki mevzuat ve genel kabul görmüş formüllere dayanmakla birlikte <strong>tahminî</strong>dir. Kesin tutarlar; bilirkişi raporu, mahkeme kararı, güncel oranlar, kusur durumu ve dosyanızdaki belgelerle değişir. Hiçbir sonucun elde edileceği <strong>garanti edilmez</strong>; dava veya başvuruların kazanılacağı yönünde bir vaatte bulunulmaz.</p>
+
+      <p><strong>5. Güncellik</strong><br/>
+      Vergi oranları, tazminat tavanları, faiz oranları ve maktu tutarlar mevzuatla her yıl değişebilir. Araçlarda oran girmeniz istenen alanlarda güncel oranı teyit etmeniz gerekir. Sitedeki bilgilerin her an güncel olduğu garanti edilmez.</p>
+
+      <p><strong>6. Süreler Konusunda Uyarı</strong><br/>
+      Hukuki başvuru, itiraz ve dava süreleri hak düşürücü nitelikte olabilir. Sitede yer alan süre değerlendirmeleri yönlendirici niteliktedir; hak kaybına uğramamak için süreleri bir avukatla teyit ediniz.</p>
+
+      <p><strong>7. Sorumluluğun Sınırı</strong><br/>
+      Site içeriğine dayanılarak alınan kararlardan ve yapılan işlemlerden doğabilecek zararlardan veri sorumlusu sorumlu tutulamaz. Site kesintisiz ve hatasız çalışacağı yönünde bir taahhüt içermez.</p>
+
+      <p><strong>8. Fikri Haklar</strong><br/>
+      Sitedeki metin, görsel, tasarım ve hesaplama araçlarına ilişkin haklar sahibine aittir; izinsiz kopyalanamaz ve çoğaltılamaz.</p>
+
+      <p><strong>9. Uygulanacak Hukuk</strong><br/>
+      Siteye ilişkin uyuşmazlıklarda Türk hukuku uygulanır ve İstanbul Anadolu mahkemeleri yetkilidir.</p>
+
+      <button onclick="document.getElementById('yasalModal').style.display='none'">Okudum, kapat</button>
     </div>
   </div>
 

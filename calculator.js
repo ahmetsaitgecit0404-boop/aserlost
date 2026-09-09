@@ -449,7 +449,8 @@ const MODULE_ICONS = {
   kalici: 'sakatlik', trafikCezasi: 'belge',
   isHukukuSihirbaz: 'canta', fesih: 'belgeOnay', iseIade: 'terazi', iscilik: 'canta',
   iseIadeTazminat: 'belgeOnay', isgucu: 'sakatlik', isKazasi: 'kask', bakiyeSure: 'saat',
-  gozetim: 'vergi',
+  gozetim: 'vergi', ithalatVergi: 'konteyner', gumrukCeza: 'yuzde',
+  vergiZiyai: 'yuzde', emlakVergisi: 'tapu', vergiDavasi: 'terazi',
   bosanma: 'aile', miras: 'miras', kamulastirma: 'arazi', nafaka: 'aile',
   tuketici: 'urun', tapu: 'tapu'
 };
@@ -481,6 +482,11 @@ const MODULES = [
   {id:'trafikCezasi',title:'Trafik cezasına itiraz etmeye değer mi?',icon:'🚨',desc:'Trafik cezalarına itiraz sürecinde olası maliyet ve tazminat hesaplaması yapın.',tags:['İtiraz Süreci','Ceza Tutarı','Mahkeme'],screen:'generic',category:'trafik'},
   // ===== VERGİ & GÜMRÜK HUKUKU =====
   {id:'gozetim',title:'Gümrükte fazla vergi mi ödedim?',icon:'🧾',desc:'Gümrükte gereğinden fazla vergi ödemiş olabilir misiniz? 1 dakikada kontrol edin.',tags:['Gözetim Kıymeti','İade İhtimali','Dosya Skoru'],screen:'gozetim',category:'vergi'},
+  {id:'ithalatVergi',title:'İthalatta ne kadar vergi ödeyeceğim?',icon:'📦',desc:'Gümrük kıymeti ve oranlarınızı girin; gümrük vergisi, İGV, ÖTV ve KDV kademeli olarak hesaplanır.',tags:['GV + İGV','ÖTV','KDV'],screen:'generic',category:'vergi'},
+  {id:'gumrukCeza',title:'Gümrük para cezasına itiraz etmeye değer mi?',icon:'⚠️',desc:'Eksik vergi tahakkukunda Gümrük Kanunu 234 uyarınca farkın üç katı ceza kesilir; itiraz senaryosunu karşılaştırın.',tags:['GK 234','Uzlaşma','İtiraz'],screen:'generic',category:'vergi'},
+  {id:'vergiZiyai',title:'Vergi ziyaı cezam ne kadar, indirimi var mı?',icon:'📉',desc:'VUK 344 uyarınca ceza verginin bir katı, VUK 359 fiillerinde üç katıdır; VUK 376 indirimiyle karşılaştırın.',tags:['VUK 344','VUK 376','Gecikme Faizi'],screen:'generic',category:'vergi'},
+  {id:'emlakVergisi',title:'Emlak vergim ne kadar?',icon:'🏠',desc:'Emlak vergi değerinizi girin; mesken, iş yeri, arsa ve arazi için yıllık vergi büyükşehir farkıyla listelenir.',tags:['Binde Oran','Büyükşehir','Yıllık'],screen:'generic',category:'vergi'},
+  {id:'vergiDavasi',title:'Vergi davası açmaya değer mi?',icon:'⚖️',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın.',tags:['Beklenen Değer','Masraf','Karar'],screen:'generic',category:'vergi'},
   // ===== İŞ HUKUKU — tek soru-cevap akışı =====
   {id:'isHukukuSihirbaz',title:'İşten ayrıldım, ne kadar alacağım var?',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
   {id:'fesih',title:'İş yerinde tazminat alma hakkım var mı?',icon:'📋',desc:'İstifa edersem tazminat alabilir miyim? İş Kanunu 4857 madde 24 kapsamında haklı fesih ve kıdem tazminatı hakkınızı yapay zeka ile değerlendirin.',tags:['AI Analiz','Madde 24','Haklı Fesih'],screen:'fesih',category:'isci'},
@@ -538,6 +544,149 @@ const FAQ_DATA = [
 ];
 
 const CALC_CONFIGS = {
+  /* ===================================================================
+     VERGİ & GÜMRÜK HESAPLAYICILARI
+     Tasarım kuralı: kanunda sabit olan katsayılar (VUK 344'te cezanın bir
+     katı, GK 234'te üç kat, Emlak Vergisi Kanunu'ndaki binde oranları)
+     formülde; her yıl değişen oranlar (gecikme faizi, gümrük vergisi
+     oranları, KDV/ÖTV oranları) kullanıcı girdisi olarak alınıyor —
+     böylece araç güncelliğini yıl değişince kaybetmiyor.
+     =================================================================== */
+  ithalatVergi:{badge:'İthalat Vergileri',title:'İthalatta Ödenecek Vergiler',desc:'Gümrük kıymeti ve oranlarınızı girin; GV, İGV, ÖTV ve KDV kademeli olarak hesaplanır',
+    fields:[
+      {id:'iv_kiymet',label:'Gümrük Kıymeti — CIF (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 1000000',required:true},
+      {id:'iv_gv',label:'Gümrük Vergisi Oranı (%)',type:'number',prefix:'%',placeholder:'Örn: 0'},
+      {id:'iv_igv',label:'İlave Gümrük Vergisi Oranı (%)',type:'number',prefix:'%',placeholder:'Örn: 20'},
+      {id:'iv_otv',label:'ÖTV Oranı (%)',type:'number',prefix:'%',placeholder:'Yoksa 0'},
+      {id:'iv_kdv',label:'KDV Oranı (%)',type:'number',prefix:'%',placeholder:'Örn: 20'}
+    ],
+    calculate(d){
+      const k=parseFloat(d.iv_kiymet)||0;
+      const gvO=parseFloat(d.iv_gv)||0,igvO=parseFloat(d.iv_igv)||0,otvO=parseFloat(d.iv_otv)||0,kdvO=parseFloat(d.iv_kdv)||0;
+      const gv=k*gvO/100, igv=k*igvO/100;
+      const otvMatrah=k+gv+igv, otv=otvMatrah*otvO/100;
+      const kdvMatrah=otvMatrah+otv, kdv=kdvMatrah*kdvO/100;
+      const toplamVergi=gv+igv+otv+kdv, maliyet=k+toplamVergi;
+      return{total:Math.round(toplamVergi),rows:[
+        {label:'Gümrük kıymeti (CIF)',value:fmt(k)},
+        {label:'Gümrük Vergisi (%'+gvO+')',value:fmt(gv)},
+        {label:'İlave Gümrük Vergisi (%'+igvO+')',value:fmt(igv)},
+        {label:'ÖTV matrahı',value:fmt(otvMatrah)},
+        {label:'ÖTV (%'+otvO+')',value:fmt(otv)},
+        {label:'KDV matrahı',value:fmt(kdvMatrah)},
+        {label:'KDV (%'+kdvO+')',value:fmt(kdv)},
+        {label:'Toplam vergi yükü',value:fmt(toplamVergi),highlight:true},
+        {label:'Eşyanın vergili maliyeti',value:fmt(maliyet),highlight:true}
+      ]};
+    }},
+
+  gumrukCeza:{badge:'Gümrük Para Cezası',title:'Gümrük Para Cezası ve İtiraz Değerlendirmesi',desc:'Eksik vergi tahakkukunda Gümrük Kanunu 234 uyarınca vergi farkının üç katı ceza kesilir; itiraz senaryosunu karşılaştırın',
+    fields:[
+      {id:'gc_fark',label:'Tespit Edilen Vergi Farkı (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 150000',required:true},
+      {id:'gc_usulsuzluk',label:'Ayrıca Kesilen Usulsüzlük Cezası (TL)',type:'number',prefix:'₺',placeholder:'Yoksa 0'},
+      {id:'gc_indirim',label:'Uzlaşma / İtirazla Beklenen İndirim (%)',type:'range',min:0,max:100,step:5,defaultVal:0},
+      {id:'gc_masraf',label:'Tahmini Dava Masrafı — harç, bilirkişi, vekâlet (TL)',type:'number',prefix:'₺',placeholder:'Örn: 40000'}
+    ],
+    calculate(d){
+      const fark=parseFloat(d.gc_fark)||0, usul=parseFloat(d.gc_usulsuzluk)||0;
+      const ind=parseInt(d.gc_indirim)||0, masraf=parseFloat(d.gc_masraf)||0;
+      const ceza=fark*3;                        /* GK 234: vergi farkının üç katı */
+      const toplam=fark+ceza+usul;
+      const indirimli=toplam-(ceza+usul)*ind/100;
+      const kazanc=toplam-indirimli-masraf;     /* itirazın net getirisi */
+      return{total:Math.round(toplam),rows:[
+        {label:'Vergi farkı',value:fmt(fark)},
+        {label:'Para cezası (GK 234 — farkın 3 katı)',value:fmt(ceza),highlight:true},
+        {label:'Usulsüzlük cezası',value:fmt(usul)},
+        {label:'İtiraz edilmezse toplam yük',value:fmt(toplam),highlight:true},
+        {label:'İndirim beklentisi',value:'%'+ind},
+        {label:'İndirimli toplam',value:fmt(indirimli)},
+        {label:'Tahmini dava masrafı',value:'-'+fmt(masraf)},
+        {label:kazanc>0?'İtirazın tahmini net getirisi':'İtirazın tahmini net maliyeti',value:fmt(Math.abs(kazanc)),highlight:true}
+      ]};
+    }},
+
+  vergiZiyai:{badge:'Vergi Ziyaı Cezası',title:'Vergi Ziyaı Cezası ve İndirim',desc:'VUK 344 uyarınca ceza verginin bir katı, VUK 359 fiilleri varsa üç katıdır; VUK 376 indirimiyle karşılaştırın',
+    fields:[
+      {id:'vz_vergi',label:'Ziyaa Uğratılan Vergi (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 200000',required:true},
+      {id:'vz_kat',label:'Ceza Katı — normalde 1, VUK 359 fiillerinde 3',type:'number',prefix:'kat',placeholder:'1'},
+      {id:'vz_faiz',label:'Aylık Gecikme Faizi Oranı (%)',type:'number',prefix:'%',placeholder:'Güncel oranı girin'},
+      {id:'vz_ay',label:'Geçen Süre (Ay)',type:'number',prefix:'ay',placeholder:'Örn: 14'},
+      {id:'vz_indirim',label:'VUK 376 İndirimi (%)',type:'range',min:0,max:100,step:5,defaultVal:50}
+    ],
+    calculate(d){
+      const v=parseFloat(d.vz_vergi)||0;
+      const kat=Math.max(1,parseFloat(d.vz_kat)||1);
+      const faizO=parseFloat(d.vz_faiz)||0, ay=parseInt(d.vz_ay)||0;
+      const ind=parseInt(d.vz_indirim);
+      const indirimOran=isNaN(ind)?50:ind;
+      const ceza=v*kat;
+      const faiz=v*faizO/100*ay;               /* VUK 112: vergi üzerinden işler */
+      const toplam=v+ceza+faiz;
+      const indirimliCeza=ceza*(1-indirimOran/100);
+      const indirimliToplam=v+indirimliCeza+faiz;
+      return{total:Math.round(toplam),rows:[
+        {label:'Ziyaa uğratılan vergi',value:fmt(v)},
+        {label:'Vergi ziyaı cezası ('+kat+' kat)',value:fmt(ceza),highlight:true},
+        {label:'Gecikme faizi (%'+faizO+' × '+ay+' ay)',value:fmt(faiz)},
+        {label:'İndirimsiz toplam',value:fmt(toplam),highlight:true},
+        {label:'VUK 376 indirimi (%'+indirimOran+')',value:'-'+fmt(ceza-indirimliCeza)},
+        {label:'İndirimli ödenecek toplam',value:fmt(indirimliToplam),highlight:true}
+      ]};
+    }},
+
+  emlakVergisi:{badge:'Emlak Vergisi',title:'Emlak Vergisi Hesaplama',desc:'Emlak vergi değerinizi girin; Emlak Vergisi Kanunu’ndaki binde oranlarına göre tüm taşınmaz türleri için yıllık vergi listelenir',
+    fields:[
+      {id:'ev_deger',label:'Emlak Vergi Değeri (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 2000000',required:true}
+    ],
+    calculate(d){
+      const x=parseFloat(d.ev_deger)||0;
+      /* EVK m.8: bina — mesken binde 1, diğer binde 2.
+         EVK m.18: arsa binde 3, arazi binde 1.
+         Büyükşehir belediyesi sınırlarında bu oranlar iki kat uygulanır. */
+      const mesken=x*0.001, isyeri=x*0.002, arsa=x*0.003, arazi=x*0.001;
+      return{total:Math.round(mesken),rows:[
+        {label:'Emlak vergi değeri',value:fmt(x)},
+        {label:'Mesken (binde 1)',value:fmt(mesken),highlight:true},
+        {label:'Mesken — büyükşehirde (binde 2)',value:fmt(mesken*2)},
+        {label:'İş yeri / diğer bina (binde 2)',value:fmt(isyeri)},
+        {label:'İş yeri — büyükşehirde (binde 4)',value:fmt(isyeri*2)},
+        {label:'Arsa (binde 3)',value:fmt(arsa)},
+        {label:'Arsa — büyükşehirde (binde 6)',value:fmt(arsa*2)},
+        {label:'Arazi (binde 1)',value:fmt(arazi)},
+        {label:'Arazi — büyükşehirde (binde 2)',value:fmt(arazi*2)}
+      ]};
+    }},
+
+  vergiDavasi:{badge:'Vergi Davası',title:'Vergi Davası Açmaya Değer mi?',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın',
+    fields:[
+      {id:'vd_vergi',label:'Tarh Edilen Vergi (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 300000',required:true},
+      {id:'vd_ceza',label:'Kesilen Ceza (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 300000',required:true},
+      {id:'vd_harc',label:'Dava Masrafı — harç, bilirkişi (TL)',type:'number',prefix:'₺',placeholder:'Örn: 25000'},
+      {id:'vd_avukat',label:'Avukatlık Ücreti (TL)',type:'number',prefix:'₺',placeholder:'Örn: 60000'},
+      {id:'vd_ihtimal',label:'Davayı Kazanma İhtimali (%)',type:'range',min:0,max:100,step:5,defaultVal:50}
+    ],
+    calculate(d){
+      const v=parseFloat(d.vd_vergi)||0, c=parseFloat(d.vd_ceza)||0;
+      const harc=parseFloat(d.vd_harc)||0, avk=parseFloat(d.vd_avukat)||0;
+      const p=(parseInt(d.vd_ihtimal)||0)/100;
+      const odeSimdi=v+c*0.5;                  /* VUK 376: cezanın yarısı indirilir */
+      const masraf=harc+avk;
+      /* Dava beklenen maliyeti: kazanırsa yalnızca masraf, kaybederse
+         tamamı + masraf. Basit beklenen değer. */
+      const davaBeklenen=p*masraf+(1-p)*(v+c+masraf);
+      const fark=odeSimdi-davaBeklenen;
+      return{total:Math.round(davaBeklenen),rows:[
+        {label:'Tarh edilen vergi',value:fmt(v)},
+        {label:'Kesilen ceza',value:fmt(c)},
+        {label:'Şimdi öde — VUK 376 ile cezanın yarısı',value:fmt(odeSimdi),highlight:true},
+        {label:'Dava masrafı + vekâlet',value:fmt(masraf)},
+        {label:'Kazanma ihtimali',value:'%'+Math.round(p*100)},
+        {label:'Davanın beklenen maliyeti',value:fmt(davaBeklenen),highlight:true},
+        {label:fark>0?'Dava lehine beklenen fark':'İndirimli ödeme lehine fark',value:fmt(Math.abs(fark)),highlight:true}
+      ]};
+    }},
+
   hasar:{badge:'Hasar Bedeli Hesaplama',title:'Hasar Bedeli Hesaplayın',desc:'Araç hasar onarım maliyetinizi hesaplayın',
     fields:[{id:'hasar_tutar',label:'Onarım Tutarı (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 35000',required:true},{id:'hasar_parca',label:'Değişen Parça Adedi',type:'number',prefix:'adet',placeholder:'0'},{id:'hasar_boyali',label:'Boyalı Parça Adedi',type:'number',prefix:'adet',placeholder:'0'},{id:'hasar_eksper',label:'Eksper Ücreti (TL)',type:'number',prefix:'₺',placeholder:'0'},{id:'hasar_cekici',label:'Çekici / Kurtarma (TL)',type:'number',prefix:'₺',placeholder:'0'},{id:'hasar_kira',label:'Alternatif Araç Kiralama (TL)',type:'number',prefix:'₺',placeholder:'0'}],
     calculate(d){const t=parseFloat(d.hasar_tutar)||0,p=(parseInt(d.hasar_parca)||0)*5000+(parseInt(d.hasar_boyali)||0)*3000,e=parseFloat(d.hasar_eksper)||0,c=parseFloat(d.hasar_cekici)||0,k=parseFloat(d.hasar_kira)||0,top=t+p+e+c,kalan=Math.round(top*0.15);return{total:top,rows:[{label:'Onarım Tutarı',value:fmt(t)},{label:'Parça/Boya Ek',value:fmt(p)},{label:'Eksper',value:fmt(e)},{label:'Çekici',value:fmt(c)},{label:'Kiralama',value:fmt(k)},{label:'Tahmini Sigorta Dışı Kalan',value:fmt(kalan),highlight:true}]}}},
@@ -962,7 +1111,7 @@ function renderCatFilterBar(){
 /* Yalnızca doğal bir 'ana giriş' olan kategorilerde öne çıkan kart var.
    'Diğer' bir torba kategori, vergide de tek araç var — oralarda rozet
    anlamsız duruyordu. */
-const ANA_ARAC={trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz'};
+const ANA_ARAC={trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz',vergi:'gozetim'};
 
 /* Soru kartı: çizgi ikon + soru + destek metni + ok. */
 function renderModuleRow(m,buyuk){
@@ -2689,6 +2838,7 @@ function showLeadModal(type){
   document.body.style.overflow='hidden';
 }
 
+function showYasalUyari(){const m=document.getElementById('yasalModal');if(m)m.style.display='flex';}
 function showKvkkText(){const m=document.getElementById('kvkkModal');if(m)m.style.display='flex';}
 function closeLeadModal(){try{const m=document.getElementById('leadModal');if(m)m.style.display='none';document.body.style.overflow='';}catch(e){}}
 function handleModalOverlayClick(e){}
@@ -3174,11 +3324,13 @@ function submitContactForm(e){
 
 const CHATBOT_SYSTEM_PROMPT=`Sen Müvekkil Bilgi'nin hukuk asistanı "AvukatBot" sun. Trafik kazası, değer kaybı, işçilik tazminatı, iş kazası, sakatlık, destekten yoksun kalma, nafaka, kasko, tüketici hakları, tapu harcı, trafik cezası itirazı, manevi tazminat ve tüm hukuki konularda uzman bir yardımcısın.
 
+KISA TUT: Yanıtın en fazla 4-5 cümle olsun. Uzun yanıt kullanıcıyı bekletiyor.
+
 KRİTİK KURALLARIN:
 1. HER cevabının sonunda kullanıcıyı mutlaka hesaplama aracını kullanmaya veya avukata danışmaya teşvik et. Örnek: "Hemen hesaplamaya başlayın!", "Bu tazminatı kaçırmayın!", "Boşuna beklemeyin, hakkınızı arayın!"
 2. Kullanıcıların haklarını sonuna kadar savun. Onlara "hakkınız var", "bunu talep etmelisiniz", "dava açmalısınız" de.
 3. Sigorta şirketlerine, işverenlere karşı kullanıcıyı sert bir dille uyar. "Sigorta sizi kandırmasın!", "İşvereniniz sorumludur, taviz vermeyin!"
-4. Kullanıcıya acil行動 planı öner: "Hemen fotoğraf çekin", "Kaza tutanağını almayın", "15 gün içinde itiraz edin", "Zamanaşımına uğramadan başvuru yapın".
+4. Kullanıcıya acil eylem planı öner: "Hemen fotoğraf çekin", "Kaza tutanağını almayın", "15 gün içinde itiraz edin", "Zamanaşımına uğramadan başvuru yapın".
 5. Her fırsatta dava açmayı ve avukata başvurmayı öv. "Profesyonel bir avukatla çalışmak tazminatınızı 2-3 kat artırır!", "Dava açmaktan çekinmeyin!"
 6. Tazminat tutarlarını mümkün olduğunca yüksek göster, insanların hak ettiği miktarları vurgula.
 7. Kullanıcının sinirli veya üzgün olmasını kendi lehine çevir: "Haklısınız, bu durumda ciddi bir tazminat hakkınız var!"
@@ -3236,7 +3388,7 @@ function appendChatMsg(role,text){
 function showTyping(){
   const container=document.getElementById('chatMessages'),div=document.createElement('div');
   div.className='chat-msg bot';div.id='chatTyping';
-  div.innerHTML=`<div class="chat-msg-avatar">⚖</div><div class="chat-typing"><span></span><span></span><span></span></div>`;
+  div.innerHTML=`<div class="chat-msg-avatar">⚖</div><div class="chat-typing"><span></span><span></span><span></span><em class="chat-typing-lbl">yazıyor</em></div>`;
   container.appendChild(div);container.scrollTop=container.scrollHeight;
 }
 function removeTyping(){const t=document.getElementById('chatTyping');if(t)t.remove();}
@@ -3267,7 +3419,7 @@ async function sendChatMsg(){
   document.getElementById('chatSendBtn').disabled=true;
   try{
     const res=await groqFetch('/api/chat',chatHistory.slice(-20),
-      {model:'openai/gpt-oss-120b',temp:0.8,tokens:1024,timeout:15000});
+      {model:'openai/gpt-oss-120b',temp:0.8,tokens:700,timeout:35000});
     const data=await res.json();
     removeTyping();
     if(data.choices&&data.choices[0]){let reply=data.choices[0].message.content;appendChatMsg('bot',reply);chatHistory.push({role:'assistant',content:reply});}
