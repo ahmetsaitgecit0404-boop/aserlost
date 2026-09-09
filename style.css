@@ -1215,6 +1215,8 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none;
    tek satır destek metni. Kategori vurgu rengi ikon ve hover'da taşınıyor,
    böylece renk hiyerarşi kuruyor, gürültü yapmıyor. */
 .mod-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
+/* Kartlar artık <a> (yeni sekmede açılıyor) — link varsayılanlarını nötrle. */
+a.qcard, a.qcard:hover, a.qcard:visited { text-decoration: none; color: var(--text-primary); }
 .qcard { position: relative; display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left;
   cursor: pointer; padding: 17px 17px 16px;
   background: linear-gradient(158deg, var(--bg-card) 0%, var(--bg-elevated) 100%);

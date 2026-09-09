@@ -791,6 +791,14 @@ function fmt2(n){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0})
 let _navLock=false;
 /* ========== SEO URL ROUTING ========== */
 const ROUTE_MAP={
+  '/trafik-kazasi-hesaplama':{screen:'trafikSihirbaz',title:'Trafik Kazası Tazminat Hesaplama | Müvekkil Bilgi',desc:'Kazanızı anlatın; araç değer kaybı, hasar bedeli ve yaralanma tazminatları tek akışta ücretsiz hesaplanır.'},
+  '/is-hukuku-hesaplama':{screen:'isHukuku',title:'İş Hukuku Alacak Hesaplama | Müvekkil Bilgi',desc:'İşten ayrılma veya çıkarılma durumunuza göre kıdem, ihbar, izin ve fazla mesai alacaklarınızı hesaplayın.'},
+  '/gozetim-fazla-vergi-iadesi':{screen:'gozetim',title:'Gözetim Kaynaklı Fazla Vergi İadesi | Müvekkil Bilgi',desc:'Gümrükte gözetim uygulaması nedeniyle fazla ödenen vergilerin iade ihtimalini 1 dakikada kontrol edin.'},
+  '/ithalat-vergileri-hesaplama':{generic:'ithalatVergi',title:'İthalat Vergileri Hesaplama | Müvekkil Bilgi',desc:'Gümrük kıymeti ve oranlara göre gümrük vergisi, İGV, ÖTV ve KDV yükünü kademeli olarak hesaplayın.'},
+  '/gumruk-para-cezasi-itiraz':{generic:'gumrukCeza',title:'Gümrük Para Cezası ve İtiraz | Müvekkil Bilgi',desc:'Gümrük Kanunu 234 uyarınca kesilen para cezasını ve itiraz senaryosunu karşılaştırın.'},
+  '/vergi-ziyai-cezasi-hesaplama':{generic:'vergiZiyai',title:'Vergi Ziyaı Cezası Hesaplama | Müvekkil Bilgi',desc:'VUK 344 uyarınca vergi ziyaı cezasını, gecikme faizini ve VUK 376 indirimini hesaplayın.'},
+  '/emlak-vergisi-hesaplama':{generic:'emlakVergisi',title:'Emlak Vergisi Hesaplama | Müvekkil Bilgi',desc:'Mesken, iş yeri, arsa ve arazi için yıllık emlak vergisini büyükşehir farkıyla hesaplayın.'},
+  '/vergi-davasi-degerlendirme':{generic:'vergiDavasi',title:'Vergi Davası Açmaya Değer mi? | Müvekkil Bilgi',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın.'},
   '/deger-kaybi-hesaplama':{screen:'arac',title:'Araç Değer Kaybı Hesaplama | Müvekkil Bilgi',desc:'Trafik kazası geçiren aracınızın piyasa değerindeki kaybı yasal formüllerle ücretsiz hesaplayın.'},
   '/kidem-tazminati-hesaplama':{screen:'iscilik',title:'Kıdem Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Kıdem, ihbar, yıllık izin ve fazla mesai alacaklarınızı saniyeler içinde ücretsiz hesaplayın.'},
   '/ihbar-tazminati-hesaplama':{screen:'iscilik',title:'İhbar Tazminatı Hesaplama | Müvekkil Bilgi',desc:'İhbar süresi ve ihbar tazminatı tutarınızı İş Kanunu\'na uygun şekilde ücretsiz hesaplayın.'},
@@ -819,8 +827,8 @@ const ROUTE_MAP={
   '/tuketici-haklari-tazminati':{generic:'tuketici',title:'Tüketici Hakları Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.'},
   '/tapu-harci-hesaplama':{generic:'tapu',title:'Tapu Harcı ve Vergi Hesaplama | Müvekkil Bilgi',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.'}
 };
-const SCREEN_TO_PATH={arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
-const GENERIC_TO_PATH={isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama',hasar:'/arac-hasar-bedeli-hesaplama',pertBedeli:'/pert-arac-bedeli-hesaplama',sakatlik:'/surekli-sakatlik-tazminati-hesaplama',yoksun:'/destekten-yoksun-kalma-tazminati',maddi:'/maddi-tazminat-hesaplama',kasko:'/kasko-hasar-tazminati-hesaplama',manevi:'/manevi-tazminat-hesaplama',gecici:'/gecici-is-goremezlik-hesaplama',kalici:'/kalici-is-goremezlik-hesaplama',trafikCezasi:'/trafik-cezasi-itiraz-hesaplama',iseIadeTazminat:'/ise-iade-tazminati-hesaplama',isgucu:'/is-gucu-kaybi-hesaplama',bakiyeSure:'/bakiye-sure-ucreti-tazminati',bosanma:'/bosanma-tazminati-mal-paylasimi',kamulastirma:'/kamulastirmasiz-el-atma-tazminati',nafaka:'/nafaka-hesaplama',tuketici:'/tuketici-haklari-tazminati',tapu:'/tapu-harci-hesaplama'};
+const SCREEN_TO_PATH={trafikSihirbaz:'/trafik-kazasi-hesaplama',isHukuku:'/is-hukuku-hesaplama',gozetim:'/gozetim-fazla-vergi-iadesi',arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
+const GENERIC_TO_PATH={ithalatVergi:'/ithalat-vergileri-hesaplama',gumrukCeza:'/gumruk-para-cezasi-itiraz',vergiZiyai:'/vergi-ziyai-cezasi-hesaplama',emlakVergisi:'/emlak-vergisi-hesaplama',vergiDavasi:'/vergi-davasi-degerlendirme',isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama',hasar:'/arac-hasar-bedeli-hesaplama',pertBedeli:'/pert-arac-bedeli-hesaplama',sakatlik:'/surekli-sakatlik-tazminati-hesaplama',yoksun:'/destekten-yoksun-kalma-tazminati',maddi:'/maddi-tazminat-hesaplama',kasko:'/kasko-hasar-tazminati-hesaplama',manevi:'/manevi-tazminat-hesaplama',gecici:'/gecici-is-goremezlik-hesaplama',kalici:'/kalici-is-goremezlik-hesaplama',trafikCezasi:'/trafik-cezasi-itiraz-hesaplama',iseIadeTazminat:'/ise-iade-tazminati-hesaplama',isgucu:'/is-gucu-kaybi-hesaplama',bakiyeSure:'/bakiye-sure-ucreti-tazminati',bosanma:'/bosanma-tazminati-mal-paylasimi',kamulastirma:'/kamulastirmasiz-el-atma-tazminati',nafaka:'/nafaka-hesaplama',tuketici:'/tuketici-haklari-tazminati',tapu:'/tapu-harci-hesaplama'};
 function setMetaDesc(desc){
   if(!desc)return;
   const el=document.querySelector('meta[name="description"]');
@@ -1079,6 +1087,11 @@ function moduleAction(m){
   if(SCREEN_MODULES.indexOf(m.screen)!==-1)return `navigate('${m.screen}')`;
   return `openGenericCalc('${m.id}')`;
 }
+/* Aracın kendi adresi: kart yeni sekmede açılırken kullanılıyor. */
+function moduleHref(m){
+  if(SCREEN_MODULES.indexOf(m.screen)!==-1)return SCREEN_TO_PATH[m.screen]||'/';
+  return GENERIC_TO_PATH[m.id]||'/';
+}
 /* Araç seçimi tek bir yolla yapılıyor: soru listesi.
    Önceki sürümlerde aynı işi yapan altı katman üst üste duruyordu — arama,
    "en çok sorulanlar" bloğu, kategori filtresi, ikonlu/açıklamalı grup
@@ -1119,15 +1132,15 @@ const ANA_ARAC={trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz',vergi:'gozetim'}
 function renderModuleRow(m,buyuk){
   const cls=buyuk?'qcard qcard-lg':'qcard';
   const rozet=buyuk?'<span class="qcard-badge">Buradan başlayın</span>':'';
-  return `<button type="button" class="${cls}" onclick="${moduleAction(m)}">
+  return `<a class="${cls}" href="${moduleHref(m)}" target="_blank" rel="noopener">
     <span class="qcard-ico">${moduleIcon(m.id,buyuk?26:21)}</span>
     <span class="qcard-body">
       ${rozet}
-      <span class="qcard-q">${m.title.replace(/\n/g,' ')}</span>
+      <span class="qcard-q">${m.title.replace(/\n/g," ")}</span>
       <span class="qcard-h">${m.desc}</span>
     </span>
     <svg class="qcard-arrow" width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>`;
+  </a>`;
 }
 function renderModuleCards(){
   const g=document.getElementById('modulesGrid');if(!g)return;
@@ -3067,8 +3080,8 @@ function renderOnIncelemeBanner(msg){
   const href='https://wa.me/'+WHATSAPP_NUM+'?text='+encodeURIComponent(msg||'Merhaba, Müvekkil Bilgi üzerinden bir hesaplama yaptım. Sonuçlarımı değerlendirmenizi ve hukuki süreç hakkında bilgi almak istiyorum.');
   return `<div class="on-inceleme-banner" style="margin:16px 0;padding:16px 18px;background:linear-gradient(135deg,rgba(37,211,102,0.1),rgba(197,168,128,0.08));border:1px solid rgba(37,211,102,0.25);border-radius:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px">
-      <div style="font-weight:700;font-size:14px;color:var(--text-primary)">Ücretsiz Ön Değerlendirme</div>
-      <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">Bu bir tahmini sonuçtur, kesin değildir. Gerçek hak ve tazminat tutarınızı öğrenmek için WhatsApp'tan bize ulaşın.</div>
+      <div style="font-weight:700;font-size:14px;color:var(--text-primary)">Bu sonuç tahminîdir</div>
+      <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">Kesin tutar belgelere ve dosyanın durumuna göre değişir. Sormak istediğiniz bir şey varsa WhatsApp'tan bize ulaşabilirsiniz.</div>
     </div>
     <a class="btn-whatsapp" style="margin:0;text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:10px 20px" href="${href}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp'tan Ulaşın</a>
   </div>`;
