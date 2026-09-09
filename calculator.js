@@ -409,6 +409,58 @@ const TURKISH_CITIES = ['Adana','Adıyaman','Afyonkarahisar','Ağrı','Amasya','
 
 const TESTIMONIALS=[];
 
+
+/* =====================================================================
+   ARAÇ İKONLARI
+   Emoji yerine tek tip çizgi ikon: emoji her platformda farklı çiziliyor,
+   boyutu ve ağırlığı kontrol edilemiyor, arayüzde ucuz duruyor. Hepsi
+   24x24 kutuda, aynı çizgi kalınlığında (1.6) ve currentColor ile
+   kategori rengini alıyor.
+   ===================================================================== */
+const ICON_PATHS = {
+  arac:      '<path d="M4 16l1.4-4.6A2 2 0 0 1 7.3 10h9.4a2 2 0 0 1 1.9 1.4L20 16"/><rect x="2.5" y="16" width="19" height="3.6" rx="1.4"/><circle cx="7" cy="19.6" r="1.3"/><circle cx="17" cy="19.6" r="1.3"/><path d="M9 7l1.5-2.4h3L15 7"/>',
+  carpisma:  '<path d="M12 3l1.9 4.2L18 6l-1.2 4.1L21 12l-4.2 1.9L18 18l-4.1-1.2L12 21l-1.9-4.2L6 18l1.2-4.1L3 12l4.2-1.9L6 6l4.1 1.2z"/>',
+  kusur:     '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5M12 16v.01"/>',
+  hasar:     '<path d="M14.5 3.5l6 6-3 3-6-6z"/><path d="M11.5 6.5L3.5 14.5V20h5.5l8-8"/><path d="M6 17l1.5 1.5"/>',
+  saat:      '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/>',
+  pert:      '<path d="M12 3l3 6 5-2-2 5 4 3-5 1.5.5 5-4.5-2.5L8 21l.5-5L3.5 15l4-3-2-5 5 2z"/>',
+  saglik:    '<path d="M12 4.5v15M4.5 12h15" stroke-width="2.2"/><rect x="3" y="3" width="18" height="18" rx="4" stroke-width="1.4"/>',
+  sakatlik:  '<circle cx="12" cy="5.2" r="2.4"/><path d="M12 9v5.5M12 14.5l-3.2 5M12 14.5l3.2 5M8.2 11h7.6"/>',
+  yoksun:    '<path d="M12 20s-6.5-4-6.5-9A3.7 3.7 0 0 1 12 8.6 3.7 3.7 0 0 1 18.5 11c0 5-6.5 9-6.5 9z"/><path d="M9.5 12.5l2 2 3.5-3.5"/>',
+  manevi:    '<path d="M12 20s-6.5-4-6.5-9A3.7 3.7 0 0 1 12 8.6 3.7 3.7 0 0 1 18.5 11c0 5-6.5 9-6.5 9z"/><path d="M12 8.6L9.6 13h4.8L12 17"/>',
+  canta:     '<rect x="3" y="7.5" width="18" height="12.5" rx="2.4"/><path d="M8.5 7.5V6a2.2 2.2 0 0 1 2.2-2.2h2.6A2.2 2.2 0 0 1 15.5 6v1.5"/><path d="M3 12.5h18"/>',
+  belge:     '<path d="M7 3.2h6.5L19 8.7v12.1H7z" /><path d="M13.5 3.2v5.5H19"/><path d="M9.6 13h6.4M9.6 16.6h6.4"/>',
+  belgeOnay: '<path d="M7 3.2h6.5L19 8.7v12.1H7z"/><path d="M13.5 3.2v5.5H19"/><path d="M9.6 15.2l2 2 3.6-3.8"/>',
+  kask:      '<path d="M3.6 15.5a8.4 8.4 0 0 1 16.8 0"/><rect x="2.6" y="15.5" width="18.8" height="4" rx="1.8"/><path d="M12 7.1v-2"/>',
+  vergi:     '<path d="M6 3.2h12v17.6l-3-1.8-3 1.8-3-1.8-3 1.8z"/><path d="M9.2 8h5.6M9.2 11.6h5.6M9.2 15.2h3.2"/>',
+  terazi:    '<path d="M12 4v16M7 20h10M4 9h16"/><path d="M4 9l-2 4.6a3.4 3.4 0 0 0 4 0z"/><path d="M20 9l2 4.6a3.4 3.4 0 0 1-4 0z"/><circle cx="12" cy="4" r="1.3"/>',
+  aile:      '<circle cx="8.2" cy="7.4" r="2.6"/><circle cx="16.4" cy="8.6" r="2.1"/><path d="M3.4 20c0-3.1 2.1-5.2 4.8-5.2s4.8 2.1 4.8 5.2"/><path d="M14 20c0-2.4 1.2-4 3-4s3.6 1.6 3.6 4"/>',
+  miras:     '<path d="M5.5 4.4h13v15.2h-13z"/><path d="M8.6 8.4h6.8M8.6 12h6.8M8.6 15.6h4"/><path d="M18.5 4.4a2 2 0 0 1 0 4"/>',
+  arazi:     '<path d="M3 20h18"/><path d="M5.5 20V9.8L12 5l6.5 4.8V20"/><path d="M10 20v-5.4h4V20"/>',
+  urun:      '<path d="M4.4 8.2h15.2l-1.3 11.6H5.7z"/><path d="M8.8 8.2V6.4a3.2 3.2 0 0 1 6.4 0v1.8"/>',
+  tapu:      '<path d="M3.4 11.2L12 4.4l8.6 6.8"/><path d="M5.8 10v9.6h12.4V10"/><circle cx="12" cy="14.4" r="1.7"/><path d="M12 16.1v2.2"/>'
+};
+
+/* Hangi araç hangi ikonu kullanıyor */
+const MODULE_ICONS = {
+  trafikSihirbaz: 'carpisma', kusur: 'kusur', arac: 'arac', hasar: 'hasar',
+  mahrumiyet: 'saat', pertBedeli: 'pert', sakatlik: 'sakatlik', yoksun: 'yoksun',
+  maddi: 'vergi', kasko: 'yoksun', manevi: 'manevi', gecici: 'saglik',
+  kalici: 'sakatlik', trafikCezasi: 'belge',
+  isHukukuSihirbaz: 'canta', fesih: 'belgeOnay', iseIade: 'terazi', iscilik: 'canta',
+  iseIadeTazminat: 'belgeOnay', isgucu: 'sakatlik', isKazasi: 'kask', bakiyeSure: 'saat',
+  gozetim: 'vergi',
+  bosanma: 'aile', miras: 'miras', kamulastirma: 'arazi', nafaka: 'aile',
+  tuketici: 'urun', tapu: 'tapu'
+};
+
+function moduleIcon(id, size) {
+  const key = MODULE_ICONS[id] || 'belge';
+  const s = size || 22;
+  return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    + 'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[key] + '</svg>';
+}
+
 const MODULES = [
   // ===== TRAFİK KAZASI HUKUKU — iki temel araç =====
   {id:'trafikSihirbaz',title:'Trafik kazasında maddi zararlarım nedir?',icon:'🚗',desc:'Tek akışta: sorulara verdiğiniz yanıtlara göre araç değer kaybı, hasar bedeli ve yaralanma varsa bedeni tazminatlar birlikte hesaplanır.',tags:['Soru-Cevap','Tüm Tazminatlar','Tek Ekran'],screen:'trafikSihirbaz',category:'trafik'},
@@ -904,13 +956,22 @@ function renderCatFilterBar(){
   return h+'</div>';
 }
 
-/* Soru kartı: ikon + soru + tek satır destek metni + ok. Üç öğe, fazlası
-   değil — eskiden kartta ayrıca 3 etiket ve bir CTA butonu vardı ve 29
-   kart yan yana gelince gürültüye dönüşüyordu. */
-function renderModuleRow(m){
-  return `<button type="button" class="qcard" onclick="${moduleAction(m)}">
-    <span class="qcard-ico">${m.icon}</span>
+/* Her kategoride bir araç "ana giriş": daha geniş, daha büyük tipografi.
+   29 kart aynı boyutta olunca göz hiçbirini ayırt edemiyor ve liste
+   yorucu bir duvara dönüşüyordu — hiyerarşi boyutla kuruluyor. */
+/* Yalnızca doğal bir 'ana giriş' olan kategorilerde öne çıkan kart var.
+   'Diğer' bir torba kategori, vergide de tek araç var — oralarda rozet
+   anlamsız duruyordu. */
+const ANA_ARAC={trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz'};
+
+/* Soru kartı: çizgi ikon + soru + destek metni + ok. */
+function renderModuleRow(m,buyuk){
+  const cls=buyuk?'qcard qcard-lg':'qcard';
+  const rozet=buyuk?'<span class="qcard-badge">Buradan başlayın</span>':'';
+  return `<button type="button" class="${cls}" onclick="${moduleAction(m)}">
+    <span class="qcard-ico">${moduleIcon(m.id,buyuk?26:21)}</span>
     <span class="qcard-body">
+      ${rozet}
       <span class="qcard-q">${m.title.replace(/\n/g,' ')}</span>
       <span class="qcard-h">${m.desc}</span>
     </span>
@@ -927,8 +988,9 @@ function renderModuleCards(){
     const c=MODULE_CATS[cat];
     /* Vurgu rengi grup sarmalayıcısında: hem etiket hem içindeki kartlar
        aynı kategori rengini miras alıyor. */
+    const anaId=items.length>1?ANA_ARAC[cat]:null;
     html+=`<div class="module-group" style="--group-accent:${c.accent}"><div class="grp-label">${c.title}</div>`;
-    html+=`<div class="mod-rows">${items.map(renderModuleRow).join('')}</div>`;
+    html+=`<div class="mod-rows">${items.map(m=>renderModuleRow(m,m.id===anaId)).join('')}</div>`;
     html+=`</div>`;
   });
   g.innerHTML=html;
