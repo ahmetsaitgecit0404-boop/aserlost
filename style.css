@@ -186,25 +186,6 @@ body {
 /* Module Cards */
 .modules-section { padding: 20px 24px 80px; }
 .modules-grid { display: block; max-width: 1200px; margin: 40px auto 0; }
-.module-card { position: relative; overflow: hidden; background: linear-gradient(145deg, var(--bg-card), var(--bg-elevated)); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 32px 24px 24px; cursor: pointer; display: flex; flex-direction: column; gap: 16px; transition: all 0.35s cubic-bezier(0.22,1,0.36,1); }
-.module-card::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background:radial-gradient(120% 90% at 50% -20%, rgba(197,168,128,0.13), transparent 62%); opacity:0; transition:opacity .35s ease; }
-.module-card:hover::after { opacity:1; }
-.module-card:hover { transform: translateY(-6px); border-color: rgba(197,168,128,0.34); box-shadow: 0 20px 54px rgba(0,0,0,0.55), 0 0 34px var(--primary-glow); }
-.module-card:active { transform: translateY(-2px); }
-.module-card-glow { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--primary-light), var(--primary), transparent); opacity: 0; transition: opacity 0.4s ease; }
-.module-card:hover .module-card-glow { opacity: 1; }
-.module-card-icon { width: 56px; height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; background: var(--primary-glow); border: 1px solid var(--border); border-radius: var(--radius-md); transition: all 0.4s cubic-bezier(0.22,1,0.36,1); }
-.module-card:hover .module-card-icon { transform: scale(1.08) rotate(-4deg); border-color: var(--primary-dark); background: rgba(197,168,128,0.12); }
-.module-card-body { flex: 1; }
-.module-card-title { font-size: 18px; font-weight: 800; color: var(--text-primary); line-height: 1.28; margin-bottom: 8px; letter-spacing: -0.016em; }
-.module-card-desc { font-size: 13px; line-height: 1.7; color: var(--text-muted); margin-bottom: 12px; }
-.module-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.module-tag { background: rgba(197,168,128,0.06); border: 1px solid rgba(197,168,128,0.12); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 600; color: var(--primary); letter-spacing: 0.5px; text-transform: uppercase; }
-.module-cta-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #0B0C10; font-size: 13px; font-weight: 700; border: none; border-radius: var(--radius-md); padding: 12px 16px; cursor: pointer; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); position:relative; overflow:hidden; }
-.module-cta-btn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent,rgba(255,255,255,0.1)); opacity:0; transition:opacity 0.3s; }
-.module-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(197,168,128,0.3); }
-.module-cta-btn:hover::after { opacity:1; }
 
 /* Trust Section */
 .trust-section { padding: 60px 24px; }
@@ -1162,7 +1143,7 @@ a.contact-info-item:hover { color: var(--primary); }
    gerçek boyları 3000px'i aşıyordu (araç listesi 3191px, blog 2869px).
    Bölüm görünür alana girince yükseklik birden büyüyor ve sayfa kaydırırken
    binlerce piksel zıplıyordu. Bu sayfada tasarruf marjinal, bedeli ağırdı. */
-.module-card, .method-card, .blog-card, .testimonial-card,
+.method-card, .blog-card, .testimonial-card,
 .header, .bg-orb, .btn-next, .btn-back { will-change: transform; }
 
 /* ===== CINEMATIC PAGE TRANSITIONS ===== */
@@ -1208,25 +1189,7 @@ a.contact-info-item:hover { color: var(--primary); }
 .module-group-title { font-size: 20px; font-weight: 800; margin: 0 0 4px; color: var(--text-primary); letter-spacing: -0.3px; }
 .module-group-desc { margin: 0; font-size: 13px; color: var(--text-secondary); }
 .module-group-count { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--group-accent, var(--primary)); background: color-mix(in srgb, var(--group-accent, var(--primary)) 14%, transparent); border: 1px solid color-mix(in srgb, var(--group-accent, var(--primary)) 30%, transparent); border-radius: 50px; padding: 6px 14px; white-space: nowrap; }
-.modules-grid-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 
-/* ===== EN ÇOK KULLANILANLAR (hızlı erişim) =====
-   Ziyaretçi sayfaya inince aramadan/filtreden geçmeden tek tıkla
-   başlayabilsin diye en üstte duruyor. */
-.pop-wrap { max-width: 1000px; margin: 0 auto 26px; text-align: left; }
-.pop-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.2px; margin-bottom: 12px; }
-.pop-head small { font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
-.pop-star { font-size: 15px; }
-.pop-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 10px; }
-.pop-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; padding: 13px 15px;
-  background: linear-gradient(140deg, var(--primary-soft), var(--bg-elevated)); border: 1px solid var(--border-mid);
-  border-radius: var(--radius-md); color: var(--text-primary); font-family: var(--font); font-size: 13.5px; font-weight: 700;
-  transition: all 0.25s cubic-bezier(0.22,1,0.36,1); }
-.pop-item:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.35); }
-.pop-item:active { transform: translateY(0) scale(0.98); }
-.pop-ico { font-size: 19px; flex-shrink: 0; }
-.pop-t { flex: 1; line-height: 1.3; }
-.pop-item svg { color: var(--primary); flex-shrink: 0; }
 
 /* ===== KAYDIRMA İLE BELİRME =====
    Öğeler görünür alana girdikçe yukarı doğru süzülerek beliriyor. Eskiden
@@ -1244,23 +1207,23 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none;
   html.rv-on .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
-/* ===== KOMPAKT ARAÇ SATIRLARI =====
-   Öne çıkan sihirbazlar kart kalıyor; diğer araçlar tek satır olarak
-   listeleniyor ki tüm liste bir bakışta taranabilsin. */
-.mod-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 8px; margin-top: 12px; }
-.mod-row { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; cursor: pointer; padding: 13px 16px;
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary);
-  font-family: var(--font); transition: all 0.2s cubic-bezier(0.22,1,0.36,1); }
-.mod-row:hover { border-color: var(--border-light); background: var(--bg-elevated); transform: translateX(3px); }
+/* ===== SORU LİSTESİ =====
+   Tek tip satır: sadece sorunun kendisi ve ok. İkon, açıklama, etiket ve
+   CTA butonu kaldırıldı — 29 satırda bunlar görsel gürültüye dönüşüyordu. */
+.mod-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 6px; }
+.mod-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left;
+  cursor: pointer; padding: 15px 18px; background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-primary); font-family: var(--font);
+  transition: background 0.2s cubic-bezier(0.22,1,0.36,1), border-color 0.2s cubic-bezier(0.22,1,0.36,1), transform 0.2s cubic-bezier(0.22,1,0.36,1); }
+.mod-row:hover { background: var(--bg-card); border-color: var(--border-light); transform: translateX(3px); }
 .mod-row:active { transform: translateX(0) scale(0.99); }
-.mod-row-ico { font-size: 20px; flex-shrink: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-  background: var(--primary-glow); border-radius: var(--radius-sm); }
-.mod-row-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.mod-row-t { font-size: 14px; font-weight: 700; line-height: 1.3; }
-.mod-row-d { font-size: 11.5px; color: var(--text-muted); line-height: 1.45; overflow: hidden; text-overflow: ellipsis;
-  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-.mod-row svg { color: var(--text-muted); flex-shrink: 0; }
+.mod-row-t { font-size: 14.5px; font-weight: 600; line-height: 1.35; letter-spacing: -0.005em; }
+.mod-row svg { color: var(--text-muted); flex-shrink: 0; transition: color 0.2s; }
 .mod-row:hover svg { color: var(--primary); }
+
+/* İnce grup ayırıcı: eski ikon + açıklama + sayaç bloğunun yerine */
+.grp-label { font-size: 11.5px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--group-accent, var(--text-muted)); padding: 0 0 10px 2px; text-align: left; }
 
 /* ===== KATEGORİ FİLTRE ÇUBUĞU =====
    Kategori bir kapı değil, filtre: araçlar ilk açılışta görünür. */
@@ -1274,30 +1237,6 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none;
   background: color-mix(in srgb, var(--group-accent, var(--primary)) 12%, transparent); }
 .cat-chip-n { font-size: 11px; font-weight: 800; opacity: 0.65; }
 
-/* ===== KATEGORİ KARTLARI (arama sonuçları / eski görünüm) ===== */
-/* Kapsayıcı 900px ile sınırlı; 260px'lik minimum 3 sütun üretip 4. kartı
-   tek başına alta atıyordu. 360px minimumla 4 kategori 2x2 diziliyor. */
-.cat-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 18px; max-width: 1000px; margin: 0 auto; }
-.cat-card { position: relative; overflow: hidden; text-align: left; cursor: pointer; padding: 28px 24px 22px;
-  background: linear-gradient(150deg, color-mix(in srgb, var(--group-accent, var(--primary)) 10%, var(--bg-card)), var(--bg-elevated));
-  border: 1px solid var(--border); border-left: 4px solid var(--group-accent, var(--primary)); border-radius: var(--radius-xl);
-  transition: all 0.3s cubic-bezier(0.22,1,0.36,1); }
-.cat-card:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--group-accent, var(--primary)) 45%, transparent);
-  box-shadow: 0 18px 46px rgba(0,0,0,0.45), 0 0 30px color-mix(in srgb, var(--group-accent, var(--primary)) 22%, transparent); }
-.cat-card:active { transform: translateY(-2px) scale(0.99); }
-.cat-card-icon { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 16px;
-  background: color-mix(in srgb, var(--group-accent, var(--primary)) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--group-accent, var(--primary)) 32%, transparent); border-radius: var(--radius-lg); }
-.cat-card-title { font-size: 21px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.4px; margin-bottom: 8px; }
-.cat-card-desc { font-size: 13.5px; line-height: 1.65; color: var(--text-muted); margin-bottom: 18px; }
-.cat-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
-.cat-card-count { font-size: 12px; font-weight: 700; color: var(--text-muted); }
-.cat-card-go { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--group-accent, var(--primary)); }
-.cat-back { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 22px; padding: 9px 16px; cursor: pointer;
-  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 100px; color: var(--text-secondary);
-  font-family: var(--font); font-size: 13px; font-weight: 600; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); }
-.cat-back:hover { border-color: var(--primary); color: var(--primary); }
-.cat-back:active { transform: scale(0.96); }
 
 /* ===== SORU-CEVAP SİHİRBAZI (trafik / iş hukuku / gözetim) ===== */
 .wz-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 30px; box-shadow: var(--glass-shadow); }
@@ -1344,7 +1283,6 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none;
 @media (max-width: 560px) {
   .wz-card { padding: 20px 16px; }
   .wz-q { font-size: 19px; }
-  .cat-card { padding: 22px 18px 18px; }
 }
 
 /* ===== MODULE SEARCH ===== */
@@ -1369,7 +1307,6 @@ input.module-search-input:focus { border-color: var(--primary); box-shadow: 0 8p
 
 @media (max-width: 768px) {
   .module-group-title { font-size: 17px; }
-  .modules-grid-inner { grid-template-columns: 1fr; }
   #screen-kusur .form-grid[style*="repeat(auto-fill"] { grid-template-columns: 1fr !important; }
 }
 
@@ -1395,5 +1332,4 @@ input.module-search-input:focus { border-color: var(--primary); box-shadow: 0 8p
   transform: scale(0.9);
   transition: transform 0.1s cubic-bezier(0.22,1,0.36,1);
 }
-.module-card:active { transform: translateY(-2px) scale(0.99); }
 

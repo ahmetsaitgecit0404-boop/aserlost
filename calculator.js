@@ -421,7 +421,7 @@ const MODULES = [
   {id:'pertBedeli',title:'Aracım pert oldu, ne kadar alırım?',icon:'💥',desc:'Onarım bedeli piyasa değerinin %50\'sini aşan (pert) araçlarda sigortadan alacağınız bedeli hesaplayın.',tags:['Pert Tespiti','Rayiç Bedel','Sovtaj'],screen:'generic',category:'trafik'},
   {id:'sakatlik',title:'Kazada sakat kaldım, tazminatım ne kadar?',icon:'🏥',desc:'Kaza sonrası sürekli sakatlık oranı ve tazminat hesaplaması yapın.',tags:['Sakatlık Oranı','Tıbbi Değerlendirme','Hesaplama'],screen:'generic',category:'trafik'},
   {id:'yoksun',title:'Kazada yakınımı kaybettim, tazminat hakkım nedir?',icon:'🕊',desc:'Vefat eden kişinin desteğinden yoksun kalanlar için tazminat hesaplayın.',tags:['Mirasçı Hakları','Gelir Kaybı','Hesaplama'],screen:'generic',category:'trafik'},
-  {id:'maddi',title:'Kazadaki maddi zararımı nasıl hesaplarım?',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
+  {id:'maddi',title:'Kaza masraflarımın toplamı ne kadar?',icon:'📑',desc:'Kaza sonrası maddi zararlarınızı hesaplayın.',tags:['Zarar Hesabı','Kapsamlı','Detaylı'],screen:'generic',category:'trafik'},
   {id:'kasko',title:'Kaskodan ne kadar hasar bedeli alırım?',icon:'🛡',desc:'Kasko sigortası kapsamındaki hasar talebinizi ve tahmini tazminatınızı hesaplayın.',tags:['Kasko Kapsamı','Hasar Türü','Sigorta Talebi'],screen:'generic',category:'trafik'},
   {id:'manevi',title:'Manevi tazminat olarak ne kadar isteyebilirim?',icon:'💔',desc:'Kaza veya zarar sonrası manevi tazminat talebinizi hesaplayın.',tags:['Manevi Zarar','Dava Türü','Tahmini Tutar'],screen:'generic',category:'trafik'},
   {id:'gecici',title:'Çalışamadığım günlerin parasını alabilir miyim?',icon:'🚑',desc:'Kaza sonrası geçici iş göremezlik süresindeki gelir kaybınızı hesaplayın.',tags:['Günlük Gelir','İstirahat Süresi','Net Tutar'],screen:'generic',category:'trafik'},
@@ -876,18 +876,14 @@ function moduleAction(m){
   if(SCREEN_MODULES.indexOf(m.screen)!==-1)return `navigate('${m.screen}')`;
   return `openGenericCalc('${m.id}')`;
 }
-function renderModuleCard(m){
-  const isAiWizard=m.screen==='kusur'||m.screen==='fesih'||m.screen==='iseIade';
-  return `<div class="module-card" onclick="${moduleAction(m)}" role="button" tabindex="0"><div class="module-card-glow"></div><div class="module-card-icon">${m.icon}</div><div class="module-card-body"><h2 class="module-card-title">${m.title.replace(/\n/g,'<br/>')}</h2><p class="module-card-desc">${m.desc}</p><div class="module-tags">${m.tags.map(t=>`<span class="module-tag">${t}</span>`).join('')}</div></div><div class="module-cta-btn">${isAiWizard?'Analizi Başlat':'Hesaplamayı Başlat'} <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`;
-}
-/* Kategori artık kapı değil, filtre: araçlar ilk açılışta görünür durumda.
-   Önceki sürümde araçları görmek için önce kategori tıklamak gerekiyordu;
-   bu fazladan adım ziyaretçiyi sonuçtan uzaklaştırıyordu. Şimdi üstte
-   kompakt bir filtre çubuğu var, altında araçlar kategori kategori listeli
-   ve HİÇBİRİ gizli değil. Ayrıca en çok kullanılan dört araç en üstte
-   tek tıkla erişilebilir şekilde duruyor. */
+/* Araç seçimi tek bir yolla yapılıyor: soru listesi.
+   Önceki sürümlerde aynı işi yapan altı katman üst üste duruyordu — arama,
+   "en çok sorulanlar" bloğu, kategori filtresi, ikonlu/açıklamalı grup
+   başlıkları, öne çıkan büyük kartlar ve kompakt satırlar. Hepsi aynı
+   anda görününce sayfa kalabalık ve kararsız duruyordu. Artık: arama,
+   kategori filtresi ve TEK tip satır listesi. Grup başlığı sadece ince
+   bir ayırıcı etiket. */
 let activeModuleCat=null;
-const POPULER_ARACLAR=['trafikSihirbaz','isHukukuSihirbaz','arac','iscilik'];
 function catVisibleModules(cat){return MODULES.filter(m=>m.category===cat);}
 function selectModuleCat(cat){
   activeModuleCat=(activeModuleCat===cat)?null:cat;
@@ -908,41 +904,22 @@ function renderCatFilterBar(){
   return h+'</div>';
 }
 
-function renderPopulerRow(){
-  const items=POPULER_ARACLAR.map(id=>MODULES.find(m=>m.id===id)).filter(Boolean);
-  if(!items.length)return '';
-  let h='<div class="pop-wrap"><div class="pop-head"><span class="pop-star">⚡</span> En çok sorulanlar <small>— tek tıkla başlayın</small></div><div class="pop-row">';
-  items.forEach(m=>{
-    h+=`<button type="button" class="pop-item" onclick="${moduleAction(m)}"><span class="pop-ico">${m.icon}</span><span class="pop-t">${m.title.replace(/\n/g,' ')}</span><svg width="15" height="15" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
-  });
-  return h+'</div></div>';
-}
-
-/* Her araç için koca kart basıldığında liste 6000 pikseli aşıyor ve
-   ziyaretçi aradığını bulmadan sayfayı terk ediyordu. Öne çıkan
-   sihirbazlar kart olarak kalıyor, geri kalan araçlar tek satırlık
-   kompakt satırlara indi — böylece tüm liste bir bakışta taranabiliyor. */
-const ONE_CIKAN=['trafikSihirbaz','kusur','isHukukuSihirbaz','gozetim'];
 function renderModuleRow(m){
   return `<button type="button" class="mod-row" onclick="${moduleAction(m)}">
-    <span class="mod-row-ico">${m.icon}</span>
-    <span class="mod-row-txt"><span class="mod-row-t">${m.title.replace(/\n/g,' ')}</span><span class="mod-row-d">${m.desc}</span></span>
+    <span class="mod-row-t">${m.title.replace(/\n/g,' ')}</span>
     <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>`;
 }
 function renderModuleCards(){
   const g=document.getElementById('modulesGrid');if(!g)return;
-  let html=renderPopulerRow()+renderCatFilterBar();
+  let html=renderCatFilterBar();
   const cats=activeModuleCat?[activeModuleCat]:Object.keys(MODULE_CATS);
   cats.forEach(cat=>{
     const items=catVisibleModules(cat);
     if(!items.length)return;
     const c=MODULE_CATS[cat];
-    const one=items.filter(m=>ONE_CIKAN.indexOf(m.id)!==-1);
-    const digerleri=items.filter(m=>ONE_CIKAN.indexOf(m.id)===-1);
-    html+=`<div class="module-group"><div class="module-group-header" style="--group-accent:${c.accent}"><div class="module-group-icon">${c.icon}</div><div class="module-group-text"><h3 class="module-group-title">${c.title}</h3><p class="module-group-desc">${c.desc}</p></div><span class="module-group-count">${items.length} araç</span></div>`;
-    if(one.length)html+=`<div class="modules-grid-inner">${one.map(renderModuleCard).join('')}</div>`;
-    if(digerleri.length)html+=`<div class="mod-rows">${digerleri.map(renderModuleRow).join('')}</div>`;
+    html+=`<div class="module-group"><div class="grp-label" style="--group-accent:${c.accent}">${c.title}</div>`;
+    html+=`<div class="mod-rows">${items.map(renderModuleRow).join('')}</div>`;
     html+=`</div>`;
   });
   g.innerHTML=html;
@@ -961,7 +938,7 @@ function filterModules(query){
   if(!matches.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted)"><p style="font-size:15px;font-weight:600;margin-bottom:6px">Sonuç bulunamadı</p><p style="font-size:13px">"${sanitizeHtml(query)}" ile eşleşen bir hesaplama aracı yok. Farklı bir kelime deneyin.</p></div>`;return;}
   /* Arama sonuçları da kompakt satır olarak: koca kartlarla üç sonuç bile
      ekranı dolduruyor, kullanıcı eşleşmeleri karşılaştıramıyordu. */
-  g.innerHTML=`<div class="module-group"><div class="module-group-header" style="--group-accent:#C5A880"><div class="module-group-icon">🔍</div><div class="module-group-text"><h3 class="module-group-title">Arama Sonuçları</h3><p class="module-group-desc">"${sanitizeHtml(query)}" için bulunan araçlar</p></div><span class="module-group-count">${matches.length} araç</span></div><div class="mod-rows">${matches.map(renderModuleRow).join('')}</div></div>`;
+  g.innerHTML=`<div class="module-group"><div class="grp-label">"${sanitizeHtml(query)}" — ${matches.length} sonuç</div><div class="mod-rows">${matches.map(renderModuleRow).join('')}</div></div>`;
   revealScan();
 }
 
@@ -3993,7 +3970,7 @@ function showIsHukukuResult(){
    bağlanabiliyor (revealScan). prefers-reduced-motion açıksa hiç
    dokunulmuyor — CSS tarafında da ayrıca nötrleniyor.
    ===================================================================== */
-const RV_SELECTORS='.section-badge,.section-title,.section-subtitle,.pop-wrap,.cat-bar,.module-group-header,.module-card,.mod-row,.method-card,.blog-card,.testimonial-card,.faq-item,.contact-form-card,.contact-info-card,.cat-card';
+const RV_SELECTORS='.section-badge,.section-title,.section-subtitle,.cat-bar,.grp-label,.mod-row,.method-card,.blog-card,.testimonial-card,.faq-item,.contact-form-card,.contact-info-card';
 let _rvObserver=null;
 /* Tek tek geçiş tetiklemek yerine gizleme katmanını komple kaldırıyor:
    böylece CSS geçişi hiç ilerlemese bile içerik anında görünür oluyor. */
