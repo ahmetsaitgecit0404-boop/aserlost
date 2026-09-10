@@ -220,14 +220,6 @@ body {
 .blog-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--primary),transparent); opacity:0; transition:opacity 0.3s; }
 .blog-card:hover { border-color: var(--border-mid); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
 .blog-card:hover::after { opacity:1; }
-.blog-card-img { height: 160px; background: linear-gradient(135deg, var(--bg-elevated), var(--bg-hover)); display: flex; align-items: center; justify-content: center; font-size: 40px; border-bottom: 1px solid var(--border); }
-.blog-card-body { padding: 20px; }
-.blog-card-category { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.blog-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; }
-.blog-card-excerpt { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
-.blog-card-meta { font-size: 11px; color: var(--text-muted); }
-.blog-card-read { display: inline-flex; align-items: center; gap: 4px; color: var(--primary); font-size: 13px; font-weight: 600; margin-top: 10px; cursor: pointer; }
-.blog-card-read:hover { text-decoration: underline; }
 
 /* Blog Detail */
 .blog-detail { max-width: 700px; margin: 0 auto; text-align: left; }
@@ -1594,3 +1586,39 @@ html.rv-on .rv.rv3d.rv-in { opacity: 1; transform: perspective(800px) rotateX(0d
   .t3d { transition: none; transform: none !important; }
   .t3d-glare { display: none; }
 }
+/* Blog kartı: kategori bandı + gövde + künye. Üç bölge net ayrılıyor,
+   göz önce başlığa gidiyor. */
+.blog-card { display: flex; flex-direction: column; }
+.blog-card-top { display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-bottom: 1px solid var(--border);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--bc, #C5A880) 13%, transparent), transparent 72%); }
+.blog-card-ico { display: flex; width: 34px; height: 34px; align-items: center; justify-content: center; flex-shrink: 0;
+  border-radius: 10px; color: var(--bc, #C5A880); background: color-mix(in srgb, var(--bc, #C5A880) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bc, #C5A880) 26%, transparent); }
+.blog-card-cat { font-size: 11.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--bc, #C5A880); }
+.blog-card-body { padding: 18px 20px 14px; flex: 1; }
+.blog-card-title { font-size: 17px; font-weight: 800; line-height: 1.35; letter-spacing: -0.012em; color: var(--text-primary); margin-bottom: 8px; }
+.blog-card-excerpt { font-size: 13.5px; line-height: 1.65; color: var(--text-secondary);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-card-foot { display: flex; align-items: center; gap: 8px; padding: 12px 20px 16px; font-size: 12px; color: var(--text-muted); }
+.blog-card-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
+.blog-card-ok { margin-left: auto; color: var(--bc, #C5A880); transition: transform .25s cubic-bezier(0.22,1,0.36,1); }
+.blog-card:hover .blog-card-ok { transform: translateX(4px); }
+.blog-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+/* Renk karıştırma desteklenmeyen tarayıcılarda bant düz kalsın. */
+@supports not (color: color-mix(in srgb, red 10%, transparent)) {
+  .blog-card-top { background: var(--bg-elevated); }
+  .blog-card-ico { background: var(--bg-hover); border-color: var(--border); }
+}
+/* Yazı sayfası: okuma genişliği korunuyor, başlıklar ince bir vurgu
+   çizgisiyle ayrılıyor, önemli ifadeler metinden ayrışıyor. */
+.blog-detail-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.blog-detail-content { font-size: 15.5px; line-height: 1.85; }
+.blog-detail-content h2 { position: relative; padding-left: 14px; margin: 30px 0 12px; font-size: 21px; letter-spacing: -0.012em; }
+.blog-detail-content h2::before { content: ""; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px;
+  border-radius: 2px; background: linear-gradient(180deg, var(--primary), transparent); }
+.blog-detail-content h3 { margin: 22px 0 8px; }
+.blog-detail-content strong { color: var(--text-primary); font-weight: 700; }
+.blog-detail-content li { margin-bottom: 9px; }
+.blog-detail-content li::marker { color: var(--primary); }
+.blog-detail-content > p:first-child { font-size: 17px; line-height: 1.75; color: var(--text-primary); }
+.blog-detail-araclar { margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--border); }
