@@ -418,6 +418,8 @@ const TESTIMONIALS=[];
    kategori rengini alıyor.
    ===================================================================== */
 const ICON_PATHS = {
+  pusula:    '<circle cx="12" cy="12" r="8.5"/><path d="M15.2 8.8l-1.9 4.5-4.5 1.9 1.9-4.5z"/>',
+  iade:      '<path d="M3.6 12a8.4 8.4 0 1 0 2.6-6.1"/><path d="M3.4 4.6v4.6h4.6"/><path d="M14 9.6a2.6 2.6 0 0 0-2.3-1.2c-1.3 0-2.1.7-2.1 1.7 0 2.3 4.6 1.2 4.6 3.6 0 1.1-1 1.9-2.4 1.9A2.8 2.8 0 0 1 9.4 14"/><path d="M11.8 7v1.2M11.8 15.6v1.2"/>',
   konteyner: '<rect x="2.6" y="7.4" width="18.8" height="10.4" rx="1.6"/><path d="M7.2 7.4v10.4M12 7.4v10.4M16.8 7.4v10.4"/><path d="M5 17.8v1.8M19 17.8v1.8"/>',
   yuzde: '<circle cx="7.8" cy="7.8" r="2.7"/><circle cx="16.2" cy="16.2" r="2.7"/><path d="M18.6 5.4L5.4 18.6"/>',
   arac:      '<path d="M4 16l1.4-4.6A2 2 0 0 1 7.3 10h9.4a2 2 0 0 1 1.9 1.4L20 16"/><rect x="2.5" y="16" width="19" height="3.6" rx="1.4"/><circle cx="7" cy="19.6" r="1.3"/><circle cx="17" cy="19.6" r="1.3"/><path d="M9 7l1.5-2.4h3L15 7"/>',
@@ -445,6 +447,7 @@ const ICON_PATHS = {
 
 /* Hangi araç hangi ikonu kullanıyor */
 const MODULE_ICONS = {
+  durumTespiti: 'pusula', vergiIade: 'iade',
   trafikSihirbaz: 'carpisma', kusur: 'kusur', arac: 'arac', hasar: 'hasar',
   mahrumiyet: 'saat', pertBedeli: 'pert', sakatlik: 'sakatlik', yoksun: 'yoksun',
   maddi: 'vergi', kasko: 'yoksun', manevi: 'manevi', gecici: 'saglik',
@@ -465,6 +468,8 @@ function moduleIcon(id, size) {
 }
 
 const MODULES = [
+  // ===== NEREDEN BAŞLAYACAĞINI BİLMEYENLER İÇİN =====
+  {id:'durumTespiti',title:'Hangi hakkım var, nereden başlamalıyım?',icon:'🧭',desc:'Birkaç soru soralım, durumunuzu tahmin edelim: dosyanızda hangi tazminat kalemleri var, süreniz ne kadar kaldı ve hangi hesabı yapmanız gerekiyor.',tags:['Akıllı Tahmin','3-5 Soru','Yol Haritası'],screen:'tani',category:'baslangic'},
   // ===== TRAFİK KAZASI HUKUKU — iki temel araç =====
   {id:'trafikSihirbaz',title:'Trafik kazasında maddi zararlarım nedir?',icon:'🚗',desc:'Tek akışta: sorulara verdiğiniz yanıtlara göre araç değer kaybı, hasar bedeli ve yaralanma varsa bedeni tazminatlar birlikte hesaplanır.',tags:['Soru-Cevap','Tüm Tazminatlar','Tek Ekran'],screen:'trafikSihirbaz',category:'trafik'},
   {id:'kusur',title:'Trafik kazasında kusur oranım kaç?',icon:'🚦',desc:'Kazanızı anlatın: yapay zeka hem kusur oranınızı belirlesin hem de değer kaybı, mahrumiyet, sakatlık gibi hangi tazminat haklarına sahip olduğunuzu söylesin.',tags:['AI Analiz','Kusur Tespiti','Hak Tespiti'],screen:'kusur',category:'trafik'},
@@ -488,6 +493,7 @@ const MODULES = [
   {id:'gumrukCeza',title:'Gümrük para cezasına itiraz etmeye değer mi?',icon:'⚠️',desc:'Eksik vergi tahakkukunda Gümrük Kanunu 234 uyarınca farkın üç katı ceza kesilir; itiraz senaryosunu karşılaştırın.',tags:['GK 234','Uzlaşma','İtiraz'],screen:'generic',category:'vergi'},
   {id:'vergiZiyai',title:'Vergi ziyaı cezam ne kadar, indirimi var mı?',icon:'📉',desc:'VUK 344 uyarınca ceza verginin bir katı, VUK 359 fiillerinde üç katıdır; VUK 376 indirimiyle karşılaştırın.',tags:['VUK 344','VUK 376','Gecikme Faizi'],screen:'generic',category:'vergi'},
   {id:'emlakVergisi',title:'Emlak vergim ne kadar?',icon:'🏠',desc:'Emlak vergi değerinizi girin; mesken, iş yeri, arsa ve arazi için yıllık vergi büyükşehir farkıyla listelenir.',tags:['Binde Oran','Büyükşehir','Yıllık'],screen:'generic',category:'vergi'},
+  {id:'vergiIade',title:'Vergi iademi nasıl alabilirim?',icon:'💰',desc:'Fazla veya yersiz ödediğiniz vergiyi geri almak için hangi mercie, hangi süre içinde, hangi belgelerle başvuracağınızı adım adım çıkarın. Örnek dilekçe dahil.',tags:['Yol Haritası','Süre Kontrolü','Örnek Dilekçe'],screen:'vergiIade',category:'vergi'},
   {id:'vergiDavasi',title:'Vergi davası açmaya değer mi?',icon:'⚖️',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın.',tags:['Beklenen Değer','Masraf','Karar'],screen:'generic',category:'vergi'},
   // ===== İŞ HUKUKU — tek soru-cevap akışı =====
   {id:'isHukukuSihirbaz',title:'İşten ayrıldım, ne kadar alacağım var?',icon:'💼',desc:'İşten siz mi ayrıldınız, çıkarıldınız mı? Yanıtlarınıza göre kıdem, ihbar, izin ve fazla mesai alacaklarınız doğru mantıkla hesaplanır.',tags:['Soru-Cevap','Kıdem & İhbar','Mantık Ağacı'],screen:'isHukuku',category:'isci'},
@@ -701,9 +707,46 @@ const CALC_CONFIGS = {
   yoksun:{badge:'Destekten Yoksun Kalma',title:'Destekten Yoksun Kalma Tazminatı',desc:'Trafik kazasında vefat eden bir yakınınızın (eş, çocuğun ebeveyni, nişanlı vb.) desteğinden yoksun kalanlar için tazminat hesaplayın',
     fields:[{id:'yk_yakinlik',label:'Sizin Merhumla Yakınlığınız',type:'text',placeholder:'Örn: Eşi / Çocuğu / Nişanlısı / Anne-Babası'},{id:'yk_gelir',label:'Merhumun Aylık Brüt Geliri (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 20000',required:true},{id:'yk_destek',label:'Destek Oranı (%) *',type:'range',min:10,max:100,step:5,defaultVal:50,required:true},{id:'yk_yas',label:'Merhumun Yaşı',type:'number',prefix:'yaş',placeholder:'45'},{id:'yk_bekli',label:'Yıllık Faiz Oranı (%)',type:'number',prefix:'%',placeholder:'21'}],
     calculate(d){const g=parseFloat(d.yk_gelir)||0,dr=parseInt(d.yk_destek)||50,y=parseInt(d.yk_yas)||45,f=parseFloat(d.yk_bekli)||21,yg=g*12,dt=yg*(dr/100),ky=Math.max(5,65-y),isk=(1-Math.pow(1+f/100,-ky))/(f/100),tp=Math.round(dt*isk);return{total:tp,rows:[{label:'Aylık Brüt Gelir',value:fmt(g)},{label:'Yıllık Gelir',value:fmt(yg)},{label:'Destek Oranı',value:'%'+dr},{label:'Destek Tutarı/Yıl',value:fmt(dt)},{label:'Kalan Yaşam Süresi',value:ky+' yıl'},{label:'İskonto Faktörü',value:isk.toFixed(2)},{label:'Tahmini Toplam',value:fmt(tp),highlight:true}]}}},
-  maddi:{badge:'Maddi Hasar Hesaplama',title:'Maddi Hasar Hesaplayın',desc:'Kaza sonrası tüm maddi zararlarınızı hesaplayın',
-    fields:[{id:'mh_onarim',label:'Onarım Bedeli (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 50000',required:true},{id:'mh_degerkaybi',label:'Araç Değer Kaybı (TL)',type:'number',prefix:'₺',placeholder:'0'},{id:'mh_arac',label:'Araç Kullanım Kaybı (TL)',type:'number',prefix:'₺',placeholder:'0'},{id:'mh_ekipman',label:'Ek Ekipman Kaybı (TL)',type:'number',prefix:'₺',placeholder:'0'},{id:'mh_kusur',label:'Kusur Oranı (%)',type:'range',min:0,max:100,step:5,defaultVal:0}],
-    calculate(d){const o=parseFloat(d.mh_onarim)||0,dv=parseFloat(d.mh_degerkaybi)||0,a=parseFloat(d.mh_arac)||0,e=parseFloat(d.mh_ekipman)||0,k=parseInt(d.mh_kusur)||0,top=o+dv+a+e,net=Math.round(top*(1-k/100));return{total:net,rows:[{label:'Onarım Bedeli',value:fmt(o)},{label:'Değer Kaybı',value:fmt(dv)},{label:'Kullanım Kaybı',value:fmt(a)},{label:'Ek Ekipman',value:fmt(e)},{label:'Toplam Brüt Zarar',value:fmt(top)},{label:'Kusur İndirimi (%'+k+')',value:'-'+fmt(Math.round(top*k/100))},{label:'Tahmini Net Tazminat',value:fmt(net),highlight:true}]}}},
+  /* Maddi zarar tek bir onarım rakamı değil: aracın kullanılamadığı günler,
+     çekici, otopark, ekspertiz, araçtaki eşya ve ticari araçlarda kazanç
+     kaybı ayrı ayrı istenebilen kalemler. Kalem kalem sorulmadığında
+     kullanıcı gerçek zararının çok altında bir rakam görüyordu. */
+  maddi:{badge:'Maddi Zarar Hesaplama',title:'Kaza masraflarınızın toplamı',desc:'Kaza sonrası isteyebileceğiniz bütün maddi kalemleri tek tabloda toplayın. Olmayan kalemleri boş bırakın.',
+    fields:[
+      {id:'mh_onarim',label:'Onarım / hasar bedeli (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 85000',required:true},
+      {id:'mh_degerkaybi',label:'Araç değer kaybı (TL)',type:'number',prefix:'₺',placeholder:'Bilmiyorsanız boş bırakın'},
+      {id:'mh_gun',label:'Aracınızı kaç gün kullanamadınız?',type:'number',prefix:'gün',placeholder:'Örn: 18'},
+      {id:'mh_gunluk',label:'Günlük kiralık araç bedeli (TL)',type:'number',prefix:'₺',placeholder:'Örn: 1800'},
+      {id:'mh_cekici',label:'Çekici / kurtarma bedeli (TL)',type:'number',prefix:'₺',placeholder:'Örn: 4500'},
+      {id:'mh_otopark',label:'Otopark / muhafaza bedeli (TL)',type:'number',prefix:'₺',placeholder:'Örn: 2000'},
+      {id:'mh_ekspertiz',label:'Ekspertiz veya rapor ücreti (TL)',type:'number',prefix:'₺',placeholder:'Örn: 3000'},
+      {id:'mh_ekipman',label:'Araçtaki eşya / ek ekipman zararı (TL)',type:'number',prefix:'₺',placeholder:'Örn: 8000'},
+      {id:'mh_kazanc',label:'Ticari araçsa kazanç kaybı (TL)',type:'number',prefix:'₺',placeholder:'Örn: 25000'},
+      {id:'mh_tedavi',label:'Tedavi ve ulaşım giderleri (TL)',type:'number',prefix:'₺',placeholder:'Örn: 6000'},
+      {id:'mh_kusur',label:'Kendi kusur oranınız (%)',type:'range',min:0,max:100,step:5,defaultVal:0}
+    ],
+    calculate(d){
+      const n=x=>parseFloat(d[x])||0;
+      const gun=n('mh_gun'),gunluk=n('mh_gunluk'),mahrum=Math.round(gun*gunluk);
+      const kalemler=[
+        ['Onarım / hasar bedeli',n('mh_onarim')],
+        ['Araç değer kaybı',n('mh_degerkaybi')],
+        ['İkame araç / mahrumiyet'+(gun&&gunluk?' ('+gun+' gün × '+fmt(gunluk)+')':''),mahrum],
+        ['Çekici / kurtarma',n('mh_cekici')],
+        ['Otopark / muhafaza',n('mh_otopark')],
+        ['Ekspertiz / rapor',n('mh_ekspertiz')],
+        ['Araçtaki eşya ve ek ekipman',n('mh_ekipman')],
+        ['Kazanç kaybı (ticari araç)',n('mh_kazanc')],
+        ['Tedavi ve ulaşım giderleri',n('mh_tedavi')]
+      ].filter(x=>x[1]>0);
+      const top=kalemler.reduce((a,x)=>a+x[1],0);
+      const k=parseInt(d.mh_kusur)||0,ind=Math.round(top*k/100),net=top-ind;
+      const rows=kalemler.map(x=>({label:x[0],value:fmt(x[1])}));
+      rows.push({label:'Toplam brüt zarar',value:fmt(top),highlight:true});
+      if(k>0)rows.push({label:'Kendi kusurunuz nedeniyle indirim (%'+k+')',value:'-'+fmt(ind)});
+      rows.push({label:'Tahmini net tazminat',value:fmt(net),highlight:true});
+      return{total:net,rows:rows};
+    }},
   gecici:{badge:'Geçici İş Göremezlik',title:'Geçici İş Göremezlik',desc:'Kaza sonrası geçici iş göremezlik gelir kaybınızı hesaplayın',
     fields:[{id:'gig_brut',label:'Aylık Brüt Maaş (TL) *',type:'number',prefix:'₺',placeholder:'Örn: 20000',required:true},{id:'gig_gun',label:'İş Göremezlik Süresi (Gün) *',type:'number',prefix:'gün',placeholder:'Örn: 20',required:true},{id:'gig_saglik',label:'Sağlık Giderleri (TL)',type:'number',prefix:'₺',placeholder:'0'}],
     calculate(d){const b=parseFloat(d.gig_brut)||0,g=parseInt(d.gig_gun)||0,s=parseFloat(d.gig_saglik)||0,gb=b/30,sgk=Math.round(gb*0.5*g),iv=Math.round(gb*0.5*g),tp=sgk+iv+s;return{total:tp,rows:[{label:'Aylık Brüt Maaş',value:fmt(b)},{label:'Günlük Brüt',value:fmt(Math.round(gb))},{label:'Süre',value:g+' gün'},{label:'SGK Ödemesi (%50)',value:fmt(sgk)},{label:'İşveren Payı (%50)',value:fmt(iv)},{label:'Sağlık Giderleri',value:fmt(s)},{label:'Tahmini Toplam',value:fmt(tp),highlight:true}]}}},
@@ -791,6 +834,8 @@ function fmt2(n){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0})
 let _navLock=false;
 /* ========== SEO URL ROUTING ========== */
 const ROUTE_MAP={
+  '/durum-tespiti':{screen:'tani',title:'Durum Tespiti — Hangi Hakkım Var? | Müvekkil Bilgi',desc:'Birkaç soruyla durumunuzu tahmin edelim: dosyanızda hangi tazminat kalemleri var, süreniz ne kadar ve hangi hesabı yapmalısınız.'},
+  '/vergi-iademi-nasil-alirim':{screen:'vergiIade',title:'Vergi İademi Nasıl Alabilirim? | Müvekkil Bilgi',desc:'Fazla veya yersiz ödenen vergiyi geri almak için başvuru mercii, süre, belgeler ve örnek dilekçe — adım adım yol haritası.'},
   '/trafik-kazasi-hesaplama':{screen:'trafikSihirbaz',title:'Trafik Kazası Tazminat Hesaplama | Müvekkil Bilgi',desc:'Kazanızı anlatın; araç değer kaybı, hasar bedeli ve yaralanma tazminatları tek akışta ücretsiz hesaplanır.'},
   '/is-hukuku-hesaplama':{screen:'isHukuku',title:'İş Hukuku Alacak Hesaplama | Müvekkil Bilgi',desc:'İşten ayrılma veya çıkarılma durumunuza göre kıdem, ihbar, izin ve fazla mesai alacaklarınızı hesaplayın.'},
   '/gozetim-fazla-vergi-iadesi':{screen:'gozetim',title:'Gözetim Kaynaklı Fazla Vergi İadesi | Müvekkil Bilgi',desc:'Gümrükte gözetim uygulaması nedeniyle fazla ödenen vergilerin iade ihtimalini 1 dakikada kontrol edin.'},
@@ -827,7 +872,7 @@ const ROUTE_MAP={
   '/tuketici-haklari-tazminati':{generic:'tuketici',title:'Tüketici Hakları Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.'},
   '/tapu-harci-hesaplama':{generic:'tapu',title:'Tapu Harcı ve Vergi Hesaplama | Müvekkil Bilgi',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.'}
 };
-const SCREEN_TO_PATH={trafikSihirbaz:'/trafik-kazasi-hesaplama',isHukuku:'/is-hukuku-hesaplama',gozetim:'/gozetim-fazla-vergi-iadesi',arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
+const SCREEN_TO_PATH={tani:'/durum-tespiti',vergiIade:'/vergi-iademi-nasil-alirim',trafikSihirbaz:'/trafik-kazasi-hesaplama',isHukuku:'/is-hukuku-hesaplama',gozetim:'/gozetim-fazla-vergi-iadesi',arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
 const GENERIC_TO_PATH={ithalatVergi:'/ithalat-vergileri-hesaplama',gumrukCeza:'/gumruk-para-cezasi-itiraz',vergiZiyai:'/vergi-ziyai-cezasi-hesaplama',emlakVergisi:'/emlak-vergisi-hesaplama',vergiDavasi:'/vergi-davasi-degerlendirme',isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama',hasar:'/arac-hasar-bedeli-hesaplama',pertBedeli:'/pert-arac-bedeli-hesaplama',sakatlik:'/surekli-sakatlik-tazminati-hesaplama',yoksun:'/destekten-yoksun-kalma-tazminati',maddi:'/maddi-tazminat-hesaplama',kasko:'/kasko-hasar-tazminati-hesaplama',manevi:'/manevi-tazminat-hesaplama',gecici:'/gecici-is-goremezlik-hesaplama',kalici:'/kalici-is-goremezlik-hesaplama',trafikCezasi:'/trafik-cezasi-itiraz-hesaplama',iseIadeTazminat:'/ise-iade-tazminati-hesaplama',isgucu:'/is-gucu-kaybi-hesaplama',bakiyeSure:'/bakiye-sure-ucreti-tazminati',bosanma:'/bosanma-tazminati-mal-paylasimi',kamulastirma:'/kamulastirmasiz-el-atma-tazminati',nafaka:'/nafaka-hesaplama',tuketici:'/tuketici-haklari-tazminati',tapu:'/tapu-harci-hesaplama'};
 function setMetaDesc(desc){
   if(!desc)return;
@@ -915,6 +960,8 @@ function navigate(screen){
   if(screen==='home'){back.style.display='none';if(nav)nav.style.display='';updateRouteUrl('/','Müvekkil Bilgi – Tazminat Hesaplama Platformu','Trafik kazası araç değer kaybı, işçilik, hasar bedeli, iş gücü kaybı, sakatlık ve tazminat hesaplamalarınızı yasal mevzuata uygun, ücretsiz hesaplayın.');}
   else{back.style.display='flex';if(nav)nav.style.display='none';if(SCREEN_TO_PATH[screen]){const r=ROUTE_MAP[SCREEN_TO_PATH[screen]]||{};updateRouteUrl(SCREEN_TO_PATH[screen],r.title,r.desc);}}
   window.scrollTo({top:0});if(screen==='blog')renderBlogPage();if(screen==='kusur'){setTimeout(renderKusurParties,50);}
+  if(screen==='tani')openTani();
+  if(screen==='vergiIade')openVergiIade();
   if(screen==='gozetim')openGozetim();
   if(screen==='trafikSihirbaz')openTrafikWizard();
   if(screen==='isHukuku')openIsHukuku();
@@ -1039,6 +1086,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   initYears();initBrands();initCarParts();initSlider();initCities();initWorkDuration();injectSvgDefs();renderModuleCards();renderFaq();renderBlogPosts();renderTestimonials();handleInitialRoute();
   setTimeout(initLazySections,100);
   revealInit();
+  tilt3dScan();
 });
 
 function injectSvgDefs(){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('width','0');s.setAttribute('height','0');s.style.position='absolute';s.innerHTML='<defs><linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4BC98"/><stop offset="100%" stop-color="#A88B60"/></linearGradient></defs>';document.body.prepend(s);}
@@ -1077,12 +1125,13 @@ function initBrands(){
 }
 
 const MODULE_CATS={
+  baslangic:{title:'Nereden başlayacağınızı bilmiyorsanız',icon:'🧭',accent:'#C5A880',desc:'Birkaç soruyla durumunuzu tahmin edelim, doğru araca sizi biz götürelim'},
   trafik:{title:'Trafik Kazası Hukuku',icon:'🚗',accent:'#8B5CF6',desc:'Kazanızı anlatın; değer kaybı, hasar ve yaralanma tazminatları tek akışta hesaplansın'},
   isci:{title:'İş Hukuku',icon:'💼',accent:'#22c55e',desc:'İşten ayrılma/çıkarılma durumunuza göre kıdem, ihbar ve diğer alacaklarınız'},
   vergi:{title:'Vergi & Gümrük Hukuku',icon:'🧾',accent:'#3B82F6',desc:'Gözetim uygulaması kaynaklı fazla ödenen vergilerin iadesi'},
   diger:{title:'Diğer Hukuk Alanları',icon:'📋',accent:'#C5A880',desc:'Boşanma, miras, kamulaştırma, tüketici ve tapu işlemleri'}
 };
-const SCREEN_MODULES=['kusur','fesih','iseIade','arac','iscilik','gozetim','trafikSihirbaz','isHukuku'];
+const SCREEN_MODULES=['tani','vergiIade','kusur','fesih','iseIade','arac','iscilik','gozetim','trafikSihirbaz','isHukuku'];
 function moduleAction(m){
   if(SCREEN_MODULES.indexOf(m.screen)!==-1)return `navigate('${m.screen}')`;
   return `openGenericCalc('${m.id}')`;
@@ -1126,7 +1175,7 @@ function renderCatFilterBar(){
 /* Yalnızca doğal bir 'ana giriş' olan kategorilerde öne çıkan kart var.
    'Diğer' bir torba kategori, vergide de tek araç var — oralarda rozet
    anlamsız duruyordu. */
-const ANA_ARAC={trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz',vergi:'gozetim'};
+const ANA_ARAC={baslangic:'durumTespiti',trafik:'trafikSihirbaz',isci:'isHukukuSihirbaz',vergi:'gozetim'};
 
 /* Soru kartı: çizgi ikon + soru + destek metni + ok. */
 function renderModuleRow(m,buyuk){
@@ -1144,6 +1193,7 @@ function renderModuleRow(m,buyuk){
 }
 function renderModuleCards(){
   const g=document.getElementById('modulesGrid');if(!g)return;
+  const cnt=document.getElementById('modulesCount');if(cnt)cnt.textContent=MODULES.length+' ücretsiz araç';
   let html=renderCatFilterBar();
   const cats=activeModuleCat?[activeModuleCat]:Object.keys(MODULE_CATS);
   cats.forEach(cat=>{
@@ -1152,13 +1202,14 @@ function renderModuleCards(){
     const c=MODULE_CATS[cat];
     /* Vurgu rengi grup sarmalayıcısında: hem etiket hem içindeki kartlar
        aynı kategori rengini miras alıyor. */
-    const anaId=items.length>1?ANA_ARAC[cat]:null;
+    const anaId=(items.length>1||cat==='baslangic')?ANA_ARAC[cat]:null;
     html+=`<div class="module-group" style="--group-accent:${c.accent}"><div class="grp-label">${c.title}</div>`;
     html+=`<div class="mod-rows">${items.map(m=>renderModuleRow(m,m.id===anaId)).join('')}</div>`;
     html+=`</div>`;
   });
   g.innerHTML=html;
   revealScan();
+  tilt3dScan();
 }
 function filterModules(query){
   const g=document.getElementById('modulesGrid');if(!g)return;
@@ -1175,6 +1226,7 @@ function filterModules(query){
      ekranı dolduruyor, kullanıcı eşleşmeleri karşılaştıramıyordu. */
   g.innerHTML=`<div class="module-group"><div class="grp-label">"${sanitizeHtml(query)}" — ${matches.length} sonuç</div><div class="mod-rows">${matches.map(renderModuleRow).join('')}</div></div>`;
   revealScan();
+  tilt3dScan();
 }
 
 function showPartPickerModal(pid) {
@@ -3843,7 +3895,8 @@ function trfField(key,label,ph,prefix,hint){
   return '<div class="form-group"><label for="trf_'+key+'">'+label+'</label><div class="input-wrapper"><span class="input-prefix">'+(prefix||'₺')+'</span><input type="number" id="trf_'+key+'" placeholder="'+ph+'" min="0" value="'+v+'"/></div>'+(hint?'<p class="field-hint">'+hint+'</p>':'')+'</div>';
 }
 function trfSaveVisible(){
-  ['aracDeger','onarim','km','yas','gelir','gunSayisi','sakatlik','merhumGelir','destekOran','merhumYas','kusur'].forEach(function(k){
+  ['aracDeger','onarim','km','yas','gelir','gunSayisi','sakatlik','merhumGelir','destekOran','merhumYas','kusur',
+   'mahrumiyetGun','gunlukKira','cekici','otopark','ekspertiz','ekipman','kazancKaybi'].forEach(function(k){
     const el=document.getElementById('trf_'+k);
     if(el&&el.value!=='')trfState.v[k]=parseFloat(el.value);
   });
@@ -3852,7 +3905,7 @@ function trfSaveVisible(){
 function renderTrafikWizard(){
   const w=document.getElementById('trafikWizardWrapper');if(!w)return;
   const cur=trfCur(),a=trfState.a;
-  let h='<div class="calc-page-header"><div class="step-number-badge">Trafik Kazası Hukuku</div><h2>Trafik Kazası Hesaplama</h2><p>Birkaç soruyla, kazanızda hangi tazminat kalemlerine hak kazandığınızı ve tahmini tutarları birlikte hesaplayalım.</p></div>';
+  let h=road3dHtml('Trafik Kazası Hesaplama')+'<div class="calc-page-header"><div class="step-number-badge">Trafik Kazası Hukuku</div><h2>Trafik Kazası Hesaplama</h2><p>Birkaç soruyla, kazanızda hangi tazminat kalemlerine hak kazandığınızı ve tahmini tutarları birlikte hesaplayalım.</p></div>';
   h+='<div class="wz-card">'+trfProgress();
 
   if(cur==='durum'){
@@ -3875,6 +3928,25 @@ function renderTrafikWizard(){
     h+=trfField('km','Araç kilometresi','Örn: 60000','km');
     h+=trfField('yas','Araç yaşı','Örn: 4','yaş');
     h+='</div>';
+    /* Maddi zarar yalnızca onarım ve değer kaybından ibaret değil: aracın
+       kullanılamadığı günler, çekici, otopark, ekspertiz ve araçtaki eşya
+       da istenebilir. Bu kalemler sorulmadığı için hesap gerçek zararın
+       belirgin biçimde altında kalıyordu. */
+    h+='<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Bunların dışında masrafınız oldu mu?</p><div class="wz-opts">';
+    h+=trfOpt('ekMasraf','evet','Evet, başka masraflarım da var','Çekici, otopark, ekspertiz, kiralık araç, araçtaki eşya');
+    h+=trfOpt('ekMasraf','hayir','Hayır, sadece araç hasarı var');
+    h+='</div>';
+    if(a.ekMasraf==='evet'){
+      h+='<div class="form-grid" style="margin-top:18px">';
+      h+=trfField('mahrumiyetGun','Aracınızı kaç gün kullanamadınız?','Örn: 18','gün','Serviste veya çekilmiş hâlde geçen süre');
+      h+=trfField('gunlukKira','Günlük kiralık araç bedeli (TL)','Boş bırakabilirsiniz','₺','Boş bırakırsanız aracınızın değerine göre emsal bedelden hesaplarız');
+      h+=trfField('cekici','Çekici / kurtarma bedeli (TL)','Örn: 4500','₺');
+      h+=trfField('otopark','Otopark / muhafaza bedeli (TL)','Örn: 2000','₺');
+      h+=trfField('ekspertiz','Ekspertiz veya rapor ücreti (TL)','Örn: 3000','₺');
+      h+=trfField('ekipman','Araçtaki eşya / ek ekipman zararı (TL)','Örn: 8000','₺','Bagajdaki eşya, taksi tepe lambası, çekici demiri gibi');
+      h+=trfField('kazancKaybi','Aracı işte kullanıyorsanız kazanç kaybı (TL)','Örn: 25000','₺','Ticari taksi, kamyonet, kurye aracı gibi hâllerde');
+      h+='</div>';
+    }
   }
 
   else if(cur==='yaralanma'){
@@ -3931,16 +4003,51 @@ function trfHesapla(){
   const a=trfState.a,v=trfState.v,rows=[];let brut=0;
   const kusur=Math.min(100,Math.max(0,v.kusur||0));
 
+  let pertUyari=false;
   if(a.aracHasar==='evet'&&v.aracDeger){
-    const kmF=(KM_FACTORS.find(function(x){return (v.km||0)<=x.max;})||KM_FACTORS[KM_FACTORS.length-1]).factor;
-    const yasF=(AGE_FACTORS.find(function(x){return (v.yas||0)<=x.max;})||AGE_FACTORS[AGE_FACTORS.length-1]).factor;
     const onarim=v.onarim||0;
-    const oran=Math.min(0.30,Math.max(0.03,(onarim/v.aracDeger)*0.9));
-    const dk=Math.round(v.aracDeger*oran*kmF*yasF);
     rows.push({label:'Araç piyasa değeri',value:fmt(v.aracDeger)});
-    if(onarim)rows.push({label:'Onarım / hasar bedeli',value:fmt(onarim)});
-    rows.push({label:'Araç değer kaybı (tahmini)',value:fmt(dk),highlight:true});
-    brut+=dk+onarim;
+    /* Onarım bedeli rayiç bedelin %70'ini aşarsa araç pert kaydına geçer.
+       O noktadan sonra değer kaybı istenemez; talep "rayiç bedel eksi
+       sovtaj"a döner. Eskiden bu ayrım yapılmadığı için pert araçlarda
+       hesap hem yanlış hem de gerçeğin çok altında çıkıyordu. */
+    if(onarim&&onarim>=v.aracDeger*0.7){
+      pertUyari=true;
+      const sovtaj=Math.round(v.aracDeger*0.15);
+      const pertBedel=v.aracDeger-sovtaj;
+      rows.push({label:'Onarım bedeli (piyasa değerinin %'+Math.round(onarim/v.aracDeger*100)+"'i)",value:fmt(onarim)});
+      rows.push({label:'Tahmini sovtaj (hurda) değeri',value:'-'+fmt(sovtaj)});
+      rows.push({label:'Pert bedeli (rayiç − sovtaj)',value:fmt(pertBedel),highlight:true});
+      brut+=pertBedel;
+    }else{
+      const kmF=(KM_FACTORS.find(function(x){return (v.km||0)<=x.max;})||KM_FACTORS[KM_FACTORS.length-1]).factor;
+      const yasF=(AGE_FACTORS.find(function(x){return (v.yas||0)<=x.max;})||AGE_FACTORS[AGE_FACTORS.length-1]).factor;
+      const oran=Math.min(0.30,Math.max(0.03,(onarim/v.aracDeger)*0.9));
+      const dk=Math.round(v.aracDeger*oran*kmF*yasF);
+      if(onarim)rows.push({label:'Onarım / hasar bedeli',value:fmt(onarim)});
+      rows.push({label:'Araç değer kaybı (tahmini)',value:fmt(dk),highlight:true});
+      brut+=dk+onarim;
+    }
+  }
+
+  /* Aracın kullanılamadığı günler ve kazaya bağlı zorunlu giderler de
+     maddi zararın parçası — ayrı ayrı istenebiliyor. */
+  if(a.ekMasraf==='evet'){
+    const gun=v.mahrumiyetGun||0;
+    if(gun>0){
+      const gunluk=v.gunlukKira||(v.aracDeger?calcDailyRentalEstimate(v.aracDeger):0);
+      const mahrum=Math.round(gun*gunluk);
+      if(mahrum){
+        rows.push({label:'İkame araç / mahrumiyet ('+gun+' gün × '+fmt(gunluk)+')',value:fmt(mahrum),highlight:true});
+        brut+=mahrum;
+      }
+    }
+    [['cekici','Çekici / kurtarma bedeli'],['otopark','Otopark / muhafaza bedeli'],
+     ['ekspertiz','Ekspertiz / rapor ücreti'],['ekipman','Araçtaki eşya ve ek ekipman zararı'],
+     ['kazancKaybi','Araçtan mahrum kalma kazanç kaybı']].forEach(function(p){
+      const tutar=v[p[0]]||0;
+      if(tutar>0){rows.push({label:p[1],value:fmt(tutar)});brut+=tutar;}
+    });
   }
 
   if(a.durum==='yaralanma'&&v.gelir){
@@ -3967,11 +4074,11 @@ function trfHesapla(){
   }
 
   const indirim=Math.round(brut*kusur/100),net=brut-indirim;
-  rows.push({label:'Toplam brüt tazminat',value:fmt(brut)});
-  if(kusur>0)rows.push({label:'Kusur indirimi (%'+kusur+')',value:'-'+fmt(indirim)});
+  rows.push({label:'Toplam brüt zarar',value:fmt(brut)});
+  if(kusur>0)rows.push({label:'Kendi kusurunuz nedeniyle indirim (%'+kusur+')',value:'-'+fmt(indirim)});
   rows.push({label:'Tahmini net tazminat',value:fmt(net),highlight:true});
 
-  state.trfResult={rows:rows,total:net,brut:brut,kusur:kusur,a:a};
+  state.trfResult={rows:rows,total:net,brut:brut,kusur:kusur,a:a,pert:pertUyari};
   state.pendingType='trafikSihirbaz';
   state.pendingResult={total:net,rows:rows,trafik:state.trfResult};
   state.pendingExtra='Trafik kazası · Durum: '+(a.durum||'-')+' · Araç hasarı: '+(a.aracHasar||'-')+' · Kusur: %'+kusur;
@@ -3988,7 +4095,10 @@ function showTrafikResult(){
   h+='<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>';
   r.rows.forEach(function(row){h+='<div class="isc-breakdown-row"><span>'+row.label+'</span><span class="'+(row.highlight?'isc-amount':'')+'">'+row.value+'</span></div>';});
   h+='</div>';
-  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Tutarlar tahminidir; kesin tutar bilirkişi raporu ve mahkeme kararına göre değişir.</p></div>';
+  if(r.pert){
+    h+='<div class="tani-dikkat" style="margin-bottom:16px"><li style="list-style:none">Onarım bedeli aracınızın piyasa değerinin <strong>%70\'ini aştığı için araç pert sınırında</strong>. Bu durumda değer kaybı istenemez; talep <strong>rayiç bedel eksi sovtaj</strong>a döner. Sovtaj değerini %15 varsaydık — gerçek teklif farklı çıkarsa tutar da değişir. <a href="/pert-arac-bedeli-hesaplama" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Pert hesaplama aracıyla</a> ayrıntılı bakabilirsiniz.</li></div>';
+  }
+  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg><p>Tutarlar tahminidir; kesin tutar bilirkişi raporu ve mahkeme kararına göre değişir. Dava açmadan önce karşı tarafın zorunlu trafik sigortasına <strong>yazılı başvuru</strong> yapılması gerekir (KTK m.97).</p></div>';
   h+=renderCompareWidget(Math.round(r.total*0.8),Math.round(r.total*1.2));
   h+='<div class="cmp-actions" style="margin-top:16px"><a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+whatsappLink('Merhaba, trafik kazası tazminat hesaplaması yaptım. Tahmini tutar: '+fmt(r.total)+'. Dosyamı değerlendirmenizi istiyorum.')+'"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Dosyamı Değerlendirin</a></div>';
   h+='<div style="text-align:center;margin-top:18px"><a style="font-size:12.5px;color:var(--text-muted);text-decoration:none;cursor:pointer;opacity:.7" onclick="openTrafikWizard()">Yeni hesaplama yap</a></div>';
@@ -4265,6 +4375,8 @@ function revealScan(){
   document.querySelectorAll(RV_SELECTORS).forEach(function(el){
     if(el.classList.contains('rv'))return;
     el.classList.add('rv');
+    /* Başlıklar sayfaya girerken yatay eksende dönerek yerleşsin. */
+    if(el.matches('.section-title,.grp-label'))el.classList.add('rv3d');
     /* Zaten ekranda olan öğe hiç gizlenmiyor: açılışta içerik bir an
        kaybolmuyor. */
     const r=el.getBoundingClientRect();
@@ -4280,4 +4392,1256 @@ function revealScan(){
     if(d)el.style.transitionDelay=(d/1000)+'s';
   });
   revealSweep();
+}
+
+/* =====================================================================
+   DURUM TESPİTİ — "akinatör" mantığında çalışan tahmin motoru
+   Kullanıcının hangi araca gitmesi gerektiğini bilmediği durum için.
+   Her yanıt, olası senaryoların olasılığını Bayes kuralıyla günceller;
+   sıradaki soru sabit değil — kalan belirsizliği en çok azaltan soru
+   (bilgi kazancı / entropi düşüşü) seçilir. Bu yüzden iki kullanıcı aynı
+   soruları görmez, akış verilen yanıta göre kısalır. Motor emin olduğunda
+   tahminini söyler; kullanıcı "hayır" derse o senaryo elenir ve kalanlarla
+   devam eder. Tahmin yanılabilir — bu yüzden sonuçta gerekçe de gösterilir.
+   ===================================================================== */
+
+/* Senaryolar (hipotezler). prior: bu tür dosyaların pratikte görülme sıklığı. */
+const TANI_H = [
+/* ---------------- TRAFİK ---------------- */
+{id:"t_karsi",alan:"trafik",prior:1.5,
+ ad:"Maddi hasarlı bir trafik kazası geçirdiniz ve kusur ağırlıklı olarak karşı tarafta",
+ ozet:"Zararınızı karşı tarafın zorunlu trafik sigortasından, limiti aşan kısmı için de kusurlu sürücü ve araç işleteninden isteyebilirsiniz.",
+ haklar:[
+  {b:"Araç değer kaybı",a:"Araç onarılsa bile ikinci el değerinde kalıcı bir düşüş olur. Değişen ve boyanan parçalara, aracın yaşına ve kilometresine göre hesaplanır."},
+  {b:"Onarım (hasar) bedeli",a:"Yedek parça ve işçilik. Onarımı henüz yaptırmadıysanız fatura yerine servis/eksper raporu da yeterlidir."},
+  {b:"İkame araç (mahrumiyet) bedeli",a:"Aracınızın serviste kaldığı gün sayısı × emsal günlük kiralama bedeli."},
+  {b:"Yan masraflar",a:"Çekici, otopark, ekspertiz ücreti gibi kazaya bağlı zorunlu giderler."}
+ ],
+ dikkat:[
+  "Sigortaya <strong>yazılı başvuru</strong> yapmadan dava açmayın: KTK m.97 uyarınca önce sigortacıya başvurulması gerekir, aksi hâlde dava usulden reddedilebilir.",
+  "Talebinizden <strong>kendi kusur oranınız kadar indirim</strong> yapılır. Kusursuzsanız tam tutarı isteyebilirsiniz.",
+  "Zorunlu trafik sigortası teminat limitini aşan zarar için sürücü ve işletene karşı ayrıca talep gerekir."
+ ],
+ mevzuat:["KTK m.85, 91, 97","KTK m.109 — 2 yıl / 10 yıl zamanaşımı","TBK m.49-51 (haksız fiil)"],
+ sure:{gun:730,ad:"Kaza tarihinden itibaren 2 yıl (KTK m.109)",olay:"Kaza tarihi"},
+ araclar:["trafikSihirbaz","arac","mahrumiyet","maddi"]},
+
+{id:"t_ben",alan:"trafik",prior:0.7,
+ ad:"Maddi hasarlı bir kaza geçirdiniz ancak kusur ağırlıklı olarak sizde",
+ ozet:"Karşı taraftan tazminat isteyemezsiniz; buradaki asıl konu kendi zararınızı kasko poliçenizden karşılamak ve karşı tarafın talebinin ölçüsünü denetlemek.",
+ haklar:[
+  {b:"Kasko hasar ödemesi",a:"Kasko poliçeniz varsa kendi aracınızın onarımı poliçe kapsamında ödenir. Muafiyet ve hasarsızlık indirimi kaybını hesaba katın."},
+  {b:"Karşı tarafın talebini denetleme",a:"Karşı tarafın istediği değer kaybı ve onarım tutarı fahiş olabilir; emsal hesapla karşılaştırmak ödemenizi düşürür."},
+  {b:"Kusur oranının paylaştırılması",a:"Tek taraflı kusur nadirdir. Kusurunuz %100 değil de %75 ise ödemeniz de o oranda düşer."}
+ ],
+ dikkat:[
+  "Kusur oranı tutanakla kesinleşmez; itiraz edip <strong>bilirkişi incelemesi</strong> isteyebilirsiniz.",
+  "Kaskodan yapılan ödeme sonrası sigortacı, kusurlu tarafa rücu eder — ödeme yapıldı diye dosya kapanmaz."
+ ],
+ mevzuat:["KTK m.85","TTK m.1472 (halefiyet / rücu)","Kara Yolları Motorlu Araçlar Zorunlu Mali Sorumluluk Sigortası Genel Şartları"],
+ araclar:["kasko","kusur","hasar"]},
+
+{id:"t_pert",alan:"trafik",prior:0.8,
+ ad:"Aracınız kazada pert (ağır hasar) oldu",
+ ozet:"Pert hâlinde onarım bedeli değil, aracın kaza öncesi rayiç değeri ile hurda (sovtaj) değeri arasındaki fark ödenir.",
+ haklar:[
+  {b:"Rayiç bedel − sovtaj",a:"Kaza öncesi piyasa değerinden hurda değeri düşülerek ödeme yapılır. Aracı sigortacıya bırakırsanız tam rayiç bedel istenebilir."},
+  {b:"Rayiç bedele itiraz",a:"Sigortacının belirlediği rayiç genellikle piyasanın altındadır; emsal ilanlarla itiraz edilebilir."},
+  {b:"Pert kaydına dikkat",a:"Onarım bedeli rayiç bedelin yaklaşık %70'ini aşarsa araç pert kaydına geçer; bu kayıt aracın satılabilirliğini kalıcı olarak düşürür."}
+ ],
+ dikkat:[
+  "Pert kaydı girildikten sonra ayrıca değer kaybı istenemez — talep <strong>rayiç bedele</strong> döner.",
+  "Trafikten çekme / hurda belgesi işlemlerini ödeme kesinleşmeden yapmayın."
+ ],
+ mevzuat:["KTK m.85, 91","Kasko Sigortası Genel Şartları A.5"],
+ sure:{gun:730,ad:"Kaza tarihinden itibaren 2 yıl (KTK m.109)",olay:"Kaza tarihi"},
+ araclar:["pertBedeli","kasko","maddi"]},
+
+{id:"t_kusur",alan:"trafik",prior:0.9,
+ ad:"Kazada kusurun kimde olduğu tartışmalı — önce kusur oranının belirlenmesi gerekiyor",
+ ozet:"Tazminat kalemlerinin tamamı kusur oranıyla çarpılır. Bu yüzden sıra önce kusurun tespitinde: tutanak son söz değildir.",
+ haklar:[
+  {b:"Kusur oranının tespiti",a:"Kaza anlatımı, çarpma noktaları ve trafik kurallarına göre kusur dağılımı belirlenir."},
+  {b:"Tutanağa itiraz",a:"Kaza tespit tutanağındaki kusur değerlendirmesi bağlayıcı değildir; sigorta tahkim veya mahkeme aşamasında bilirkişi ile değişebilir."},
+  {b:"Kusur düştükçe tazminat artar",a:"Kusurunuz %50'den %25'e inerse alacağınız tutar belirgin biçimde yükselir."}
+ ],
+ dikkat:[
+  "Kusur oranınızı bilmeden yapılan hesaplar yanıltıcı olur; önce kusuru netleştirin.",
+  "Tarafların ortak kusuru sık görülür — %100 kusursuzluk iddiası çoğu dosyada kabul görmez."
+ ],
+ mevzuat:["KTK m.84-85","TBK m.51-52 (kusurun paylaştırılması)"],
+ araclar:["kusur","trafikSihirbaz"]},
+
+{id:"t_yara",alan:"trafik",prior:1.1,
+ ad:"Trafik kazasında yaralandınız — dosyanızda araç kalemlerinin yanında bedeni tazminatlar da var",
+ ozet:"Yaralanma varsa tazminat sadece araçla sınırlı kalmaz: iyileşme sürecindeki gelir kaybı, kalıcı sakatlık ve manevi tazminat da talep edilir.",
+ haklar:[
+  {b:"Geçici iş göremezlik",a:"Doktor raporuyla belgelenen istirahat süresindeki kazanç kaybı."},
+  {b:"Sürekli sakatlık (iş gücü kaybı)",a:"Kalıcı maluliyet oranı varsa, çalışma hayatınızın sonuna kadarki kazanç kaybı peşin değere indirgenerek hesaplanır."},
+  {b:"Tedavi ve bakım giderleri",a:"Hastane, ilaç, protez, fizik tedavi ve refakatçi giderleri."},
+  {b:"Manevi tazminat",a:"Bedensel zararın yol açtığı acı ve elem karşılığı; kusur oranı ve yaralanmanın ağırlığına göre takdir edilir."}
+ ],
+ dikkat:[
+  "Maluliyet oranı için <strong>tam teşekküllü hastane raporu</strong> şart; bu rapor dosyanın en belirleyici belgesidir.",
+  "Tedavi giderleri bakımından zorunlu trafik sigortası yanında SGK'nın sorumluluğu da gündeme gelir.",
+  "Manevi tazminat sigortadan değil, <strong>kusurlu kişiden</strong> istenir (zorunlu trafik sigortası manevi zararı karşılamaz)."
+ ],
+ mevzuat:["TBK m.54 (bedensel zarar)","TBK m.56 (manevi tazminat)","KTK m.90-92"],
+ sure:{gun:730,ad:"Kaza tarihinden itibaren 2 yıl (KTK m.109); ceza davası varsa uzayabilir",olay:"Kaza tarihi"},
+ araclar:["trafikSihirbaz","gecici","sakatlik","manevi"]},
+
+{id:"t_vefat",alan:"trafik",prior:0.6,
+ ad:"Trafik kazasında bir yakınınızı kaybettiniz",
+ ozet:"Vefat hâlinde talep, merhumun desteğinden yoksun kalan yakınlara ait bağımsız bir haktır; mirasçılık payından ayrıdır.",
+ haklar:[
+  {b:"Destekten yoksun kalma tazminatı",a:"Merhumun size sağladığı desteğin, kalan yaşam süresi boyunca peşin değere indirgenmiş karşılığı."},
+  {b:"Yakınların manevi tazminatı",a:"Eş, çocuk, anne-baba ve bazı hâllerde kardeş için ayrı ayrı talep edilebilir."},
+  {b:"Cenaze ve defin giderleri",a:"Belgelenen zorunlu giderler."}
+ ],
+ dikkat:[
+  "Destekten yoksun kalma tazminatı <strong>mirasa dâhil değildir</strong>; her destek göreni kendi talebini açar.",
+  "Merhumun kusuru varsa tazminattan o oranda indirim yapılır.",
+  "Tazminat, resmî kazancın yanında fiilen elde edilen gelir de dikkate alınarak hesaplanır."
+ ],
+ mevzuat:["TBK m.53 (ölüm hâlinde zarar)","TBK m.56 (manevi tazminat)","KTK m.90-92"],
+ sure:{gun:730,ad:"Vefat tarihinden itibaren 2 yıl (KTK m.109)",olay:"Vefat tarihi"},
+ araclar:["yoksun","manevi","kusur"]},
+
+{id:"t_ceza",alan:"trafik",prior:0.55,
+ ad:"Size trafik idari para cezası yazıldı ve buna itiraz etmek istiyorsunuz",
+ ozet:"Trafik cezasına itiraz, tazminat değil idari yaptırım konusudur; süre çok kısa ve kaçırılırsa ceza kesinleşir.",
+ haklar:[
+  {b:"Sulh ceza hâkimliğine itiraz",a:"Tebliğ veya tutanak tarihinden itibaren 15 gün içinde başvurulur; harç alınmaz."},
+  {b:"Erken ödeme indirimi",a:"İtiraz etmeyecekseniz ilk 1 ay içinde ödeme %25 indirim sağlar; itiraz reddedilirse indirim kaybedilir."},
+  {b:"Tutanağın usul denetimi",a:"Tutanakta plaka, yer, saat, kural maddesi ve tespit yönteminde hata varsa ceza kaldırılabilir."}
+ ],
+ dikkat:[
+  "<strong>15 günlük süre hak düşürücüdür</strong> — geçtikten sonra itiraz incelenmez.",
+  "İtiraz, ödemeyi kendiliğinden durdurmaz; gecikme zammı işlemeye devam eder."
+ ],
+ mevzuat:["5326 sayılı Kabahatler Kanunu m.27-28","KTK m.116"],
+ sure:{gun:15,ad:"Tebliğden itibaren 15 gün (Kabahatler Kanunu m.27)",olay:"Cezanın tebliğ / tutanak tarihi"},
+ araclar:["trafikCezasi"]},
+
+/* ---------------- İŞ HUKUKU ---------------- */
+{id:"i_cikarildi",alan:"is",prior:1.6,
+ ad:"İşveren iş sözleşmenizi feshetti (işten çıkarıldınız) — kıdem ve ihbar tazminatı gündemde",
+ ozet:"Fesih işverenden geldiyse, haklı sebep (m.25/II) ileri sürülmedikçe kıdem ve ihbar tazminatının ikisine de hak kazanılır.",
+ haklar:[
+  {b:"Kıdem tazminatı",a:"En az 1 yıl çalışma şartıyla, her tam yıl için 30 günlük giydirilmiş brüt ücret. Yasal tavanla sınırlıdır."},
+  {b:"İhbar tazminatı",a:"Kıdeme göre 2-8 hafta. Fesih işverenden geldiği için burada hak kazanılır."},
+  {b:"Kullanılmayan yıllık izin ücreti",a:"Kıdem şartı yok; hak edilip kullanılmayan tüm izin günleri ödenir."},
+  {b:"Fazla mesai, hafta tatili, resmî tatil alacakları",a:"Belgelenebildiği ölçüde son 5 yıl için istenebilir."}
+ ],
+ dikkat:[
+  "Dava açmadan önce <strong>arabuluculuk zorunludur</strong> (7036 sayılı Kanun m.3) — bu adım atlanırsa dava usulden reddedilir.",
+  "İşe iade de düşünüyorsanız süre çok kısa: fesih bildiriminden itibaren <strong>1 ay</strong> içinde arabulucuya başvurmalısınız.",
+  "İşverenin m.25/II (ahlak ve iyi niyet kurallarına aykırılık) iddiası varsa kıdem/ihbar tartışmalı hâle gelir; iddiayı ispat yükü işverendedir."
+ ],
+ mevzuat:["4857 sayılı İş Kanunu m.17 (ihbar)","1475 sayılı Kanun m.14 (kıdem)","4857 m.59 (izin ücreti)","7036 m.3 (arabuluculuk)"],
+ sure:{gun:1825,ad:"Kıdem ve ihbar tazminatında 5 yıllık zamanaşımı (İş K. Ek m.3)",olay:"Fesih tarihi"},
+ araclar:["isHukukuSihirbaz","iscilik","iseIade"]},
+
+{id:"i_istifa",alan:"is",prior:0.9,
+ ad:"İşten kendi isteğinizle ayrıldınız ve ortada haklı bir fesih sebebi yok",
+ ozet:"Bu durumda kıdem ve ihbar tazminatı doğmaz; ancak birikmiş ücret ve izin alacaklarınız yine ödenmek zorundadır.",
+ haklar:[
+  {b:"Kullanılmayan yıllık izin ücreti",a:"İstifa etseniz de ödenir; kıdem şartı yoktur."},
+  {b:"Ödenmeyen ücret, fazla mesai, tatil alacakları",a:"Ayrılma şekli bu alacakları etkilemez."},
+  {b:"Varsa prim, ikramiye ve yol/yemek alacakları",a:"Sözleşme veya iş yeri uygulamasıyla kararlaştırılmışsa talep edilebilir."}
+ ],
+ dikkat:[
+  "<strong>Kıdem tazminatı yok</strong>: istifa, kanunda sayılan hâller (askerlik, evlilik nedeniyle kadın işçi, emeklilik/yaş dışı şartların tamamlanması) dışında kıdeme hak kazandırmaz.",
+  "<strong>İhbar tazminatı da yok</strong> — aksine ihbar süresine uymadan ayrıldıysanız işveren sizden ihbar tazminatı isteyebilir.",
+  "Ayrılma sebebiniz ücretin ödenmemesi, sigortanın eksik yatması veya mobbing ise durum tamamen değişir; bunu mutlaka değerlendirin."
+ ],
+ mevzuat:["4857 m.17","1475 m.14","4857 m.59"],
+ sure:{gun:1825,ad:"Ücret alacaklarında 5 yıllık zamanaşımı",olay:"Ayrılma tarihi"},
+ araclar:["iscilik","isHukukuSihirbaz","fesih"]},
+
+{id:"i_hakli",alan:"is",prior:1.2,
+ ad:"İşten siz ayrıldınız ama haklı bir sebebiniz var — kıdem tazminatı hakkınız duruyor",
+ ozet:"Ücretin ödenmemesi, sigortanın eksik/hiç yatmaması, mobbing, hakaret veya ağır çalışma koşulları haklı fesih sebebidir. Haklı fesihte kıdem tazminatı hakkı korunur, ihbar tazminatı doğmaz.",
+ haklar:[
+  {b:"Kıdem tazminatı",a:"1 yıllık çalışma şartıyla, haklı fesihte de tam olarak istenir."},
+  {b:"Ödenmeyen ücret / fazla mesai / tatil alacakları",a:"Fesih sebebinizi oluşturan alacakların kendisi de ayrıca talep edilir."},
+  {b:"Kullanılmayan yıllık izin ücreti",a:"Kıdem şartı olmadan ödenir."},
+  {b:"Varsa manevi tazminat",a:"Mobbing, hakaret veya cinsel taciz gibi kişilik haklarına saldırı hâllerinde ayrıca istenebilir."}
+ ],
+ dikkat:[
+  "<strong>İhbar tazminatı istenemez</strong>: sözleşmeyi siz sona erdirdiğiniz için ihbar tazminatı yalnızca karşı tarafa aittir.",
+  "Haklı fesih hakkı, sebebi öğrendiğinizden itibaren <strong>6 iş günü</strong> içinde kullanılmalıdır (m.26) — ücretin ödenmemesi gibi süregelen ihlallerde bu süre her ay yenilenir.",
+  "Fesih sebebinizi <strong>yazılı</strong> olarak bildirin; sözlü ayrılma sonradan istifa olarak yorumlanabilir.",
+  "Ödenmeyen ücret, banka kayıtları ve tanık beyanıyla ispatlanır — belgelerinizi şimdiden toplayın."
+ ],
+ mevzuat:["4857 m.24 (işçinin haklı nedenle derhal feshi)","4857 m.26 (6 iş günü)","1475 m.14 (kıdem)"],
+ sure:{gun:1825,ad:"Kıdem tazminatında 5 yıllık zamanaşımı",olay:"Fesih tarihi"},
+ araclar:["fesih","iscilik","isHukukuSihirbaz"]},
+
+{id:"i_iade",alan:"is",prior:0.85,
+ ad:"İşten çıkarıldınız ve işe iade davası şartlarını taşıyor olabilirsiniz",
+ ozet:"İşe iade, geçerli bir sebep gösterilmeden yapılan feshe karşı en güçlü yol: kazanılırsa boşta geçen süre ücreti ve işe başlatmama tazminatı da gelir.",
+ haklar:[
+  {b:"İşe iade kararı",a:"Fesih geçersiz sayılır; işveren 1 ay içinde işe başlatmazsa tazminat ödemek zorunda kalır."},
+  {b:"Boşta geçen süre ücreti",a:"En çok 4 aya kadar ücret ve diğer haklar."},
+  {b:"İşe başlatmama tazminatı",a:"Kıdeme göre 4-8 aylık ücret."},
+  {b:"Kıdem ve ihbar tazminatı",a:"İşe iade talebiyle birlikte veya ayrıca istenebilir."}
+ ],
+ dikkat:[
+  "Şartlar: iş yerinde <strong>en az 30 işçi</strong>, <strong>en az 6 ay kıdem</strong>, belirsiz süreli sözleşme ve işveren kaynaklı fesih.",
+  "<strong>1 aylık süre hak düşürücüdür</strong>: fesih bildiriminin tebliğinden itibaren 1 ay içinde arabulucuya başvurulmalı; anlaşma olmazsa 2 hafta içinde dava açılmalıdır.",
+  "İşveren vekili niteliğindeki üst düzey yöneticiler bu güvenceden yararlanamaz."
+ ],
+ mevzuat:["4857 m.18-21","7036 m.3, m.11"],
+ sure:{gun:30,ad:"Fesih bildiriminden itibaren 1 ay içinde arabulucuya başvuru (4857 m.20)",olay:"Fesih bildiriminin tebliği"},
+ araclar:["iseIade","iseIadeTazminat","isHukukuSihirbaz"]},
+
+{id:"i_kaza",alan:"is",prior:0.8,
+ ad:"İş kazası geçirdiniz veya meslek hastalığı tespit edildi",
+ ozet:"Burada iki ayrı hat var: SGK'nın sağladığı gelir/ödenekler ve bunları aşan zarar için işverene karşı açılan tazminat davası.",
+ haklar:[
+  {b:"SGK geçici iş göremezlik ödeneği",a:"İstirahat süresi boyunca SGK tarafından ödenir."},
+  {b:"Sürekli iş göremezlik geliri",a:"Maluliyet oranı %10 ve üzeriyse SGK gelir bağlar."},
+  {b:"İşverenden maddi tazminat",a:"SGK ödemelerini aşan kazanç kaybı; işverenin iş sağlığı ve güvenliği yükümlülüğünü ihlali ölçüsünde."},
+  {b:"Manevi tazminat",a:"İşçi için; vefat hâlinde yakınları için de talep edilebilir."}
+ ],
+ dikkat:[
+  "Kaza <strong>3 iş günü</strong> içinde SGK'ya bildirilmelidir; bildirilmediyse tutanak, tanık ve hastane kayıtlarıyla iş kazası tespiti davası açılabilir.",
+  "İşveren gerekli eğitim ve koruyucu ekipmanı sağladığını ispatlamakla yükümlüdür.",
+  "İşçinin kendi kusuru varsa tazminattan indirim yapılır ancak sorumluluk tamamen ortadan kalkmaz."
+ ],
+ mevzuat:["5510 sayılı Kanun m.13, 21","6331 sayılı Kanun m.4","TBK m.417 (işverenin özen borcu)"],
+ sure:{gun:3650,ad:"İşverene karşı tazminatta 10 yıllık zamanaşımı (TBK m.146)",olay:"Kaza / hastalık tespiti"},
+ araclar:["isKazasi","isgucu","manevi"]},
+
+{id:"i_odenmeyen",alan:"is",prior:1.0,
+ ad:"Hâlâ çalışıyorsunuz ama ücret, fazla mesai veya izin haklarınız gereği gibi ödenmiyor",
+ ozet:"İşten ayrılmadan da alacak talep edilebilir; ayrıca bu ihlaller size haklı fesih hakkı verir — hangi yolu seçeceğiniz tutara göre değişir.",
+ haklar:[
+  {b:"Ödenmeyen ücret ve fazla mesai",a:"Son 5 yıllık dönem için istenebilir; fazla mesai puantaj, mesai kayıtları ve tanıkla ispatlanır."},
+  {b:"Hafta tatili ve resmî tatil alacakları",a:"Çalışıldığı hâlde ödenmemişse zamlı ücret gerekir."},
+  {b:"Haklı fesih seçeneği",a:"Ücret ödenmezse iş görmekten kaçınabilir veya sözleşmeyi haklı sebeple feshedip kıdem tazminatına hak kazanabilirsiniz."},
+  {b:"Eksik sigorta priminin düzeltilmesi",a:"Ücret düşük gösterildiyse hizmet tespiti yoluyla düzeltilebilir."}
+ ],
+ dikkat:[
+  "Ücreti ödenmeyen işçi, ödeme günü geçtikten <strong>20 gün</strong> sonra iş görmekten kaçınabilir; bu grev sayılmaz (m.34).",
+  "Zamanaşımı işlemeye devam eder: <strong>5 yıldan eski</strong> alacaklar kaybedilir.",
+  "İmzalattırılan bordroların gerçeği yansıtmadığını ispat yükü ağırdır — kendi kayıtlarınızı tutun."
+ ],
+ mevzuat:["4857 m.32, 34, 41","4857 m.24/II-e (haklı fesih)","İş K. Ek m.3 (5 yıl)"],
+ araclar:["iscilik","fesih","isHukukuSihirbaz"]},
+
+{id:"i_belirli",alan:"is",prior:0.4,
+ ad:"Belirli süreli iş sözleşmeniz süresi bitmeden feshedildi",
+ ozet:"Belirli süreli sözleşmede kural, sürenin sonuna kadar ücretin ödenmesidir; kıdem/ihbar yerine bakiye süre ücreti gündeme gelir.",
+ haklar:[
+  {b:"Bakiye süre ücreti",a:"Sözleşmenin bitimine kadar kalan sürenin ücreti. Özel okul öğretmenliği gibi 5580 sayılı Kanun kapsamındaki sözleşmelerde sık görülür."},
+  {b:"Kullanılmayan izin ve ödenmeyen ücretler",a:"Sözleşme türü bu alacakları etkilemez."},
+  {b:"Şartları varsa kıdem tazminatı",a:"Sözleşme yenilenerek belirsiz süreliye dönüşmüşse veya haklı fesih varsa kıdem de istenebilir."}
+ ],
+ dikkat:[
+  "Belirli süreli sözleşmede <strong>ihbar tazminatı yoktur</strong>; talep bakiye süre ücretine döner.",
+  "İşçinin bu süre içinde başka iş bularak elde ettiği kazanç, tazminattan mahsup edilebilir.",
+  "Objektif bir neden yoksa üst üste yapılan belirli süreli sözleşmeler <strong>belirsiz süreli</strong> sayılır — bu, kıdem ve ihbar hakkını açar."
+ ],
+ mevzuat:["4857 m.11","TBK m.438","5580 sayılı Kanun m.9"],
+ araclar:["bakiyeSure","iscilik","isHukukuSihirbaz"]},
+
+/* ---------------- VERGİ & GÜMRÜK ---------------- */
+{id:"v_gozetim",alan:"vergi",prior:1.2,
+ ad:"İthalatta gözetim uygulaması nedeniyle beyan ettiğinizden fazla vergi ödediniz",
+ ozet:"Gözetim kıymetine ulaşmak için beyana yurt dışı gider eklenip fazla ödenen KDV ve diğer vergiler, geri verme başvurusuyla iade alınabilir.",
+ haklar:[
+  {b:"Fazla ödenen KDV ve diğer vergilerin iadesi",a:"Gözetim nedeniyle şişirilen kıymet üzerinden hesaplanan verginin, gerçek kıymete isabet eden kısmı aşan bölümü."},
+  {b:"Geri verme (iade) başvurusu",a:"Beyannamenin tescil edildiği gümrük müdürlüğüne yazılı başvuru yapılır."},
+  {b:"Reddedilirse dava",a:"Başvurunun reddi üzerine vergi mahkemesinde iptal davası açılabilir; bu konuda yerleşik lehte içtihat vardır."}
+ ],
+ dikkat:[
+  "<strong>3 yıllık süre</strong> kritik: geri verme başvurusu, vergilerin ödendiği tarihten itibaren 3 yıl içinde yapılmalıdır (GK m.211).",
+  "Beyannamede yurt dışı gider kaleminin gözetim nedeniyle eklendiğinin belgelenmesi gerekir.",
+  "Her beyanname ayrı bir dosyadır; birden fazla ithalatınız varsa hepsi ayrı ayrı değerlendirilir."
+ ],
+ mevzuat:["Gümrük Kanunu m.211 (geri verme / kaldırma)","GK m.24 (gümrük kıymeti)","İthalatta Gözetim Uygulaması Tebliğleri"],
+ sure:{gun:1095,ad:"Ödeme tarihinden itibaren 3 yıl (GK m.211)",olay:"Vergilerin ödendiği tarih"},
+ araclar:["gozetim","vergiIade","ithalatVergi"]},
+
+{id:"v_gumrukceza",alan:"vergi",prior:0.7,
+ ad:"Gümrük idaresi tarafından hakkınızda para cezası / ek tahakkuk yapıldı",
+ ozet:"Gümrük Kanunu m.234 uyarınca eksik tahakkuk eden verginin üç katı ceza kesilir; burada hem itiraz hem uzlaşma yolu var ve süreler kısadır.",
+ haklar:[
+  {b:"İdari itiraz",a:"Tebliğden itibaren 15 gün içinde bir üst makama (gümrük ve dış ticaret bölge müdürlüğü) itiraz edilir."},
+  {b:"Uzlaşma",a:"Uzlaşma talebiyle cezada indirim sağlanabilir; uzlaşılan tutar kesinleşir ve dava yolu kapanır."},
+  {b:"Vergi mahkemesinde dava",a:"İtirazın reddi üzerine 30 gün içinde iptal davası açılabilir."},
+  {b:"Kendiliğinden beyan indirimi",a:"Eksiklik idare tespit etmeden önce beyan edilirse ceza önemli ölçüde düşer."}
+ ],
+ dikkat:[
+  "<strong>15 günlük itiraz süresi</strong> geçerse ceza kesinleşir; sonrasında yalnızca sınırlı yollar kalır.",
+  "Uzlaşma ile dava aynı anda yürütülemez — hangisinin daha avantajlı olduğunu tutarı hesaplayarak karşılaştırın.",
+  "Ceza, verginin kendisinden ayrı olarak tahakkuk eder; ödeme planlaması yaparken ikisini birlikte hesaplayın."
+ ],
+ mevzuat:["Gümrük Kanunu m.234","GK m.242 (itiraz)","GK m.244 (uzlaşma)","İYUK m.7 (30 gün)"],
+ sure:{gun:15,ad:"Tebliğden itibaren 15 gün içinde itiraz (GK m.242)",olay:"Ceza kararının tebliği"},
+ araclar:["gumrukCeza","vergiDavasi","ithalatVergi"]},
+
+{id:"v_vergiceza",alan:"vergi",prior:0.9,
+ ad:"Vergi dairesinden ihbarname / vergi ziyaı cezası aldınız",
+ ozet:"İhbarname elinize geçtiği anda 30 günlük tek bir süre başlar; bu süre içinde dava, uzlaşma ve ceza indirimi arasında seçim yapılır.",
+ haklar:[
+  {b:"Vergi mahkemesinde dava",a:"Tebliğden itibaren 30 gün içinde iptal davası; dava tahsilatı kendiliğinden durdurur."},
+  {b:"Uzlaşma",a:"Tarhiyat sonrası uzlaşma ile vergi ve cezada indirim sağlanabilir."},
+  {b:"VUK m.376 ceza indirimi",a:"Dava açmadan ödenmesi hâlinde vergi ziyaı cezasında yarı oranında indirim uygulanır."},
+  {b:"Pişmanlık ve düzeltme",a:"Beyan edilmeyen bir durum idare tespit etmeden bildirilirse vergi ziyaı cezası uygulanmaz (VUK m.371)."}
+ ],
+ dikkat:[
+  "<strong>30 gün hak düşürücüdür</strong>: geçirilirse tarhiyat kesinleşir ve ödeme emri gelir.",
+  "Uzlaşma talebi dava süresini durdurur; uzlaşma sağlanmazsa kalan süre içinde dava açılabilir.",
+  "Ceza indirimi ile dava birbirini dışlar — hangisinin daha ucuz olduğunu sayıyla karşılaştırın."
+ ],
+ mevzuat:["VUK m.344 (vergi ziyaı)","VUK m.376 (ceza indirimi)","VUK m.371 (pişmanlık)","İYUK m.7 (30 gün)"],
+ sure:{gun:30,ad:"İhbarnamenin tebliğinden itibaren 30 gün (İYUK m.7)",olay:"İhbarnamenin tebliği"},
+ araclar:["vergiZiyai","vergiDavasi","vergiIade"]},
+
+{id:"v_iade",alan:"vergi",prior:1.0,
+ ad:"Fazla veya yersiz ödediğiniz bir vergiyi geri almak istiyorsunuz",
+ ozet:"Hatalı ya da fazla ödenen vergi, dava açılmasına gerek olmadan düzeltme talebiyle geri istenebilir; reddedilirse şikayet ve dava yolu açılır.",
+ haklar:[
+  {b:"Düzeltme talebi",a:"Vergi dairesine yazılı dilekçeyle başvurulur; vergilendirme veya hesap hatası varsa idare kendiliğinden de düzeltir."},
+  {b:"Şikayet yoluyla başvuru",a:"Düzeltme talebi reddedilirse Hazine ve Maliye Bakanlığı'na şikayet edilir (VUK m.124), ardından dava açılır."},
+  {b:"Faiz",a:"Fazla veya haksız tahsil edilen vergi iade edilirken, düzeltme fişine dayanan iadelerde tecil faizi oranında faiz işletilir."},
+  {b:"İade hakkı doğuran işlemler",a:"İhracat, indirimli orana tabi teslimler ve tevkifat gibi hâllerde KDV iadesi ayrı bir usule tabidir."}
+ ],
+ dikkat:[
+  "<strong>5 yıllık düzeltme zamanaşımı</strong>: vergi alacağının doğduğu yılı izleyen yılbaşından itibaren 5 yıl (VUK m.126).",
+  "Gümrük vergilerinde süre daha kısadır: <strong>3 yıl</strong> (GK m.211).",
+  "İdare 60 gün içinde cevap vermezse talep <strong>zımnen reddedilmiş</strong> sayılır ve dava süresi işlemeye başlar (İYUK m.10)."
+ ],
+ mevzuat:["VUK m.116-126 (vergi hataları ve düzeltme)","VUK m.124 (şikayet)","VUK m.112/4 (faiz)","İYUK m.10-11"],
+ sure:{gun:1825,ad:"Düzeltme zamanaşımı: 5 yıl (VUK m.126)",olay:"Ödeme / tahakkuk yılı"},
+ araclar:["vergiIade","vergiDavasi","gozetim"]},
+
+{id:"v_emlak",alan:"vergi",prior:0.6,
+ ad:"Emlak vergisi, MTV veya tapu harcı gibi bir vergiyi fazla / hatalı ödediniz",
+ ozet:"Bu vergilerde tutar matraha bağlı olduğu için hata sık görülür: yanlış bina/arsa değeri, yanlış oran veya hak edilen muafiyetin uygulanmaması.",
+ haklar:[
+  {b:"Doğru tutarın hesaplanması",a:"Vergi değeri, oran ve büyükşehir farkı üzerinden gerçek tutar bulunur."},
+  {b:"Muafiyet ve indirimlerin uygulanması",a:"Tek meskeni olan emekli, engelli, gazi ve dul-yetimlere sıfır oranlı emlak vergisi uygulanabilir."},
+  {b:"Fazla ödemenin iadesi / mahsubu",a:"Belediyeye ya da vergi dairesine düzeltme dilekçesiyle başvurulur; sonraki dönem borcuna mahsup da istenebilir."}
+ ],
+ dikkat:[
+  "Muafiyet <strong>başvuruya bağlıdır</strong>; geçmiş yıllar için kendiliğinden geri ödenmez, düzeltme talep edilmesi gerekir.",
+  "Tapu harcı gerçek satış bedeli üzerinden hesaplanır; düşük gösterilen bedel sonradan ceza doğurur.",
+  "Emlak vergisinde düzeltme talebi de 5 yıllık zamanaşımına tabidir."
+ ],
+ mevzuat:["1319 sayılı Emlak Vergisi Kanunu m.8, 29","492 sayılı Harçlar Kanunu","VUK m.116-126"],
+ sure:{gun:1825,ad:"Düzeltme zamanaşımı: 5 yıl (VUK m.126)",olay:"Ödeme yılı"},
+ araclar:["emlakVergisi","vergiIade","tapu"]},
+
+/* ---------------- DİĞER ---------------- */
+{id:"d_bosanma",alan:"diger",prior:1.0,
+ ad:"Boşanma sürecindesiniz; tazminat ve mal paylaşımı gündemde",
+ ozet:"Boşanmada üç ayrı kalem birlikte değerlendirilir: maddi-manevi tazminat, nafaka ve edinilmiş mallara katılma alacağı.",
+ haklar:[
+  {b:"Maddi ve manevi tazminat",a:"Boşanmada kusuru daha az olan taraf, yoksun kaldığı menfaatler ve kişilik hakkı ihlali için tazminat isteyebilir."},
+  {b:"Edinilmiş mallara katılma alacağı",a:"2002 sonrası evliliklerde kural: evlilik içinde edinilen malların yarısı. Miras ve bağış gibi kişisel mallar hariçtir."},
+  {b:"Yoksulluk nafakası",a:"Boşanmayla yoksulluğa düşecek eş için süresiz olarak istenebilir."},
+  {b:"İştirak nafakası",a:"Velayeti alan eşe, çocuğun bakım ve eğitim giderleri için ödenir."}
+ ],
+ dikkat:[
+  "Mal rejimi tasfiyesi boşanma davasından <strong>ayrı bir dava</strong>dır; boşanma kesinleşmeden karar verilmez.",
+  "Katılma alacağında zamanaşımı boşanmanın kesinleşmesinden itibaren <strong>10 yıl</strong>dır.",
+  "Kusur belgelemesi tazminatın belirleyicisidir; mesaj, tanık ve rapor gibi delilleri baştan toplayın."
+ ],
+ mevzuat:["TMK m.174 (tazminat)","TMK m.175 (yoksulluk nafakası)","TMK m.182 (iştirak nafakası)","TMK m.202, 231, 236 (mal rejimi)"],
+ araclar:["bosanma","nafaka"]},
+
+{id:"d_nafaka",alan:"diger",prior:0.7,
+ ad:"Konu nafaka: miktarın belirlenmesi, artırılması veya kaldırılması",
+ ozet:"Nafaka tutarı tarafların geliri, çocuğun ihtiyaçları ve hakkaniyet ölçütüne göre belirlenir; şartlar değişirse yeniden düzenlenmesi istenebilir.",
+ haklar:[
+  {b:"İştirak nafakası",a:"Çocuğun eğitim, sağlık ve barınma giderlerine katkı; velayeti almayan eş öder."},
+  {b:"Yoksulluk nafakası",a:"Boşanmayla yoksulluğa düşen eş için; kusuru daha ağır olan eş talep edemez."},
+  {b:"Artırım / azaltım davası",a:"Enflasyon, gelir değişimi veya çocuğun büyümesi nafakanın yeniden belirlenmesini gerektirir."},
+  {b:"Tedbir nafakası",a:"Dava sürerken geçici olarak bağlanır; dava tarihinden itibaren istenebilir."}
+ ],
+ dikkat:[
+  "Nafaka alacaklısının yeniden evlenmesi veya fiilen evli gibi yaşaması <strong>kaldırma sebebi</strong>dir.",
+  "Ödenmeyen nafaka icra takibine konur; <strong>şikayet üzerine tazyik hapsi</strong> uygulanabilir.",
+  "Kendiliğinden artış (ÜFE/TÜFE) kararda yazmıyorsa artırım için dava gerekir."
+ ],
+ mevzuat:["TMK m.169, 175, 176, 182","İİK m.344 (nafaka borcunun ödenmemesi)"],
+ araclar:["nafaka","bosanma"]},
+
+{id:"d_miras",alan:"diger",prior:0.9,
+ ad:"Miras paylaşımı konusunda hakkınızı öğrenmek istiyorsunuz",
+ ozet:"Önce yasal pay oranları, sonra saklı pay ve tenkis konuları değerlendirilir; muris sağlığında mal kaçırdıysa denkleştirme gündeme gelir.",
+ haklar:[
+  {b:"Yasal miras payı",a:"Zümre sistemine göre belirlenir: alt soy, sağ kalan eş, anne-baba ve kardeşler sırasıyla dikkate alınır."},
+  {b:"Saklı pay ve tenkis",a:"Vasiyet veya bağışla saklı payınız ihlal edildiyse tenkis davasıyla azaltılması istenir."},
+  {b:"Muris muvazaası (mirastan mal kaçırma)",a:"Satış gibi gösterilen bağışlar için tapu iptali ve tescil davası açılabilir."},
+  {b:"Ortaklığın giderilmesi",a:"Paylaşımda anlaşma sağlanamazsa izale-i şuyu davasıyla taşınmaz satılır veya aynen bölünür."}
+ ],
+ dikkat:[
+  "Tenkis davası, saklı pay ihlalinin öğrenilmesinden itibaren <strong>1 yıl</strong> ve her hâlde 10 yıl içinde açılmalıdır (TMK m.571).",
+  "Mirasın reddi süresi <strong>3 ay</strong>dır; borç ihtimali varsa bu süreyi kaçırmayın (TMK m.606).",
+  "Muris muvazaası davasında zamanaşımı yoktur, ancak deliller zamanla kaybolur."
+ ],
+ mevzuat:["TMK m.495-501 (yasal mirasçılar)","TMK m.505-506 (saklı pay)","TMK m.560, 571 (tenkis)","TMK m.606 (ret)"],
+ araclar:["miras","tapu"]},
+
+{id:"d_kamulastirma",alan:"diger",prior:0.55,
+ ad:"Taşınmazınıza idare tarafından kamulaştırma yapılmadan el atıldı",
+ ozet:"İdare usulüne uygun kamulaştırma yapmadan taşınmazı fiilen kullanıyor veya imar kararıyla kullanımınızı tamamen kısıtlıyorsa bedelini talep edebilirsiniz.",
+ haklar:[
+  {b:"Fiilî el atmada bedel talebi",a:"Yol, park veya tesis yapılmışsa taşınmazın gerçek değeri istenir; dava adli yargıda görülür."},
+  {b:"Hukukî el atmada bedel",a:"İmar planında kamu hizmetine ayrıldığı hâlde 5 yıl içinde kamulaştırılmayan taşınmazlar için bedel istenebilir."},
+  {b:"Ecrimisil (kullanım bedeli)",a:"İdarenin haksız kullandığı dönem için kira benzeri tazminat."},
+  {b:"Değer artışı ve faiz",a:"Bedel dava tarihindeki değere göre belirlenir; faiz de talep edilir."}
+ ],
+ dikkat:[
+  "Fiilî ve hukukî el atmada <strong>görevli mahkeme farklıdır</strong>; yanlış yargı yolunda açılan dava reddedilir.",
+  "Kamulaştırma bedelinin artırılması davası, tebliğden itibaren <strong>30 gün</strong> içinde açılmalıdır.",
+  "Taşınmazın gerçek değeri için emsal satışlar ve imar durumu belgelenmelidir."
+ ],
+ mevzuat:["2942 sayılı Kamulaştırma Kanunu m.10, 14","Kamulaştırma K. Geçici m.6","TMK m.683, 995"],
+ araclar:["kamulastirma","tapu"]},
+
+{id:"d_tuketici",alan:"diger",prior:0.8,
+ ad:"Aldığınız ürün veya hizmet ayıplı çıktı",
+ ozet:"Ayıplı malda dört seçimlik hak vardır ve tercih tüketiciye aittir; satıcı sizi tek bir yola zorlayamaz.",
+ haklar:[
+  {b:"Ücretsiz onarım",a:"Makul süre (en çok 30 iş günü) içinde yapılmazsa diğer haklara geçilir."},
+  {b:"Ayıpsız yenisiyle değişim",a:"Aynı özellikte ayıpsız ürünle değiştirilmesi istenebilir."},
+  {b:"Bedel iadesi (sözleşmeden dönme)",a:"Ödediğiniz tutarın tamamının iadesi."},
+  {b:"Bedelden indirim",a:"Ürünü kullanmaya devam edip ayıp oranında indirim isteme."}
+ ],
+ dikkat:[
+  "Teslimden itibaren <strong>6 ay içinde</strong> ortaya çıkan ayıbın baştan var olduğu kabul edilir; ispat yükü satıcıdadır.",
+  "Zamanaşımı <strong>2 yıl</strong> (konutlarda 5 yıl); ayıp gizlenmişse zamanaşımı işlemez.",
+  "Parasal sınıra göre önce <strong>Tüketici Hakem Heyeti</strong>ne başvurulması zorunludur; sınırın üzerindeki uyuşmazlıklarda tüketici mahkemesine gidilir."
+ ],
+ mevzuat:["6502 sayılı TKHK m.8-11 (ayıplı mal)","TKHK m.66-72 (hakem heyetleri)","TBK m.227"],
+ sure:{gun:730,ad:"Ayıplı malda 2 yıllık zamanaşımı (TKHK m.12)",olay:"Teslim tarihi"},
+ araclar:["tuketici"]}
+];
+const TANI_MAP={};TANI_H.forEach(function(h){TANI_MAP[h.id]=h;});
+
+/* Sorular. arti: bu yanıt hangi senaryoları güçlendirir, eksi: hangilerini
+   zayıflatır, alan: yanıt doğrudan hukuk alanını belirler. when: soru
+   yalnızca bu koşulda anlamlı (gereksiz soru sorulmasın). */
+const TANI_Q=[
+{id:"alan",t:"Başlayalım — yaşadığınız olay hangisine daha yakın?",
+ h:"Önce hangi alanda olduğunuzu anlamam gerekiyor. Sonraki sorular verdiğiniz yanıta göre değişecek.",
+ o:[
+  {k:"Trafik kazası geçirdim ya da trafik cezası aldım",s:"Araç hasarı, yaralanma, kusur, ceza",alan:"trafik",
+   neden:"Trafik dosyalarında araç kalemleri ile bedeni tazminatlar bambaşka hesaplanıyor; hangisi olduğunu ayırmam gerek."},
+  {k:"İşveren veya iş yerimle sorunum var",s:"İşten çıkarılma, istifa, ödenmeyen alacak, iş kazası",alan:"is",
+   neden:"İş hukukunda neredeyse her şey tek bir ayrıma bağlı: sözleşmeyi kim, hangi sebeple bitirdi."},
+  {k:"Vergi veya gümrükle ilgili bir durumum var",s:"Fazla ödenen vergi, ihbarname, ceza, ithalat",alan:"vergi",
+   neden:"Vergi tarafında süreler çok kısa; elinize hangi belgenin geçtiği yol haritasını tamamen değiştiriyor."},
+  {k:"Aile, miras, taşınmaz veya tüketici konusu",s:"Boşanma, nafaka, miras, arazi, ayıplı ürün",alan:"diger",
+   neden:"Bu alanlarda hesap kalemi tamamen farklı; hangi ilişki içinde olduğunuzu netleştirmem gerek."}
+ ]},
+
+/* --- trafik --- */
+{id:"t_tur",t:"Trafikte tam olarak ne oldu?",when:function(f){return f.alan==="trafik";},
+ h:"Kaza ile idari para cezası bambaşka iki süreç: birinde tazminat, diğerinde 15 günlük itiraz süresi var.",
+ o:[
+  {k:"Kaza oldu, hasar veya yaralanma var",s:"Çarpışma, devrilme, çarpıp kaçma",eksi:["t_ceza"],
+   neden:"Kaza varsa tazminat hattındayız; ceza itirazı devre dışı kalıyor."},
+  {k:"Kaza yok, sadece ceza yazıldı",s:"Hız, kırmızı ışık, park, EDS",arti:["t_ceza"],eksi:["t_karsi","t_ben","t_pert","t_kusur","t_yara","t_vefat"],
+   neden:"Ortada zarar değil idari yaptırım var; burada tek konu 15 gün içinde itiraz."}
+ ]},
+
+{id:"t_sonuc",t:"Kazada yaralanan ya da hayatını kaybeden biri oldu mu?",when:function(f){return f.alan==="trafik"&&f.t_tur===0;},
+ h:"Bu, dosyanın en belirleyici sorusu: yaralanma varsa hesap araç kalemleriyle sınırlı kalmıyor.",
+ o:[
+  {k:"Hayır, sadece araçlarda hasar var",s:"Kimse yaralanmadı",arti:["t_karsi","t_ben","t_pert","t_kusur"],eksi:["t_yara","t_vefat"],
+   neden:"Sadece maddi hasar varsa değer kaybı, onarım ve mahrumiyet kalemlerine odaklanıyorum."},
+  {k:"Evet, yaralanma var",s:"Ben veya bir yakınım yaralandı",arti:["t_yara"],eksi:["t_vefat","t_pert","t_karsi","t_ben"],
+   neden:"Yaralanma varsa iş göremezlik, sakatlık ve manevi tazminat da devreye giriyor — bunlar araç kalemlerinden çok daha büyük tutarlar."},
+  {k:"Kazada vefat eden oldu",s:"Yakınımı kaybettim",arti:["t_vefat"],eksi:["t_yara","t_pert","t_ben","t_karsi"],
+   neden:"Vefat hâlinde talep destekten yoksun kalma tazminatına dönüyor ve bu hak mirastan bağımsız."}
+ ]},
+
+{id:"t_kusurkim",t:"Kusur kimde görünüyor?",when:function(f){return f.alan==="trafik"&&f.t_tur===0;},
+ h:"Tazminatın tamamı kusur oranıyla çarpıldığı için bu soru tutarı doğrudan belirliyor.",
+ o:[
+  {k:"Karşı taraf kusurlu",s:"Tutanak veya kayıtlar karşı tarafı gösteriyor",arti:["t_karsi","t_yara","t_pert"],eksi:["t_ben","t_kusur"],
+   neden:"Kusur karşı tarafta ise zararınızın tamamını onun sigortasından isteyebiliyorsunuz."},
+  {k:"Kusur bende",s:"Kabahat bendeydi",arti:["t_ben"],eksi:["t_karsi"],
+   neden:"Kusur sizdeyse karşı taraftan tazminat çıkmıyor; konu kasko ve karşı tarafın talebinin ölçüsü oluyor."},
+  {k:"Tartışmalı veya bilmiyorum",s:"İki taraf da kusurlu görünüyor / itiraz ettim",arti:["t_kusur"],
+   neden:"Kusur netleşmeden yapılacak her hesap yanıltıcı olur; önce kusur oranını tespit etmemiz gerek."}
+ ]},
+
+{id:"t_pertmi",t:"Aracınız için 'pert' ya da 'ağır hasarlı' dendi mi?",when:function(f){return f.alan==="trafik"&&f.t_tur===0&&f.t_sonuc===0;},
+ h:"Pert kaydı girildiyse hesap tamamen değişiyor: değer kaybı yerine rayiç bedel konuşuluyor.",
+ o:[
+  {k:"Evet, pert / ağır hasar dendi",s:"Onarımı ekonomik bulunmadı",arti:["t_pert"],eksi:["t_karsi"],
+   neden:"Pert hâlinde artık değer kaybı istenemiyor; talep rayiç bedel eksi sovtaja dönüyor."},
+  {k:"Hayır, araç onarıldı veya onarılabilir",s:"Normal hasar",eksi:["t_pert"],
+   neden:"Araç onarılabiliyorsa değer kaybı en önemli kalem hâline geliyor."}
+ ]},
+
+/* --- iş --- */
+{id:"i_durum",t:"İş ilişkiniz şu an hangi durumda?",when:function(f){return f.alan==="is";},
+ h:"İş hukukunda hesabın tamamı buna bağlı: sözleşmeyi kimin bitirdiği kıdem ve ihbarı doğrudan belirliyor.",
+ o:[
+  {k:"İşveren çıkardı",s:"Fesih işverenden geldi",arti:["i_cikarildi","i_iade"],eksi:["i_istifa","i_hakli","i_odenmeyen"],
+   neden:"Fesih işverenden geldiyse hem kıdem hem ihbar tazminatı gündeme geliyor; ayrıca işe iade süresi işlemeye başlıyor."},
+  {k:"Ben ayrıldım / istifa ettim",s:"Sözleşmeyi ben sona erdirdim",arti:["i_istifa","i_hakli"],eksi:["i_cikarildi","i_iade","i_odenmeyen"],
+   neden:"Siz ayrıldıysanız ihbar tazminatı doğmuyor; kıdem ise ayrılma sebebinize bağlı — bunu netleştirmem gerek."},
+  {k:"Hâlâ çalışıyorum",s:"Ama haklarım ödenmiyor",arti:["i_odenmeyen"],eksi:["i_cikarildi","i_istifa","i_iade","i_hakli"],
+   neden:"Çalışmaya devam ediyorsanız hem alacak talebi hem de haklı fesih seçeneği aynı anda masada."},
+  {k:"İş kazası geçirdim / meslek hastalığı var",s:"Yaralanma veya sağlık kaybı",arti:["i_kaza"],eksi:["i_istifa","i_iade","i_belirli","i_odenmeyen"],
+   neden:"İş kazasında iki ayrı hat var: SGK ödemeleri ve bunları aşan zarar için işverene karşı dava."}
+ ]},
+
+{id:"i_sebep",t:"Ayrılma sebebiniz şunlardan biri mi?",when:function(f){return f.alan==="is"&&f.i_durum===1;},
+ h:"Ücretin ödenmemesi, sigortanın eksik yatması, mobbing, hakaret, taciz, ağır çalışma koşulları veya sağlık sorunu.",
+ o:[
+  {k:"Evet, bu sebeplerden biri yüzünden ayrıldım",s:"Haklı fesih ihtimali var",arti:["i_hakli"],eksi:["i_istifa"],
+   neden:"Haklı sebeple ayrılan işçi <em>kıdem tazminatını kaybetmiyor</em> — istifa ile arasındaki en büyük fark bu."},
+  {k:"Hayır, kendi tercihimle ayrıldım",s:"Başka iş buldum / kişisel sebep",arti:["i_istifa"],eksi:["i_hakli"],
+   neden:"Sebepsiz istifada kıdem ve ihbar çıkmıyor; hesap izin ve birikmiş ücret alacaklarıyla sınırlı kalıyor."}
+ ]},
+
+{id:"i_kidem",t:"Aynı işverende ne kadar süre çalıştınız?",when:function(f){return f.alan==="is"&&f.i_durum!==undefined&&f.i_durum!==3;},
+ h:"Kıdem tazminatı 1 yıl, işe iade güvencesi ise 6 ay şartına bağlı.",
+ o:[
+  {k:"1 yıldan fazla",s:"Kıdem şartı tamam",arti:["i_cikarildi","i_hakli","i_belirli"],
+   neden:"1 yılı geçtiğiniz için kıdem tazminatı şartı sağlanıyor; her tam yıl 30 günlük ücret demek."},
+  {k:"6 ay - 1 yıl arası",s:"Kıdem için yetersiz, iş güvencesi için yeterli",eksi:["i_belirli"],
+   neden:"1 yıl dolmadığı için kıdem tazminatı doğmuyor; ancak 6 ayı geçtiğiniz için işe iade güvencesi devrede."},
+  {k:"6 aydan az",s:"Yeni başlamıştım",eksi:["i_cikarildi","i_iade","i_hakli"],
+   neden:"6 ayın altında hem kıdem hem işe iade güvencesi devre dışı; talep ücret ve izin alacaklarına iniyor."}
+ ]},
+
+{id:"i_sayi",t:"İş yerinde 30 veya daha fazla işçi çalışıyor mu?",when:function(f){return f.alan==="is"&&f.i_durum===0;},
+ h:"İşe iade davasının en katı şartı bu. Aynı işverenin aynı işkolundaki tüm iş yerleri birlikte sayılır.",
+ o:[
+  {k:"Evet, 30'dan fazla",s:"Büyük iş yeri / şube ağı var",arti:["i_iade"],
+   neden:"30 işçi şartı sağlandığı için iş güvencesi hükümleri uygulanıyor — işe iade en güçlü koz hâline geliyor."},
+  {k:"Hayır veya bilmiyorum",s:"Küçük iş yeri",eksi:["i_iade"],
+   neden:"30 işçi şartı yoksa işe iade yolu kapanıyor; hesap kıdem, ihbar ve diğer alacaklarla devam ediyor."}
+ ]},
+
+{id:"i_sozlesme",t:"Sözleşmeniz belirli süreli miydi?",when:function(f){return f.alan==="is"&&(f.i_durum===0||f.i_durum===1);},
+ h:"Örneğin özel okul öğretmenliği, proje bazlı işler veya süresi baştan yazılı olarak belirlenmiş sözleşmeler.",
+ o:[
+  {k:"Evet, bitiş tarihi belliydi",s:"Süreli sözleşme",arti:["i_belirli"],eksi:["i_iade"],
+   neden:"Belirli süreli sözleşmede ihbar tazminatı yerine <em>bakiye süre ücreti</em> isteniyor — bu genelde daha yüksek."},
+  {k:"Hayır, süresizdi",s:"Standart sözleşme",eksi:["i_belirli"],
+   neden:"Belirsiz süreli sözleşme, iş güvencesi ve ihbar tazminatı hükümlerinin doğal alanı."}
+ ]},
+
+/* --- vergi --- */
+{id:"v_belge",t:"Elinize hangi belge geçti veya durum ne?",when:function(f){return f.alan==="vergi";},
+ h:"Vergi tarafında sürenin hangi tarihte başladığını belirleyen şey bu belge.",
+ o:[
+  {k:"Gümrük beyannamesi / ithalat işlemi",s:"İthalatta vergi ödedim",arti:["v_gozetim","v_gumrukceza"],eksi:["v_vergiceza","v_emlak"],
+   neden:"Gümrük tarafında hem gözetim kaynaklı fazla vergi hem de m.234 cezası ihtimali var; hangisi olduğunu ayırmam gerek."},
+  {k:"Vergi dairesinden ihbarname / ceza",s:"Vergi ziyaı, usulsüzlük, ek tarhiyat",arti:["v_vergiceza"],eksi:["v_gozetim","v_emlak"],
+   neden:"İhbarname elinize geçtiği anda 30 günlük süre başlıyor; bu süre dava, uzlaşma ve indirim arasında tek seçim hakkı veriyor."},
+  {k:"Fazla / yersiz ödeme yaptığımı düşünüyorum",s:"Ödedim ama tutar yüksek geldi",arti:["v_iade","v_emlak"],eksi:["v_vergiceza","v_gumrukceza"],
+   neden:"Ortada ceza yoksa yol dava değil düzeltme talebi; bu daha hızlı ve masrafsız işliyor."},
+  {k:"Henüz belge yok, ne olacağını öğrenmek istiyorum",s:"Önceden hesaplamak istiyorum",eksi:["v_vergiceza","v_gumrukceza"],
+   neden:"Henüz işlem yapılmamışsa doğru hamle, tutarı önceden hesaplayıp planlamak."}
+ ]},
+
+{id:"v_gumruk",t:"Gümrükte tam olarak ne oldu?",when:function(f){return f.alan==="vergi"&&f.v_belge===0;},
+ h:"Gözetim uygulaması ile ceza kararı ayrı süreçler: birinde 3 yıllık iade hakkı, diğerinde 15 günlük itiraz süresi var.",
+ o:[
+  {k:"Beyan ettiğim kıymet kabul edilmedi, üstüne vergi ödedim",s:"Gözetim / kıymet artırımı",arti:["v_gozetim"],eksi:["v_gumrukceza"],
+   neden:"Bu tipik gözetim tablosu: kıymet yapay olarak yükseltilip fazla KDV ödettiriliyor ve bu fazla kısım iade edilebiliyor."},
+  {k:"Hakkımda ceza kesildi / ek tahakkuk yapıldı",s:"GK m.234 cezası",arti:["v_gumrukceza"],eksi:["v_gozetim"],
+   neden:"Ceza kesildiyse ilk iş 15 günlük itiraz süresini korumak; ondan sonra uzlaşma-dava karşılaştırması yapılıyor."},
+  {k:"Sadece ne kadar vergi ödeyeceğimi hesaplamak istiyorum",s:"Henüz ithalat yapmadım",eksi:["v_gozetim","v_gumrukceza"],
+   neden:"İthalat öncesindeyseniz GV, İGV, ÖTV ve KDV kademesini önceden görmek maliyeti planlamanızı sağlıyor."}
+ ]},
+
+{id:"v_hangi",t:"Hangi vergiyi fazla ödediğinizi düşünüyorsunuz?",when:function(f){return f.alan==="vergi"&&f.v_belge===2;},
+ h:"İade usulü ve süre, verginin türüne göre değişiyor.",
+ o:[
+  {k:"Gelir / kurumlar vergisi veya KDV",s:"Beyanname, stopaj, tevkifat",arti:["v_iade"],eksi:["v_emlak"],
+   neden:"Bu vergilerde düzeltme talebi ve iade hakkı doğuran işlem usulü devrede; süre 5 yıl."},
+  {k:"Emlak vergisi, MTV veya tapu harcı",s:"Belediye / tapu ödemeleri",arti:["v_emlak"],
+   neden:"Bu vergilerde hata matrahta olur: yanlış değer, yanlış oran veya uygulanmayan muafiyet."},
+  {k:"Gümrük vergileri",s:"İthalatta ödediğim vergiler",arti:["v_gozetim","v_iade"],eksi:["v_emlak"],
+   neden:"Gümrük vergilerinde süre 5 yıl değil <em>3 yıl</em>; bu yüzden acele etmek gerekiyor."}
+ ]},
+
+/* --- diğer --- */
+{id:"d_konu",t:"Konu tam olarak hangisi?",when:function(f){return f.alan==="diger";},
+ h:"Bu alanların her birinin kendi hesap kalemleri ve süreleri var.",
+ o:[
+  {k:"Boşanma",s:"Tazminat, nafaka, mal paylaşımı",arti:["d_bosanma","d_nafaka"],eksi:["d_miras","d_kamulastirma","d_tuketici"],
+   neden:"Boşanmada üç kalem birden konuşuluyor: tazminat, nafaka ve edinilmiş mallara katılma."},
+  {k:"Sadece nafaka",s:"Miktar, artırım, kaldırma",arti:["d_nafaka"],eksi:["d_bosanma","d_miras","d_kamulastirma","d_tuketici"],
+   neden:"Nafaka tek başına konuysa mesele miktarın hakkaniyete uygunluğu ve şartların değişip değişmediği."},
+  {k:"Miras",s:"Pay, vasiyet, mal kaçırma",arti:["d_miras"],eksi:["d_bosanma","d_nafaka","d_kamulastirma","d_tuketici"],
+   neden:"Mirasta önce yasal paylar, sonra saklı pay ihlali ve muvazaa değerlendiriliyor."},
+  {k:"Taşınmaz / arazi",s:"El atma, kamulaştırma, tapu",arti:["d_kamulastirma"],eksi:["d_bosanma","d_nafaka","d_miras","d_tuketici"],
+   neden:"İdare el attıysa bedel talebi var; ama fiilî ve hukukî el atmada görevli mahkeme farklı."},
+  {k:"Ayıplı ürün veya hizmet",s:"Bozuk mal, eksik hizmet",arti:["d_tuketici"],eksi:["d_bosanma","d_nafaka","d_miras","d_kamulastirma"],
+   neden:"Tüketici uyuşmazlığında dört seçimlik hak var ve tercih size ait; ayrıca parasal sınıra göre önce hakem heyeti gerekiyor."}
+ ]}
+];
+
+/* Trace ve "aklımdakiler" panelinde senaryoyu tek satırda anmak için kısa ad. */
+const TANI_KISA={
+ t_karsi:"karşı taraf kusurlu maddi hasarlı kaza",t_ben:"kusur sizde olan kaza",t_pert:"pert olan araç",
+ t_kusur:"kusuru tartışmalı kaza",t_yara:"yaralanmalı kaza",t_vefat:"ölümlü kaza",t_ceza:"trafik cezasına itiraz",
+ i_cikarildi:"işveren tarafından çıkarılma",i_istifa:"sebepsiz istifa",i_hakli:"haklı sebeple ayrılma",
+ i_iade:"işe iade davası",i_kaza:"iş kazası",i_odenmeyen:"ödenmeyen işçilik alacakları",i_belirli:"belirli süreli sözleşmenin erken feshi",
+ v_gozetim:"gümrükte gözetim kaynaklı fazla vergi",v_gumrukceza:"gümrük para cezası",v_vergiceza:"vergi ihbarnamesi",
+ v_iade:"fazla ödenen verginin iadesi",v_emlak:"emlak/MTV/tapu harcı hatası",
+ d_bosanma:"boşanma",d_nafaka:"nafaka",d_miras:"miras paylaşımı",d_kamulastirma:"kamulaştırmasız el atma",d_tuketici:"ayıplı mal"
+};
+
+const taniState={p:{},f:{},sorulan:[],iz:[],red:{},faz:"soru",q:null,dusun:false,tahminId:null,tur:0};
+
+function openTani(){
+  taniState.p={};taniState.f={};taniState.sorulan=[];taniState.iz=[];taniState.red={};
+  taniState.faz="soru";taniState.dusun=false;taniState.tahminId=null;taniState.tur=0;
+  TANI_H.forEach(function(h){taniState.p[h.id]=h.prior||1;});
+  taniNorm();
+  taniState.q=TANI_Q[0];
+  renderTani();
+}
+function taniNorm(){
+  let t=0;for(const k in taniState.p)t+=taniState.p[k];
+  if(t<=0){TANI_H.forEach(function(h){taniState.p[h.id]=h.prior||1;});t=0;for(const k in taniState.p)t+=taniState.p[k];}
+  for(const k in taniState.p)taniState.p[k]/=t;
+}
+/* Bir yanıtın senaryoya verdiği ham ağırlık. */
+function taniW(opt,h){
+  if(opt.alan)return h.alan===opt.alan?6:0.03;
+  if(opt.eksi&&opt.eksi.indexOf(h.id)!==-1)return 0.07;
+  if(opt.arti&&opt.arti.indexOf(h.id)!==-1)return 4.5;
+  return 1;
+}
+/* Olabilirlik: her senaryo için seçenekler arasında normalize edilir, böylece
+   çok seçenekli sorular haksız biçimde baskın hâle gelmez. */
+function taniL(q,i,h){
+  let t=0;for(let j=0;j<q.o.length;j++)t+=taniW(q.o[j],h);
+  return taniW(q.o[i],h)/t;
+}
+function taniEntropi(p){
+  let e=0;for(const k in p){const v=p[k];if(v>1e-9)e-=v*Math.log2(v);}
+  return e;
+}
+/* Bilgi kazancı: bu soru sorulursa belirsizlik ne kadar azalır. */
+function taniKazanc(q){
+  const H0=taniEntropi(taniState.p);let bek=0;
+  for(let i=0;i<q.o.length;i++){
+    const post={};let po=0;
+    for(const id in taniState.p){
+      if(taniState.red[id])continue;
+      const v=taniState.p[id]*taniL(q,i,TANI_MAP[id]);
+      post[id]=v;po+=v;
+    }
+    if(po<1e-12)continue;
+    for(const id in post)post[id]/=po;
+    bek+=po*taniEntropi(post);
+  }
+  return H0-bek;
+}
+function taniAdaylar(){
+  return TANI_Q.filter(function(q){
+    if(taniState.sorulan.indexOf(q.id)!==-1)return false;
+    if(q.when&&!q.when(taniState.f))return false;
+    return true;
+  });
+}
+/* Sıradaki soru sabit değil: kalan belirsizliği en çok azaltan soru seçilir. */
+function taniSoruSec(){
+  const ad=taniAdaylar();if(!ad.length)return null;
+  let en=null,enK=-1;
+  ad.forEach(function(q){const k=taniKazanc(q);if(k>enK){enK=k;en=q;}});
+  if(enK<0.03)return null;
+  return en;
+}
+function taniSirali(){
+  const a=[];
+  for(const id in taniState.p){if(taniState.red[id])continue;a.push({h:TANI_MAP[id],p:taniState.p[id]});}
+  a.sort(function(x,y){return y.p-x.p;});
+  return a;
+}
+function taniYeterMi(){
+  const s=taniSirali();if(!s.length)return true;
+  if(taniState.sorulan.length>=6)return true;
+  const ik=s[1]?s[1].p:0;
+  /* İkinci olasılık hâlâ ciddi bir paya sahipse tahmin etmiyoruz: %70'e
+     karşı %22 "emin" sayılmaz, aradaki ayrımı yapan soru (pert mi, kusur
+     kimde) sorulmadan geçilirse yanlış araca yönlendiriyoruz. */
+  const emin=s[0].p>=0.55&&ik<0.20&&(ik<1e-9||s[0].p/ik>=2.5);
+  if(!emin)return false;
+  /* Emin olsak da en az üç soru soralım: tek soruda "tahmin ettim" demek
+     hem güven vermiyor hem de sonucu zenginleştiren ayrımları atlıyor. */
+  if(taniState.sorulan.length<3&&taniSoruSec())return false;
+  return true;
+}
+
+function taniCevap(i){
+  const q=taniState.q;if(!q||taniState.dusun)return;
+  const opt=q.o[i];
+  const once=taniSirali();
+  const oncePay={};once.forEach(function(x){oncePay[x.h.id]=x.p;});
+  for(const id in taniState.p){
+    if(taniState.red[id]){taniState.p[id]=0;continue;}
+    taniState.p[id]=taniState.p[id]*taniL(q,i,TANI_MAP[id]);
+  }
+  taniNorm();
+  taniState.f[q.id]=i;
+  if(opt.alan)taniState.f.alan=opt.alan;
+  taniState.sorulan.push(q.id);
+  /* Gerekçe satırı: yanıttan sonra oranı en çok yükselen senaryo hangisiyse
+     onu adıyla anıyoruz — metin sabit değil, gerçek hesaptan çıkıyor. */
+  const sonra=taniSirali();
+  let yuk=null,enOran=1.15;
+  sonra.forEach(function(x){
+    const o=oncePay[x.h.id]||1e-6;
+    const oran=x.p/o;
+    if(x.p>0.05&&oran>enOran){enOran=oran;yuk=x.h;}
+  });
+  taniState.iz.push({soru:q.t,secim:opt.k,neden:opt.neden||"",yuk:yuk?(TANI_KISA[yuk.id]||yuk.ad):"",kat:enOran});
+  taniState.tur++;
+  taniState.dusun=true;renderTani();
+  setTimeout(function(){
+    taniState.dusun=false;
+    const yeter=taniYeterMi();
+    const sonraki=yeter?null:taniSoruSec();
+    if(sonraki){taniState.q=sonraki;taniState.faz="soru";}
+    else{taniState.q=null;taniState.faz="tahmin";taniState.tahminId=taniSirali()[0]?taniSirali()[0].h.id:null;}
+    renderTani();
+  },820);
+}
+/* Tahmin yanlışsa: senaryo eleniyor, motor kalanlarla devam ediyor. */
+function taniRed(){
+  const id=taniState.tahminId;if(!id)return;
+  taniState.red[id]=1;taniState.p[id]=0;taniNorm();
+  taniState.iz.push({soru:"Tahminim doğru mu?",secim:"Hayır, durumum bu değil",neden:"Bu senaryoyu listeden çıkardım ve kalan olasılıklarla devam ediyorum.",yuk:"",kat:0,red:TANI_KISA[id]||""});
+  const kalan=taniSirali();
+  if(!kalan.length){taniState.faz="liste";renderTani();return;}
+  taniState.dusun=true;renderTani();
+  setTimeout(function(){
+    taniState.dusun=false;
+    const q=taniSoruSec();
+    if(q&&taniState.sorulan.length<8){taniState.q=q;taniState.faz="soru";}
+    else{taniState.tahminId=kalan[0].h.id;taniState.faz="tahmin";}
+    renderTani();
+  },700);
+}
+function taniOnay(){taniState.faz="sonuc";renderTani();window.scrollTo({top:0,behavior:"smooth"});}
+function taniBasa(){openTani();window.scrollTo({top:0,behavior:"smooth"});}
+
+/* ---------- görünüm ---------- */
+function taniYuzde(p){return Math.round(p*100);}
+function taniAklim(){
+  const s=taniSirali().slice(0,3).filter(function(x){return x.p>0.03;});
+  if(s.length<2)return "";
+  let h='<div class="tani-mind"><div class="tani-mind-lbl">Şu an aklımdakiler</div>';
+  s.forEach(function(x,i){
+    h+='<div class="tani-mind-row"><span class="tani-mind-name">'+(TANI_KISA[x.h.id]||x.h.ad)+'</span>'+
+       '<span class="tani-mind-bar"><i style="width:'+Math.max(4,taniYuzde(x.p))+'%'+(i===0?';opacity:1':'')+'"></i></span>'+
+       '<span class="tani-mind-pct">%'+taniYuzde(x.p)+'</span></div>';
+  });
+  return h+'</div>';
+}
+function taniIzHtml(acik){
+  if(!taniState.iz.length)return "";
+  let h='<details class="tani-iz"'+(acik?" open":"")+'><summary>Nasıl düşündüm? <span>'+taniState.iz.length+' adım</span></summary><ol>';
+  taniState.iz.forEach(function(x){
+    h+='<li><span class="tani-iz-s">'+x.soru+'</span><span class="tani-iz-c">'+x.secim+'</span>';
+    if(x.neden)h+='<span class="tani-iz-n">'+x.neden+'</span>';
+    if(x.red)h+='<span class="tani-iz-n">Eledim: '+x.red+'</span>';
+    else if(x.yuk&&x.kat>1.3)h+='<span class="tani-iz-y">→ öne çıkan: '+x.yuk+'</span>';
+    h+='</li>';
+  });
+  return h+'</ol></details>';
+}
+function taniArac(id,ana){
+  const m=MODULES.filter(function(x){return x.id===id;})[0];
+  if(!m)return "";
+  return '<a class="tani-tool'+(ana?" ana":"")+'" href="'+moduleHref(m)+'" target="_blank" rel="noopener">'+
+    '<span class="tani-tool-ico">'+moduleIcon(m.id,ana?24:20)+'</span>'+
+    '<span class="tani-tool-body"><span class="tani-tool-t">'+m.title.replace(/\n/g," ")+'</span>'+
+    (ana?'<span class="tani-tool-d">'+m.desc+'</span>':'')+'</span>'+
+    '<svg class="tani-tool-ok" width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>';
+}
+
+function renderTani(){
+  const w=document.getElementById("taniWrapper");if(!w)return;
+  let h='<div class="calc-page-header tani-head"><div class="step-number-badge">Durum Tespiti</div>'+
+        '<h2>Durumunuzu tahmin edeyim</h2>'+
+        '<p>Hangi hesaplamayı yapmanız gerektiğini bilmiyorsanız buradan başlayın. Birkaç soru soracağım, sonra durumunuzu tahmin edeceğim. Yanlış tahmin edersem söylemeniz yeter — kalan olasılıklarla devam ederim.</p></div>';
+
+  if(taniState.dusun){
+    h+='<div class="wz-card tani-think"><div class="tani-think-dots"><i></i><i></i><i></i></div>'+
+       '<p>Yanıtınızı işliyorum, olasılıkları güncelliyorum…</p>'+taniAklim()+'</div>';
+    w.innerHTML=h;return;
+  }
+
+  if(taniState.faz==="soru"&&taniState.q){
+    const q=taniState.q,n=taniState.sorulan.length+1;
+    h+='<div class="wz-card tani-card">';
+    h+='<div class="tani-step">'+n+'. soru <span>·</span> genelde 3-5 soru sürüyor</div>';
+    h+='<div class="wz-q tani-q">'+q.t+'</div>';
+    if(q.h)h+='<p class="wz-hint">'+q.h+'</p>';
+    h+='<div class="wz-opts tani-opts">';
+    q.o.forEach(function(o,i){
+      h+='<button type="button" class="wz-opt tani-opt" onclick="taniCevap('+i+')"><span class="wz-opt-dot"></span>'+
+         '<span>'+o.k+(o.s?'<span class="wz-opt-sub">'+o.s+'</span>':'')+'</span></button>';
+    });
+    h+='</div>';
+    h+=taniAklim();
+    h+=taniIzHtml(false);
+    h+='<div class="tani-foot"><button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button>'+
+       '<button class="btn-back" onclick="taniBasa()">Baştan başla</button></div>';
+    h+='</div>';
+    w.innerHTML=h;return;
+  }
+
+  if(taniState.faz==="tahmin"){
+    const s=taniSirali(),top=s[0];
+    if(!top){taniState.faz="liste";renderTani();return;}
+    const g=taniYuzde(top.p);
+    h+='<div class="wz-card tani-guess">';
+    h+='<div class="tani-guess-lbl">Sanırım durumunuz şu</div>';
+    h+='<div class="tani-guess-ad">'+top.h.ad+'</div>';
+    h+='<div class="tani-guess-oz">'+top.h.ozet+'</div>';
+    h+='<div class="tani-conf"><div class="tani-conf-bar"><i style="width:'+Math.max(8,g)+'%"></i></div>'+
+       '<span>%'+g+' eminim</span></div>';
+    h+='<div class="tani-guess-act">'+
+       '<button class="btn-next" onclick="taniOnay()">Evet, durumum bu <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+       '<button class="btn-back" onclick="taniRed()">Hayır, bu değil</button></div>';
+    if(s[1]&&s[1].p>0.05)h+='<p class="tani-alt">İkinci olasılık: '+(TANI_KISA[s[1].h.id]||s[1].h.ad)+' (%'+taniYuzde(s[1].p)+')</p>';
+    h+=taniIzHtml(true);
+    h+='</div>';
+    w.innerHTML=h;return;
+  }
+
+  if(taniState.faz==="liste"){
+    h+='<div class="wz-card"><div class="wz-q">Durumunuzu tahmin edemedim</div>'+
+       '<p class="wz-hint">Sorularımın kapsamına girmeyen bir durum olabilir. Aşağıdan doğrudan araç seçebilir ya da baştan başlayabilirsiniz.</p>'+
+       '<div class="tani-tools">'+["trafikSihirbaz","isHukukuSihirbaz","gozetim","miras"].map(function(id){return taniArac(id,false);}).join("")+'</div>'+
+       '<div class="tani-foot"><button class="btn-back" onclick="taniBasa()">Baştan başla</button>'+
+       '<a class="btn-next" href="/" style="text-decoration:none">Tüm araçlar</a></div></div>';
+    w.innerHTML=h;tilt3dScan();return;
+  }
+
+  /* sonuç */
+  const hp=TANI_MAP[taniState.tahminId];
+  if(!hp){taniState.faz="liste";renderTani();return;}
+  if(hp.alan==='trafik')h+=road3dHtml('');
+  h+='<div class="isc-result-card tani-res">';
+  h+='<div class="tani-res-top"><div class="tani-res-lbl">Durum tespiti</div><h3>'+hp.ad+'</h3><p>'+hp.ozet+'</p></div>';
+
+  h+='<div class="tani-sec"><div class="tani-sec-t">Bu durumda dosyanızda olan kalemler</div><div class="tani-haklar">';
+  hp.haklar.forEach(function(x){
+    h+='<div class="tani-hak"><span class="tani-hak-ok"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4 9.5l3.5 3.5L14 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'+
+       '<div><strong>'+x.b+'</strong><p>'+x.a+'</p></div></div>';
+  });
+  h+='</div></div>';
+
+  h+='<div class="tani-sec"><div class="tani-sec-t">Kaçırmamanız gerekenler</div><ul class="tani-dikkat">';
+  hp.dikkat.forEach(function(d){h+='<li>'+d+'</li>';});
+  h+='</ul></div>';
+
+  if(hp.sure){
+    h+='<div class="tani-sec tani-sure"><div class="tani-sec-t">Süre kontrolü</div>'+
+       '<p class="tani-sure-ad">'+hp.sure.ad+'</p>'+
+       '<div class="tani-sure-in"><label for="taniSureTarih">'+(hp.sure.olay||"Olay tarihi")+'</label>'+
+       '<input type="date" id="taniSureTarih" onchange="taniSureHesap('+hp.sure.gun+')"/></div>'+
+       '<div id="taniSureOut" class="tani-sure-out"></div></div>';
+  }
+
+  h+='<div class="tani-sec"><div class="tani-sec-t">Şimdi hangi hesabı yapmalısınız</div><div class="tani-tools">';
+  hp.araclar.forEach(function(id,i){h+=taniArac(id,i===0);});
+  h+='</div><p class="tani-tools-not">Seçtiğiniz araç yeni sekmede açılır; bu sayfa açık kalır.</p></div>';
+
+  h+='<div class="tani-sec"><div class="tani-sec-t">Dayanak</div><div class="tani-mev">';
+  hp.mevzuat.forEach(function(m){h+='<span class="tani-mev-c">'+m+'</span>';});
+  h+='</div></div>';
+
+  h+=taniIzHtml(false);
+
+  h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg>'+
+     '<p>Bu bir tahmindir, hukuki görüş değildir. Yanıtlarınızdan çıkarılmıştır; dosyanızdaki belgeler tabloyu değiştirebilir.</p></div>';
+
+  h+='<div class="cmp-actions" style="margin-top:16px">'+
+     '<a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+whatsappLink("Merhaba, sitedeki durum tespiti aracını kullandım. Çıkan sonuç: "+hp.ad+". Bu konuda görüşmek istiyorum.")+'">'+
+     '<svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Bu konuda görüşmek istiyorum</a></div>';
+
+  h+='<div class="tani-foot" style="margin-top:18px"><button class="btn-back" onclick="taniBasa()">Baştan başla</button>'+
+     '<button class="btn-back" onclick="taniYanlis()">Bu tespit bana uymadı</button></div>';
+  h+='</div>';
+  w.innerHTML=h;tilt3dScan();
+}
+function taniYanlis(){taniState.faz="tahmin";taniRed();window.scrollTo({top:0,behavior:"smooth"});}
+function taniSureHesap(gun){
+  const el=document.getElementById("taniSureTarih"),out=document.getElementById("taniSureOut");
+  if(!el||!out||!el.value)return;
+  const t=new Date(el.value+"T00:00:00");
+  if(isNaN(t.getTime()))return;
+  const gecen=Math.floor((Date.now()-t.getTime())/86400000);
+  const kalan=gun-gecen;
+  if(gecen<0){out.className="tani-sure-out";out.innerHTML="Gelecek bir tarih girdiniz.";return;}
+  if(kalan<=0){
+    out.className="tani-sure-out kirmizi";
+    out.innerHTML="<strong>Süre görünüşe göre dolmuş.</strong> Üzerinden "+gecen+" gün geçmiş. Buna rağmen sürenin durduğu veya yeniden işlediği hâller olabilir (ceza davası, ödeme, yazılı kabul, zorunlu arabuluculuk gibi) — kapıyı kapatmadan bir avukata sorun.";
+  }else if(kalan<=Math.max(15,Math.round(gun*0.15))){
+    out.className="tani-sure-out sari";
+    out.innerHTML="<strong>Yaklaşık "+kalan+" gününüz kalmış.</strong> Bu, kaybetmemek için hemen harekete geçilmesi gereken bir aralık.";
+  }else{
+    out.className="tani-sure-out yesil";
+    out.innerHTML="<strong>Yaklaşık "+kalan+" gününüz var.</strong> Süre bakımından rahatsınız; belgeleri toplayarak başlayabilirsiniz.";
+  }
+}
+
+/* =====================================================================
+   VERGİ İADEMİ NASIL ALABİLİRİM — tutar değil, yol haritası üreten araç
+   Fazla veya yersiz ödenen verginin geri alınması dava açmayı gerektirmez;
+   önce idareye düzeltme başvurusu yapılır. Ancak başvuru mercii, süre ve
+   belgeler verginin türüne göre değişiyor: gümrükte 3 yıl, VUK kapsamındaki
+   vergilerde 5 yıl. Bu araç, kullanıcının durumuna göre doğru mercii,
+   kalan süreyi, gereken belgeleri ve reddedilirse izlenecek yolu çıkarıyor.
+   ===================================================================== */
+const VI_TUR={
+ gelir:{ad:"Gelir veya kurumlar vergisi",mercii:"bağlı olduğunuz vergi dairesi",
+  sure:1825,sureAd:"Verginin doğduğu yılı izleyen yılbaşından itibaren 5 yıl (VUK m.126)",
+  dayanak:["VUK m.116-126 (vergi hataları ve düzeltme)","VUK m.112/4 (iadede faiz)","GVK m.121 (uyumlu mükellef indirimi)"],
+  belgeler:["Düzeltme talebi dilekçesi","Beyanname ve tahakkuk fişi","Ödeme makbuzu / banka dekontu","Fazla ödemeyi gösteren hesap dökümü","Varsa stopaj/tevkifat belgeleri (muhtasar beyan, serbest meslek makbuzu)"],
+  ipucu:"Yıl içinde kesilen stopaj, beyan üzerinden hesaplanan vergiden fazlaysa fark iade edilir. Beyannamede iade talebini işaretlemeyi atlarsanız iade kendiliğinden yapılmaz; düzeltme beyannamesi vermeniz gerekir."},
+ kdv:{ad:"KDV",mercii:"bağlı olduğunuz vergi dairesi",
+  sure:1825,sureAd:"Düzeltme yolunda 5 yıl (VUK m.126). İade hakkı doğuran işlemlerde ise talep, işlemin yapıldığı dönemi izleyen ikinci takvim yılının sonuna kadar yapılmalıdır",
+  dayanak:["KDVK m.29, 32","VUK m.116-126","KDV Uygulama Genel Tebliği"],
+  belgeler:["İade talep dilekçesi ve standart iade talep formu","İndirilecek KDV listesi","Yüklenilen KDV tablosu","Satış faturaları ve gümrük çıkış beyannamesi (ihracatta)","Vergi dairesinin istediği hâllerde YMM raporu veya teminat"],
+  ipucu:"İki ayrı yol var: ihracat, indirimli oran ve tevkifat gibi iade hakkı doğuran işlemlerde iade kendi usulüne göre istenir; sadece hata veya mükerrer ödeme varsa yol düzeltme talebidir."},
+ gumruk:{ad:"Gümrük vergileri (ithalatta ödenen)",mercii:"beyannamenin tescil edildiği gümrük müdürlüğü",
+  sure:1095,sureAd:"Vergilerin ödendiği tarihten itibaren 3 yıl (GK m.211)",
+  dayanak:["Gümrük Kanunu m.211 (geri verme veya kaldırma)","GK m.24 (gümrük kıymeti)","GK m.242 (itiraz)"],
+  belgeler:["Geri verme (iade) başvuru dilekçesi","Gümrük beyannamesi ve eki belgeler","Vergilerin ödendiğini gösteren makbuz","Fatura, navlun ve sigorta belgeleri","Gözetim nedeniyle eklenen yurt dışı gider kalemini gösteren beyan satırı"],
+  ipucu:"Gümrükte süre diğer vergilerden kısadır: 3 yıl. Gözetim uygulaması nedeniyle kıymeti yükseltip fazla KDV ödediyseniz bu, iadesi en çok kabul gören dosya tipidir."},
+ emlak:{ad:"Emlak vergisi",mercii:"taşınmazın bulunduğu belediyenin gelir müdürlüğü",
+  sure:1825,sureAd:"Düzeltme zamanaşımı 5 yıl (VUK m.126)",
+  dayanak:["1319 sayılı Emlak Vergisi Kanunu m.8, 29","VUK m.116-126"],
+  belgeler:["Düzeltme ve iade dilekçesi","Tapu fotokopisi","Ödeme makbuzları","Muafiyet talebi varsa: SGK emeklilik belgesi, engelli sağlık kurulu raporu veya gazi/dul-yetim belgesi","Bina/arsa vergi değerini gösteren belediye kaydı"],
+  ipucu:"En sık iki hata: bina değerinin yanlış hesaplanması ve tek meskeni olan emekli, engelli, gazi, dul ve yetimlere tanınan sıfır oranın uygulanmaması. Muafiyet başvuruya bağlıdır, kendiliğinden geri ödenmez."},
+ mtv:{ad:"Motorlu taşıtlar vergisi (MTV)",mercii:"bağlı olduğunuz vergi dairesi",
+  sure:1825,sureAd:"Düzeltme zamanaşımı 5 yıl (VUK m.126)",
+  dayanak:["197 sayılı MTV Kanunu m.5, 8","VUK m.116-126"],
+  belgeler:["Düzeltme ve iade dilekçesi","Araç ruhsatı","Ödeme makbuzları","Satış / noter devir belgesi veya trafikten çekme, hurdaya ayırma belgesi","Engelli muafiyeti için sağlık kurulu raporu ve 'H' sınıfı belge"],
+  ipucu:"Aracı sattığınız hâlde devir trafikte işlenmediyse vergi size çıkmaya devam eder. Satış belgesiyle düzeltme isteyip ödediğiniz fazla tutarı geri alabilirsiniz."},
+ tapu:{ad:"Tapu harcı",mercii:"harcı tahsil eden vergi dairesi (tapu müdürlüğü bağlantılı)",
+  sure:1825,sureAd:"Düzeltme zamanaşımı 5 yıl (VUK m.126)",
+  dayanak:["492 sayılı Harçlar Kanunu (4) sayılı tarife","VUK m.116-126"],
+  belgeler:["Düzeltme ve iade dilekçesi","Tapu senedi ve resmî satış senedi","Harç ödeme makbuzu","Gerçek satış bedelini gösteren belgeler (banka transferi, kredi sözleşmesi)"],
+  ipucu:"İşlem iptal edildiyse veya harç gerçek bedelin üzerinde bir matrahtan alındıysa fark iade edilir. Buna karşılık bedeli düşük göstermek sonradan hem harç farkı hem ceza doğurur."},
+ damga:{ad:"Damga vergisi veya harç",mercii:"vergiyi tahsil eden vergi dairesi",
+  sure:1825,sureAd:"Düzeltme zamanaşımı 5 yıl (VUK m.126)",
+  dayanak:["488 sayılı Damga Vergisi Kanunu","492 sayılı Harçlar Kanunu","VUK m.116-126"],
+  belgeler:["Düzeltme ve iade dilekçesi","Vergiye konu sözleşme veya kâğıdın aslı/fotokopisi","Ödeme makbuzu","İşlemin gerçekleşmediğini veya iptal edildiğini gösteren belge"],
+  ipucu:"Aynı kâğıt için mükerrer ödeme, hükmü kalmayan sözleşme veya istisna kapsamında olduğu hâlde ödenen damga vergisi iade edilir."},
+ stopaj:{ad:"Kesinti (stopaj / tevkifat) fazlası",mercii:"bağlı olduğunuz vergi dairesi",
+  sure:1825,sureAd:"Düzeltme zamanaşımı 5 yıl (VUK m.126)",
+  dayanak:["GVK m.94, 121","VUK m.116-126","VUK m.112/4"],
+  belgeler:["İade talebi dilekçesi","Yıllık beyanname ve tahakkuk fişi","Kesintiyi yapan tarafın verdiği muhtasar beyan bilgileri / makbuz","Kesinti tutarlarını gösteren tablo","Banka hesap bilgisi (IBAN)"],
+  ipucu:"Kira, serbest meslek ve menkul sermaye iratlarında yıl içinde kesilen vergi, yıllık beyan üzerinden çıkan vergiden fazlaysa fark iadeye konu olur."}
+};
+const VI_SEBEP={
+ hata:{ad:"Hesap veya vergilendirme hatası var",
+  aciklama:"Matrah, oran, mükerrer tahakkuk, kişide veya konuda yanılma gibi bir hata. Bu, düzeltme yolunun tam merkezindeki hâl: idare hatayı kendiliğinden de düzeltmek zorundadır.",
+  yol:"duzeltme"},
+ muafiyet:{ad:"Hakkım olan muafiyet / indirim uygulanmadı",
+  aciklama:"Muafiyet şartlarını taşıdığınız hâlde vergi tam alınmışsa, muafiyeti belgeleyip geçmiş dönemler için düzeltme isteyebilirsiniz.",
+  yol:"duzeltme"},
+ mukerrer:{ad:"Aynı vergiyi iki kez ödedim",
+  aciklama:"Mükerrer ödeme en kolay kabul edilen iade sebebidir; makbuzların ikisini de eklemeniz genellikle yeterli olur.",
+  yol:"duzeltme"},
+ iptal:{ad:"İşlem gerçekleşmedi veya iptal edildi",
+  aciklama:"Verginin dayandığı işlem hiç doğmadıysa ya da sonradan geçersiz hâle geldiyse ödenen vergi yersiz kalır ve iadesi istenir.",
+  yol:"duzeltme"},
+ iadehakki:{ad:"İhracat, indirimli oran veya tevkifat nedeniyle iade hakkım doğdu",
+  aciklama:"Burada bir hata yok; kanun size doğrudan iade hakkı tanıyor. Bu yol düzeltmeden farklı, kendi usulü ve formları var.",
+  yol:"iadehakki"},
+ karar:{ad:"Mahkeme kararı veya sonradan yapılan düzenleme lehime çıktı",
+  aciklama:"Tahsilatın dayanağı ortadan kalkmışsa ödenen tutar iade edilir; kararın kesinleşme tarihi burada belirleyicidir.",
+  yol:"duzeltme"}
+};
+const viState={step:1,tur:null,sebep:null,tarih:"",tutar:0,faiz:0};
+function openVergiIade(){viState.step=1;viState.tur=null;viState.sebep=null;viState.tarih="";viState.tutar=0;viState.faiz=0;renderVergiIade();}
+function viPick(k,v){viState[k]=v;if(viState.step<3)viState.step++;renderVergiIade();window.scrollTo({top:0,behavior:"smooth"});}
+function viPrev(){if(viState.step>1){viState.step--;renderVergiIade();window.scrollTo({top:0,behavior:"smooth"});}}
+function viKaydet(){
+  const t=document.getElementById("vi_tarih"),tu=document.getElementById("vi_tutar"),f=document.getElementById("vi_faiz");
+  if(t)viState.tarih=t.value||"";
+  if(tu)viState.tutar=parseFloat(tu.value)||0;
+  if(f)viState.faiz=parseFloat(f.value)||0;
+}
+function viHesapla(){viKaydet();viState.step=4;renderVergiIade();window.scrollTo({top:0,behavior:"smooth"});}
+
+function viGun(){
+  if(!viState.tarih)return null;
+  const t=new Date(viState.tarih+"T00:00:00");
+  if(isNaN(t.getTime()))return null;
+  return Math.floor((Date.now()-t.getTime())/86400000);
+}
+function viDilekceMetni(){
+  const tur=VI_TUR[viState.tur],seb=VI_SEBEP[viState.sebep];
+  const gumruk=viState.tur==="gumruk";
+  const mercii=gumruk?"…… GÜMRÜK MÜDÜRLÜĞÜNE":(viState.tur==="emlak"?"…… BELEDİYE BAŞKANLIĞINA (Gelir Müdürlüğü)":"…… VERGİ DAİRESİ MÜDÜRLÜĞÜNE");
+  const day=gumruk?"4458 sayılı Gümrük Kanunu'nun 211. maddesi":"213 sayılı Vergi Usul Kanunu'nun 116 ve devamı maddeleri";
+  return mercii+"\n\n"+
+"Konu: Fazla / yersiz tahsil edilen "+tur.ad.toLowerCase()+" tutarının iadesi (düzeltme) talebi\n\n"+
+"Mükellef / Vergi Kimlik No: ……\nAdres: ……\nTelefon: ……\nIBAN (iade için): ……\n\n"+
+"Açıklamalar:\n"+
+"1) Tarafımca "+(viState.tarih||"…/…/……")+" tarihinde "+tur.ad.toLowerCase()+" olarak "+(viState.tutar?fmt(viState.tutar):"……")+" tutarında ödeme yapılmıştır. Ödemeye ilişkin makbuz dilekçe ekindedir.\n"+
+"2) "+seb.ad+". "+seb.aciklama+"\n"+
+"3) Bu nedenle söz konusu tutar tarafımdan fazla / yersiz olarak tahsil edilmiştir.\n\n"+
+"Talep:\n"+
+"Yukarıda açıkladığım nedenlerle, "+day+" uyarınca fazla / yersiz tahsil edilen tutarın "+
+"yasal faiziyle birlikte tarafıma iadesine (düzeltilmesine) karar verilmesini talep ederim.\n\n"+
+"Ekler:\n"+tur.belgeler.map(function(b,i){return "   "+(i+1)+") "+b;}).join("\n")+"\n\n"+
+"Tarih: …/…/……\nAd Soyad / İmza: ……";
+}
+function viKopyala(){
+  const m=viDilekceMetni();
+  const bitir=function(ok){
+    const el=document.getElementById("viKopyaDurum");
+    if(el)el.textContent=ok?"Dilekçe metni kopyalandı.":"Kopyalanamadı — metni elle seçip kopyalayabilirsiniz.";
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(m).then(function(){bitir(true);},function(){bitir(false);});
+  else bitir(false);
+}
+
+function renderVergiIade(){
+  const w=document.getElementById("vergiIadeWrapper");if(!w)return;
+  let h='<div class="calc-page-header"><div class="step-number-badge">Vergi & Gümrük Hukuku</div>'+
+        '<h2>Vergi iademi nasıl alabilirim?</h2>'+
+        '<p>Fazla veya yersiz ödenen vergiyi geri almak için dava şart değil — önce idareye düzeltme başvurusu yapılır. Hangi mercie, hangi süre içinde ve hangi belgelerle başvuracağınızı birlikte çıkaralım.</p></div>';
+  h+='<div class="wz-card"><div class="wz-progress">';
+  for(let i=1;i<=4;i++)h+='<span class="'+(i<=viState.step?"done":"")+'"></span>';
+  h+='</div>';
+
+  if(viState.step===1){
+    h+='<div class="wz-step-label">1. adım</div><div class="wz-q">Hangi vergiyi ya da harcı fazla ödediniz?</div>';
+    h+='<p class="wz-hint">Başvuru mercii ve süre buna göre değişiyor. Gümrük vergilerinde süre yalnızca 3 yıl.</p><div class="wz-opts">';
+    Object.keys(VI_TUR).forEach(function(k){
+      const t=VI_TUR[k],sel=viState.tur===k?" sel":"";
+      h+='<button type="button" class="wz-opt'+sel+'" onclick="viPick(\'tur\',\''+k+'\')"><span class="wz-opt-dot"></span><span>'+t.ad+'<span class="wz-opt-sub">Başvuru: '+t.mercii+'</span></span></button>';
+    });
+    h+='</div>';
+  }
+  else if(viState.step===2){
+    h+='<div class="wz-step-label">2. adım</div><div class="wz-q">Neden fazla ödediğinizi düşünüyorsunuz?</div>';
+    h+='<p class="wz-hint">Sebep, izleyeceğiniz yolu belirliyor: hata varsa düzeltme, kanunen iade hakkı doğmuşsa kendi usulü.</p><div class="wz-opts">';
+    Object.keys(VI_SEBEP).forEach(function(k){
+      const s=VI_SEBEP[k],sel=viState.sebep===k?" sel":"";
+      h+='<button type="button" class="wz-opt'+sel+'" onclick="viPick(\'sebep\',\''+k+'\')"><span class="wz-opt-dot"></span><span>'+s.ad+'</span></button>';
+    });
+    h+='</div>';
+  }
+  else if(viState.step===3){
+    const t=VI_TUR[viState.tur];
+    h+='<div class="wz-step-label">3. adım</div><div class="wz-q">Ödeme bilgileri</div>';
+    h+='<p class="wz-hint">Tarih, sürenizin dolup dolmadığını hesaplamak için gerekli. Tutar ve faiz oranı isteğe bağlı — girerseniz tahmini iade tutarını da gösteririm.</p>';
+    h+='<div class="form-grid">';
+    h+='<div class="form-group"><label for="vi_tarih">Ödemeyi yaptığınız tarih</label><div class="input-wrapper"><input type="date" id="vi_tarih" value="'+viState.tarih+'"/></div><p class="field-hint">'+t.sureAd+'</p></div>';
+    h+='<div class="form-group"><label for="vi_tutar">Fazla ödediğinizi düşündüğünüz tutar (TL)</label><div class="input-wrapper"><span class="input-prefix">₺</span><input type="number" id="vi_tutar" min="0" placeholder="Örn: 45000" value="'+(viState.tutar||"")+'"/></div></div>';
+    h+='<div class="form-group"><label for="vi_faiz">Uygulanacak yıllık faiz oranı (%)</label><div class="input-wrapper"><span class="input-prefix">%</span><input type="number" id="vi_faiz" min="0" placeholder="Bilmiyorsanız boş bırakın" value="'+(viState.faiz||"")+'"/></div><p class="field-hint">Düzeltme fişine dayanan iadede tecil faizi oranında faiz işletilir (VUK m.112/4). Oran Bakanlıkça değiştirildiği için buraya sabit bir değer yazmıyorum; güncel oranı girerseniz hesaplarım.</p></div>';
+    h+='</div>';
+  }
+  else {
+    const t=VI_TUR[viState.tur],s=VI_SEBEP[viState.sebep];
+    const gecen=viGun(),kalan=gecen===null?null:t.sure-gecen;
+    const gumruk=viState.tur==="gumruk";
+    h+='<div class="wz-step-label">Yol haritanız</div>';
+    h+='<div class="vi-ozet"><div><span>Vergi türü</span><strong>'+t.ad+'</strong></div>'+
+       '<div><span>Sebep</span><strong>'+s.ad+'</strong></div>'+
+       '<div><span>Başvuru mercii</span><strong>'+t.mercii+'</strong></div></div>';
+
+    if(kalan!==null){
+      const cls=kalan<=0?"kirmizi":(kalan<=Math.max(30,Math.round(t.sure*0.15))?"sari":"yesil");
+      h+='<div class="vi-sure '+cls+'">';
+      if(kalan<=0)h+='<strong>Süre görünüşe göre dolmuş.</strong> Ödeme tarihinden bu yana '+gecen+' gün geçmiş. Yine de sürenin başlangıcı bazı hâllerde farklı hesaplanır (mahkeme kararına dayanan iadelerde kararın kesinleşme tarihi gibi) — vazgeçmeden önce bir avukata sorun.';
+      else h+='<strong>Yaklaşık '+kalan+' gününüz kalmış.</strong> '+t.sureAd+'.';
+      h+='</div>';
+    }
+
+    if(viState.tutar>0){
+      const yil=gecen===null?0:gecen/365;
+      const faiz=viState.faiz>0?Math.round(viState.tutar*(viState.faiz/100)*yil):0;
+      h+='<div class="vi-tutar"><div class="vi-tutar-lbl">Talep edeceğiniz tahmini tutar</div>'+
+         '<div class="vi-tutar-big">'+fmt2(viState.tutar+faiz)+' TL</div>'+
+         '<div class="vi-tutar-alt">Ana para '+fmt(viState.tutar)+(faiz>0?' + faiz '+fmt(faiz)+' ('+viState.faiz+'% × '+yil.toFixed(1)+' yıl)':' (faiz oranı girilmedi)')+'</div>'+
+         '<div class="vi-tutar-not">Bu tutar sizin girdiğiniz verilere dayanır; idarenin kabul edeceği tutar belgelerinize göre değişir.</div></div>';
+    }
+
+    h+='<div class="vi-adimlar">';
+    const iadeHakki=s.yol==="iadehakki";
+    const adimlar=[
+     {b:"Belgeleri toplayın",m:"<ul><li>"+t.belgeler.join("</li><li>")+"</li></ul>"},
+     {b:(iadeHakki?"İade talep formunu ve dilekçeyi verin":"Düzeltme dilekçesini verin"),
+      m:iadeHakki
+        ?"İade hakkı doğuran işlemlerde talep, beyanname üzerinden ve ilgili standart iade talep formuyla yapılır. Formu eksiksiz doldurup istenen listeleri (yüklenilen KDV tablosu, indirilecek KDV listesi) sisteme yükleyin."
+        :"Aşağıdaki dilekçeyi <strong>"+t.mercii+"</strong>ne elden verip <strong>tarihli ve imzalı kayıt numarası</strong> alın veya e-Devlet/İnteraktif Vergi Dairesi üzerinden gönderin. Kayıt numarası, süreyi durdurduğunuzun tek kanıtıdır."},
+     {b:"İdarenin cevabını bekleyin",m:"İdare talebinizi inceler. <strong>60 gün içinde cevap verilmezse talep zımnen reddedilmiş sayılır</strong> (İYUK m.10) ve dava açma süresi bu tarihten işlemeye başlar. Bu süreyi takviminize işleyin."},
+     gumruk
+      ?{b:"Ret hâlinde itiraz ve dava",m:"Ret kararına karşı <strong>15 gün</strong> içinde gümrük ve dış ticaret bölge müdürlüğüne itiraz edilir (GK m.242). İtirazın reddi üzerine <strong>30 gün</strong> içinde vergi mahkemesinde iptal davası açılır."}
+      :{b:"Ret hâlinde şikayet ve dava",m:"Vergi dairesi düzeltme talebinizi reddederse <strong>Hazine ve Maliye Bakanlığı'na şikayet yoluyla</strong> başvurulur (VUK m.124). Şikayetin reddi veya 60 gün içinde cevap verilmemesi üzerine <strong>30 gün</strong> içinde vergi mahkemesinde dava açılır (İYUK m.7, 10)."},
+     {b:"İade ve faiz",m:"Talep kabul edilirse düzeltme fişi düzenlenir ve tutar bildirdiğiniz hesaba aktarılır. Fazla veya haksız tahsil edilen vergilerde, düzeltme fişine dayanan iadelerde <strong>tecil faizi oranında faiz</strong> işletilir (VUK m.112/4). Dilekçenizde faizi <strong>açıkça talep etmeyi</strong> unutmayın; talep edilmeyen faiz kendiliğinden ödenmez."}
+    ];
+    adimlar.forEach(function(a,i){
+      h+='<div class="vi-adim"><span class="vi-adim-n">'+(i+1)+'</span><div><strong>'+a.b+'</strong><div class="vi-adim-m">'+a.m+'</div></div></div>';
+    });
+    h+='</div>';
+
+    h+='<div class="vi-ipucu"><strong>Bu vergi türünde en sık görülen durum</strong><p>'+t.ipucu+'</p></div>';
+
+    if(!iadeHakki){
+      h+='<div class="vi-dilekce"><div class="vi-dilekce-head"><strong>Örnek dilekçe</strong>'+
+         '<button type="button" class="btn-back" onclick="viKopyala()">Metni kopyala</button></div>'+
+         '<pre class="vi-dilekce-body">'+sanitizeHtml(viDilekceMetni())+'</pre>'+
+         '<div id="viKopyaDurum" class="vi-kopya-durum"></div>'+
+         '<p class="vi-dilekce-not">Noktalı yerleri kendi bilgilerinizle doldurun. Bu bir taslaktır; dosyanızın özelliğine göre eklemeler gerekebilir.</p></div>';
+    }
+
+    h+='<div class="tani-sec"><div class="tani-sec-t">Dayanak</div><div class="tani-mev">';
+    t.dayanak.forEach(function(d){h+='<span class="tani-mev-c">'+d+'</span>';});
+    h+='</div></div>';
+
+    h+='<div class="tani-sec"><div class="tani-sec-t">İlgili hesaplama araçları</div><div class="tani-tools">'+
+       ["gozetim","vergiDavasi","emlakVergisi","ithalatVergi"].map(function(id,i){return taniArac(id,i===0);}).join("")+
+       '</div></div>';
+
+    h+='<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg>'+
+       '<p>Bu yol haritası genel bilgilendirmedir, hukuki görüş değildir. Süreler dosyanızın özelliğine göre farklı işleyebilir.</p></div>';
+
+    h+='<div class="cmp-actions" style="margin-top:14px"><a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="'+
+       whatsappLink("Merhaba, "+t.ad+" için iade başvurusu yapmak istiyorum. Sebep: "+s.ad+". Bu konuda görüşebilir miyiz?")+
+       '"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Başvurumu birlikte hazırlayalım</a></div>';
+  }
+
+  h+='<div class="wz-actions">';
+  h+=viState.step===1?'<button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button>':'<button class="btn-back" onclick="viPrev()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>';
+  if(viState.step===3)h+='<button class="btn-next" onclick="viHesapla()">Yol haritamı çıkar <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+  else if(viState.step===4)h+='<button class="btn-next" onclick="openVergiIade()">Yeniden başla</button>';
+  h+='</div></div>';
+  w.innerHTML=h;tilt3dScan();
+}
+
+/* =====================================================================
+   HAFİF 3B KATMANI
+   İki parça: (1) kartlar imlecin bulunduğu yöne birkaç derece eğiliyor,
+   (2) trafik akışlarının başında perspektifli bir yol sahnesi var.
+   Açılar bilinçli olarak küçük (en çok 6°): derinlik hissi versin ama
+   okumayı zorlaştırmasın. Dokunmatik cihazlarda ve hareket kısıtlaması
+   açıkken tamamen devre dışı — orada eğim ya hiç tetiklenmiyor ya da
+   rahatsız edici oluyor.
+   ===================================================================== */
+const T3D_SELECTORS='.qcard,.method-card,.blog-card,.testimonial-card,.tani-tool,.tani-hak,.vi-adim';
+const T3D_MAX=6;
+let _t3dHazir=false,_t3dAktif=null,_t3dBekleyen=null,_t3dRaf=false;
+
+function tilt3dDestekli(){
+  if(!window.matchMedia)return false;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return false;
+  return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+}
+/* Parlama katmanı kartın içine bir kez ekleniyor; eğimle birlikte ışık da
+   imleci takip edince yüzey düz bir dikdörtgen gibi durmuyor. */
+function tilt3dScan(){
+  if(!tilt3dDestekli())return;
+  document.querySelectorAll(T3D_SELECTORS).forEach(function(el){
+    if(el.classList.contains('t3d'))return;
+    el.classList.add('t3d');
+    if(!el.querySelector(':scope > .t3d-glare')){
+      const g=document.createElement('span');g.className='t3d-glare';el.appendChild(g);
+    }
+  });
+  if(!_t3dHazir)tilt3dInit();
+}
+function tilt3dBirak(el){
+  if(!el)return;
+  el.classList.remove('t3d-live');
+  el.style.setProperty('--t3rx','0deg');
+  el.style.setProperty('--t3ry','0deg');
+}
+function tilt3dInit(){
+  if(_t3dHazir||!tilt3dDestekli())return;
+  _t3dHazir=true;
+  document.addEventListener('pointermove',function(e){
+    if(e.pointerType==='touch')return;
+    const el=e.target&&e.target.closest?e.target.closest(T3D_SELECTORS):null;
+    if(el!==_t3dAktif){tilt3dBirak(_t3dAktif);_t3dAktif=el;if(el)el.classList.add('t3d-live');}
+    if(!el)return;
+    _t3dBekleyen={el:el,x:e.clientX,y:e.clientY};
+    /* Kare başına tek güncelleme: pointermove saniyede yüzlerce kez tetiklenir. */
+    if(_t3dRaf)return;
+    _t3dRaf=true;
+    requestAnimationFrame(function(){
+      _t3dRaf=false;
+      const b=_t3dBekleyen;if(!b||!b.el.isConnected)return;
+      const r=b.el.getBoundingClientRect();
+      if(!r.width||!r.height)return;
+      const x=Math.min(1,Math.max(0,(b.x-r.left)/r.width));
+      const y=Math.min(1,Math.max(0,(b.y-r.top)/r.height));
+      b.el.style.setProperty('--t3ry',((x-0.5)*2*T3D_MAX).toFixed(2)+'deg');
+      b.el.style.setProperty('--t3rx',((0.5-y)*2*T3D_MAX).toFixed(2)+'deg');
+      b.el.style.setProperty('--t3x',(x*100).toFixed(1)+'%');
+      b.el.style.setProperty('--t3y',(y*100).toFixed(1)+'%');
+    });
+  },{passive:true});
+  /* Fare pencereden çıkarsa kart eğik kalmasın. */
+  document.addEventListener('mouseleave',function(){tilt3dBirak(_t3dAktif);_t3dAktif=null;});
+  window.addEventListener('blur',function(){tilt3dBirak(_t3dAktif);_t3dAktif=null;});
+}
+
+/* Perspektifli yol sahnesi: zemin rotateX ile yatırılıyor, şerit çizgileri
+   kayıyor, araç hafifçe süzülüyor. Tek bir SVG + CSS; kütüphane yok. */
+function road3dHtml(baslik){
+  return '<div class="road3d" aria-hidden="true">'+
+    '<div class="road3d-sky"></div>'+
+    '<div class="road3d-floor"></div>'+
+    '<div class="road3d-lane"></div>'+
+    '<div class="road3d-glow"></div>'+
+    '<svg class="road3d-car" viewBox="0 0 240 130" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs>'+
+        '<linearGradient id="r3dBody" x1="0" y1="0" x2="0" y2="1">'+
+          '<stop offset="0%" stop-color="#A78BFA"/><stop offset="52%" stop-color="#7C4DEF"/><stop offset="100%" stop-color="#4C2E9E"/>'+
+        '</linearGradient>'+
+        '<linearGradient id="r3dCam" x1="0" y1="0" x2="0" y2="1">'+
+          '<stop offset="0%" stop-color="#EAE6FF" stop-opacity=".92"/><stop offset="100%" stop-color="#6D5FA8" stop-opacity=".55"/>'+
+        '</linearGradient>'+
+        '<linearGradient id="r3dFar" x1="0" y1="0" x2="1" y2="0">'+
+          '<stop offset="0%" stop-color="#FFF6DC"/><stop offset="100%" stop-color="#C5A880"/>'+
+        '</linearGradient>'+
+        '<radialGradient id="r3dIsik" cx="50%" cy="50%" r="50%">'+
+          '<stop offset="0%" stop-color="#FFF3D0" stop-opacity=".95"/><stop offset="100%" stop-color="#FFF3D0" stop-opacity="0"/>'+
+        '</radialGradient>'+
+      '</defs>'+
+      /* far huzmeleri — sahnenin sinematik hissi buradan geliyor */
+      '<ellipse cx="62" cy="92" rx="52" ry="17" fill="url(#r3dIsik)" opacity=".55"/>'+
+      '<ellipse cx="178" cy="92" rx="52" ry="17" fill="url(#r3dIsik)" opacity=".55"/>'+
+      /* gövde */
+      '<path d="M22 92c-6 0-10-4-10-10V64c0-7 4-13 10-16l24-11 12-19c3-5 8-8 14-8h96c6 0 11 3 14 8l12 19 24 11c6 3 10 9 10 16v18c0 6-4 10-10 10z" fill="url(#r3dBody)"/>'+
+      /* tavan / cam */
+      '<path d="M64 41l10-16c2-3 5-5 9-5h74c4 0 7 2 9 5l10 16z" fill="url(#r3dCam)"/>'+
+      '<path d="M12 70h216" stroke="#000" stroke-opacity=".18" stroke-width="2"/>'+
+      /* farlar */
+      '<rect x="18" y="60" width="40" height="13" rx="6" fill="url(#r3dFar)"/>'+
+      '<rect x="182" y="60" width="40" height="13" rx="6" fill="url(#r3dFar)"/>'+
+      /* ızgara ve tampon */
+      '<rect x="84" y="62" width="72" height="14" rx="7" fill="#0B0C10" fill-opacity=".55"/>'+
+      '<rect x="30" y="84" width="180" height="10" rx="5" fill="#0B0C10" fill-opacity=".35"/>'+
+      /* tekerlekler */
+      '<rect x="26" y="88" width="34" height="26" rx="10" fill="#0B0C10"/>'+
+      '<rect x="180" y="88" width="34" height="26" rx="10" fill="#0B0C10"/>'+
+      '<rect x="33" y="94" width="20" height="14" rx="7" fill="#2A2A2A"/>'+
+      '<rect x="187" y="94" width="20" height="14" rx="7" fill="#2A2A2A"/>'+
+    '</svg>'+
+    (baslik?'<div class="road3d-cap">'+baslik+'</div>':'')+
+  '</div>';
 }

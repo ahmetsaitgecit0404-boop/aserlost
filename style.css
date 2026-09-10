@@ -1379,3 +1379,218 @@ input.module-search-input:focus { border-color: var(--primary); box-shadow: 0 8p
   transition: transform 0.1s cubic-bezier(0.22,1,0.36,1);
 }
 
+/* ===================================================
+   DURUM TESPİTİ (tahmin motoru)
+   =================================================== */
+.tani-head h2 { letter-spacing: -0.02em; }
+.tani-card { position: relative; overflow: hidden; }
+.tani-card::before { content:''; position:absolute; inset:-1px -1px auto -1px; height:2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity:.5; }
+.tani-step { font-size: 12px; font-weight: 700; color: var(--primary); letter-spacing: .5px;
+  text-transform: uppercase; margin-bottom: 10px; }
+.tani-step span { opacity: .4; margin: 0 5px; }
+.tani-q { font-size: 24px; }
+.tani-opts { margin-top: 4px; }
+.tani-opt { align-items: flex-start; }
+.tani-opt .wz-opt-dot { margin-top: 2px; }
+
+/* Motorun o an ne düşündüğü — gerçek olasılıklar, süs değil. */
+.tani-mind { margin-top: 20px; padding: 14px 16px; border-radius: var(--radius-md);
+  background: var(--bg-elevated); border: 1px solid var(--border); }
+.tani-mind-lbl { font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px; }
+.tani-mind-row { display: grid; grid-template-columns: 1fr 84px 38px; align-items: center; gap: 10px; margin-bottom: 7px; }
+.tani-mind-row:last-child { margin-bottom: 0; }
+.tani-mind-name { font-size: 12.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tani-mind-bar { height: 6px; border-radius: 100px; background: var(--bg-hover); overflow: hidden; }
+.tani-mind-bar i { display: block; height: 100%; border-radius: 100px; opacity: .55;
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+  transition: width .5s cubic-bezier(0.22,1,0.36,1); }
+.tani-mind-pct { font-size: 12px; font-weight: 700; color: var(--primary); text-align: right; }
+
+.tani-think { text-align: center; }
+.tani-think p { font-size: 14px; color: var(--text-secondary); margin: 14px 0 4px; }
+.tani-think-dots { display: flex; gap: 7px; justify-content: center; }
+.tani-think-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--primary);
+  animation: taniDot 1s ease-in-out infinite; }
+.tani-think-dots i:nth-child(2) { animation-delay: .15s; }
+.tani-think-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes taniDot { 0%,100% { opacity:.25; transform: translateY(0) scale(.85); } 50% { opacity:1; transform: translateY(-5px) scale(1); } }
+
+.tani-guess { text-align: left; }
+.tani-guess-lbl { font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
+  color: var(--primary); margin-bottom: 10px; }
+.tani-guess-ad { font-size: clamp(21px, 3vw, 27px); font-weight: 800; line-height: 1.3;
+  letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 10px; }
+.tani-guess-oz { font-size: 14.5px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px; }
+.tani-conf { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.tani-conf-bar { flex: 1; height: 8px; border-radius: 100px; background: var(--bg-hover); overflow: hidden; }
+.tani-conf-bar i { display: block; height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary-light, var(--primary)));
+  animation: taniConf .7s cubic-bezier(0.22,1,0.36,1) both; }
+@keyframes taniConf { from { width: 0 !important; } }
+.tani-conf span { font-size: 13px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+.tani-guess-act { display: flex; gap: 10px; flex-wrap: wrap; }
+.tani-guess-act .btn-next, .tani-guess-act .btn-back { flex: 1; justify-content: center; min-width: 150px; }
+.tani-alt { font-size: 12.5px; color: var(--text-muted); margin-top: 14px; }
+
+.tani-iz { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px; }
+.tani-iz summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--text-secondary); list-style: none; }
+.tani-iz summary::-webkit-details-marker { display: none; }
+.tani-iz summary::before { content:'▸'; display:inline-block; margin-right:7px; color: var(--primary); transition: transform .2s; }
+.tani-iz[open] summary::before { transform: rotate(90deg); }
+.tani-iz summary span { color: var(--text-muted); font-weight: 500; }
+.tani-iz ol { margin: 14px 0 0; padding-left: 20px; }
+.tani-iz li { margin-bottom: 14px; }
+.tani-iz-s { display: block; font-size: 12.5px; color: var(--text-muted); }
+.tani-iz-c { display: block; font-size: 13.5px; font-weight: 700; color: var(--text-primary); margin: 2px 0 4px; }
+.tani-iz-n { display: block; font-size: 12.5px; line-height: 1.6; color: var(--text-secondary); }
+.tani-iz-y { display: block; font-size: 12px; font-weight: 600; color: var(--primary); margin-top: 4px; }
+.tani-foot { display: flex; gap: 10px; justify-content: space-between; margin-top: 22px; flex-wrap: wrap; }
+
+.tani-res-top { margin-bottom: 26px; }
+.tani-res-lbl { font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+.tani-res-top h3 { font-size: clamp(21px, 3vw, 28px); font-weight: 800; line-height: 1.3;
+  letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 10px; }
+.tani-res-top p { font-size: 14.5px; line-height: 1.7; color: var(--text-secondary); }
+.tani-sec { margin-bottom: 24px; }
+.tani-sec-t { font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 12px; }
+.tani-haklar { display: grid; gap: 10px; }
+.tani-hak { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.tani-hak-ok { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; background: rgba(34,197,94,.14); color: #22c55e; margin-top: 1px; }
+.tani-hak strong { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.tani-hak p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+.tani-dikkat { list-style: none; display: grid; gap: 9px; }
+.tani-dikkat li { position: relative; padding: 12px 14px 12px 38px; font-size: 13.5px; line-height: 1.65;
+  color: var(--text-secondary); background: rgba(245,158,11,.06); border: 1px solid rgba(245,158,11,.18);
+  border-radius: var(--radius-md); }
+.tani-dikkat li::before { content:'!'; position:absolute; left:14px; top:12px; width:16px; height:16px;
+  border-radius:50%; background:#f59e0b; color:#111; font-size:11px; font-weight:900;
+  display:flex; align-items:center; justify-content:center; }
+.tani-dikkat strong { color: var(--text-primary); }
+.tani-mev { display: flex; flex-wrap: wrap; gap: 7px; }
+.tani-mev-c { font-size: 11.5px; font-weight: 600; color: var(--text-muted); padding: 6px 11px;
+  border: 1px solid var(--border); border-radius: 100px; background: var(--bg-elevated); }
+
+.tani-tools { display: grid; gap: 9px; }
+.tani-tool { display: flex; align-items: center; gap: 13px; padding: 14px 16px; text-decoration: none;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md);
+  color: var(--text-primary); transition: border-color .25s, transform .25s cubic-bezier(0.22,1,0.36,1); }
+.tani-tool:hover { border-color: var(--border-light); transform: translateX(3px); }
+.tani-tool:active { transform: scale(.985); }
+.tani-tool.ana { background: linear-gradient(145deg, var(--primary-glow, rgba(197,168,128,.1)), var(--bg-elevated));
+  border-color: var(--border-mid); padding: 18px; }
+.tani-tool-ico { flex-shrink: 0; color: var(--primary); display: flex; }
+.tani-tool-body { flex: 1; min-width: 0; }
+.tani-tool-t { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.tani-tool.ana .tani-tool-t { font-size: 15.5px; }
+.tani-tool-d { display: block; font-size: 12.5px; line-height: 1.55; color: var(--text-muted); margin-top: 4px; }
+.tani-tool-ok { flex-shrink: 0; color: var(--text-muted); }
+.tani-tools-not { font-size: 12px; color: var(--text-muted); margin-top: 9px; }
+
+.tani-sure-ad { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+.tani-sure-in { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tani-sure-in label { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.tani-sure-in input { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 12px; color: var(--text-primary); font-family: var(--font); font-size: 13.5px; }
+.tani-sure-out { font-size: 13.5px; line-height: 1.65; margin-top: 12px; padding: 12px 14px;
+  border-radius: var(--radius-md); color: var(--text-secondary); }
+.tani-sure-out:empty { display: none; }
+.tani-sure-out.yesil { background: rgba(34,197,94,.07); border: 1px solid rgba(34,197,94,.22); }
+.tani-sure-out.sari { background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.22); }
+.tani-sure-out.kirmizi { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22); }
+
+/* ===================================================
+   VERGİ İADESİ YOL HARİTASI
+   =================================================== */
+.vi-ozet { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.vi-ozet > div { padding: 13px 15px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.vi-ozet span { display: block; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.vi-ozet strong { font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.45; }
+.vi-sure { font-size: 13.5px; line-height: 1.65; padding: 14px 16px; border-radius: var(--radius-md); margin-bottom: 18px; color: var(--text-secondary); }
+.vi-sure.yesil { background: rgba(34,197,94,.07); border: 1px solid rgba(34,197,94,.22); }
+.vi-sure.sari { background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.22); }
+.vi-sure.kirmizi { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22); }
+.vi-tutar { text-align: center; padding: 22px; margin-bottom: 20px; border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(197,168,128,.1), rgba(168,139,96,.05)); border: 1px solid var(--border-mid); }
+.vi-tutar-lbl { font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--text-muted); }
+.vi-tutar-big { font-size: clamp(30px, 5vw, 42px); font-weight: 900; letter-spacing: -0.03em; color: var(--primary); margin: 8px 0 6px; }
+.vi-tutar-alt { font-size: 13px; color: var(--text-secondary); }
+.vi-tutar-not { font-size: 11.5px; color: var(--text-muted); margin-top: 8px; }
+.vi-adimlar { display: grid; gap: 12px; margin-bottom: 20px; }
+.vi-adim { display: flex; gap: 14px; align-items: flex-start; padding: 16px; background: var(--bg-elevated);
+  border: 1px solid var(--border); border-radius: var(--radius-md); }
+.vi-adim-n { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 12.5px; font-weight: 800; color: var(--bg-base);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+.vi-adim strong { display: block; font-size: 14.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
+.vi-adim-m { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+.vi-adim-m ul { margin: 0; padding-left: 18px; }
+.vi-adim-m li { margin-bottom: 4px; }
+.vi-ipucu { padding: 16px; border-radius: var(--radius-md); background: rgba(197,168,128,.06);
+  border: 1px solid rgba(197,168,128,.18); margin-bottom: 20px; }
+.vi-ipucu strong { display: block; font-size: 13px; color: var(--primary); margin-bottom: 6px; }
+.vi-ipucu p { font-size: 13.5px; line-height: 1.7; color: var(--text-secondary); }
+.vi-dilekce { margin-bottom: 20px; }
+.vi-dilekce-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.vi-dilekce-head strong { font-size: 13px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--text-muted); }
+.vi-dilekce-body { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 18px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px;
+  line-height: 1.75; color: var(--text-secondary); white-space: pre-wrap; overflow-x: auto; max-height: 420px; }
+.vi-kopya-durum { font-size: 12px; color: var(--primary); margin-top: 8px; }
+.vi-kopya-durum:empty { display: none; }
+.vi-dilekce-not { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+/* ===================================================
+   HAFİF 3B KATMANI
+   İmleç/parmak kartın üzerindeyken kart o yöne doğru birkaç derece
+   eğiliyor; başlıklar sayfaya girerken yatay eksende dönerek yerine
+   oturuyor. Amaç derinlik hissi — dikkat dağıtan bir gösteri değil,
+   bu yüzden açılar küçük (en çok 6°) ve hareket kısıtlıysa kapalı.
+   =================================================== */
+.t3d { transform-style: preserve-3d;
+  transform: perspective(950px) rotateX(var(--t3rx, 0deg)) rotateY(var(--t3ry, 0deg)) translateZ(0);
+  transition: transform .35s cubic-bezier(0.22,1,0.36,1); }
+.t3d.t3d-live { transition: transform .08s linear; }
+.t3d-glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  transition: opacity .3s ease; z-index: 2;
+  background: radial-gradient(340px circle at var(--t3x, 50%) var(--t3y, 50%), rgba(255,255,255,.09), transparent 60%); }
+.t3d.t3d-live .t3d-glare { opacity: 1; }
+[data-theme="light"] .t3d-glare { background: radial-gradient(340px circle at var(--t3x,50%) var(--t3y,50%), rgba(197,168,128,.16), transparent 60%); }
+
+/* Yazıların 3B dönüşü: yalnızca sayfaya ilk girişte, bir kez. */
+html.rv-on .rv.rv3d { opacity: 0; transform: perspective(800px) rotateX(-42deg) translateY(14px); transform-origin: 50% 100%; }
+html.rv-on .rv.rv3d.rv-in { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+
+/* Sinematik yol sahnesi — trafik araçlarının başlığında. */
+.road3d { position: relative; height: 190px; margin: 0 0 26px; border-radius: var(--radius-lg);
+  overflow: hidden; background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-base) 62%);
+  border: 1px solid var(--border); perspective: 460px; perspective-origin: 50% 34%; }
+.road3d-sky { position: absolute; inset: 0 0 42% 0;
+  background: radial-gradient(120% 90% at 50% 100%, rgba(139,92,246,.22), transparent 62%); }
+.road3d-floor { position: absolute; left: -60%; right: -60%; bottom: -38%; height: 132%;
+  transform: rotateX(74deg); transform-origin: 50% 100%;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 78px, rgba(197,168,128,.16) 78px 80px),
+    repeating-linear-gradient(0deg, transparent 0 58px, rgba(197,168,128,.10) 58px 60px),
+    linear-gradient(180deg, rgba(197,168,128,.05), transparent 72%); }
+.road3d-lane { position: absolute; left: 50%; bottom: 0; width: 5px; height: 62%; margin-left: -2.5px;
+  background: repeating-linear-gradient(180deg, var(--primary) 0 18px, transparent 18px 44px);
+  opacity: .5; animation: road3dRun 1.05s linear infinite; }
+@keyframes road3dRun { to { background-position-y: 44px; } }
+.road3d-glow { position: absolute; left: 50%; bottom: 16px; width: 260px; height: 90px; margin-left: -130px;
+  background: radial-gradient(closest-side, rgba(197,168,128,.28), transparent); filter: blur(6px); }
+.road3d-car { position: absolute; left: 50%; bottom: 22px; width: 220px; margin-left: -110px;
+  animation: road3dFloat 3.4s ease-in-out infinite; filter: drop-shadow(0 14px 22px rgba(0,0,0,.5)); }
+@keyframes road3dFloat { 0%,100% { transform: translateY(0) rotateZ(-.5deg); } 50% { transform: translateY(-7px) rotateZ(.5deg); } }
+.road3d-cap { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: 12px;
+  font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-muted); }
+@media (max-width: 640px) { .road3d { height: 150px; } .road3d-car { width: 168px; margin-left: -84px; } }
+@media (prefers-reduced-motion: reduce) {
+  .road3d-lane, .road3d-car { animation: none; }
+  .t3d { transition: none; transform: none !important; }
+  .t3d-glare { display: none; }
+}
