@@ -12,3 +12,9 @@ Thumbs.db
 deploy.zip
 selftest.log
 .preview-server.log
+dogrulayici/build/
+dogrulayici/dist/
+dogrulayici/*.spec
+dogrulayici-apk/build/
+dogrulayici-apk/dist/
+dogrulayici-apk/imza.keystore
