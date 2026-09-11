@@ -64,12 +64,21 @@ function parseAiJson(text){
   throw new Error('AI yanıtı işlenemedi (geçersiz format). Lütfen tekrar deneyin.');
 }
 
-const _SB_U='https://hvsxeljnyxmhiwgsqhgx.supabase.co';
-const _SB_K='sb_publishable_BcnsD00a5GKnQvNIqQ_jCg_i4gb7ycq';
-let _sbClient=null;
-function getSb(){if(!_sbClient&&window.supabase){_sbClient=window.supabase.createClient(_SB_U,_SB_K);}return _sbClient;}
-async function sbInsert(table,data){try{const c=getSb();if(c)await c.from(table).insert(data);}catch(e){}}
-async function sbSelect(table){try{const c=getSb();if(c){const r=await c.from(table).select('*');return r.data||[];}}catch(e){}return[];}
+
+
+
+/* Kayitlar kendi sunucumuz uzerinden yaziliyor. Tarayicida veritabani
+   anahtari tutulmuyor: kaynak koda bakan biri hicbir sey ele geciremez.
+   Sunucu alanlari dogruluyor, boyut sinirliyor ve hiz limiti uyguluyor. */
+async function sbInsert(table,data){
+  try{
+    await fetch('/api/kayit/'+encodeURIComponent(table),{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+  }catch(e){}
+}
 
 /* ========== LINK TRACKING SYSTEM ========== */
 function getUrlParam(name){const p=new URLSearchParams(window.location.search);return p.get(name)||'';}
@@ -2884,13 +2893,15 @@ function calcGeneric(){
 }
 
 function showLeadModal(type){
-  state.leadVekalet=null;
   ['leadName','leadEmail','leadPlate','leadDistrict','leadDescription'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('leadPhone').value='';
   const kvk=document.getElementById('kvkkConsent');if(kvk)kvk.checked=false;
+  /* Açık rıza her açılışta sıfırlanır: önceki hesaplamadan devreden bir
+     onay, yeni ve farklı bir işleme rıza sayılamaz. */
+  const ar=document.getElementById('acikRizaConsent');if(ar)ar.checked=false;
+  const arf=document.getElementById('acikRizaField');if(arf)arf.style.display=acikRizaGerekli(type)?'':'none';
   const city=document.getElementById('leadCity');if(city)city.value='';
-  document.querySelectorAll('#vekaletToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
-  ['nameError','phoneError','emailError','cityError','vekaletError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+  ['nameError','phoneError','emailError','cityError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
   const plateField=document.getElementById('leadPlateField');
   if(plateField)plateField.style.display=(type==='arac')?'':'none';
   /* Gözetim dosyalarında firma adı, sıradan başvurulardan daha değerli;
@@ -2910,25 +2921,33 @@ function showYasalUyari(){const m=document.getElementById('yasalModal');if(m)m.s
 function showKvkkText(){const m=document.getElementById('kvkkModal');if(m)m.style.display='flex';}
 function closeLeadModal(){try{const m=document.getElementById('leadModal');if(m)m.style.display='none';document.body.style.overflow='';}catch(e){}}
 function handleModalOverlayClick(e){}
-function selectVekalet(btn){document.querySelectorAll('#vekaletToggle .toggle-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.leadVekalet=btn.dataset.value;}
+/* Bu akışlarda sağlık verisi ya da yurt dışına giden yapay zekâ analizi
+   devrede; açık rıza kutusu yalnızca burada gösteriliyor. */
+const ACIK_RIZA_GEREKEN=['kusur','fesih','iseIade','sakatlik','gecici','kalici','isgucu','isKazasi','yoksun','manevi','durumTespiti'];
+function acikRizaGerekli(tur){return ACIK_RIZA_GEREKEN.indexOf(tur)!==-1;}
 
 function submitLead(){
   try{
-  const name=(document.getElementById('leadName').value||'').trim(),phone=(document.getElementById('leadPhone').value||'').trim(),email=(document.getElementById('leadEmail').value||'').trim(),city=document.getElementById('leadCity').value,district=(document.getElementById('leadDistrict').value||'').trim(),plate=(document.getElementById('leadPlate').value||'').trim(),description=(document.getElementById('leadDescription').value||'').trim(),vekalet=state.leadVekalet;
+  const name=(document.getElementById('leadName').value||'').trim(),phone=(document.getElementById('leadPhone').value||'').trim(),email=(document.getElementById('leadEmail').value||'').trim(),city=document.getElementById('leadCity').value,district=(document.getElementById('leadDistrict').value||'').trim(),plate=(document.getElementById('leadPlate').value||'').trim(),description=(document.getElementById('leadDescription').value||'').trim(),vekalet='';
   const kvkkOk=document.getElementById('kvkkConsent')&&document.getElementById('kvkkConsent').checked;
   let valid=true;
   const nOk=validateName(name);const ne=document.getElementById('nameError');if(ne)ne.textContent=nOk?'':'Lütfen adınızı ve soyadınızı tam girin.';if(!nOk)valid=false;
   const pOk=!!phone&&validatePhone(phone);const pe=document.getElementById('phoneError');if(pe)pe.textContent=pOk?'':'Lütfen geçerli bir telefon numarası girin.';if(!pOk)valid=false;
   const eOk=!!email&&validateEmail(email);const ee=document.getElementById('emailError');if(ee)ee.textContent=eOk?'':'Lütfen geçerli bir e-posta adresi girin.';if(!eOk)valid=false;
-  /* Şehir ve vekalet sorusu bilinçli olarak zorunlu değil: sonucu görmek
+  /* Şehir bilinçli olarak zorunlu değil: sonucu görmek
      için doldurulması gereken alan sayısı arttıkça ziyaretçi formu yarıda
      bırakıyor. Kimliğe dair asgari bilgi (ad, telefon, e-posta) ve KVKK
      onayı zorunlu kalıyor; bu ikisi boş gelirse kayıt yine oluşuyor. */
   const ce=document.getElementById('cityError');if(ce)ce.textContent='';
-  const ve=document.getElementById('vekaletError');if(ve)ve.textContent='';
   const ke=document.getElementById('kvkkError');if(!kvkkOk){if(ke)ke.textContent='KVKK Aydınlatma Metni\'ni kabul etmelisiniz.';valid=false;}else if(ke)ke.textContent='';
   if(!valid)return;
-  const contactInfo={name,phone,email,city,district,plate,vekalet};
+  /* Rızanın ispatı bizde: hangi onayın verildiği, onay anının tarih ve
+     saatiyle birlikte başvuru kaydına yazılıyor. KVKK denetiminde
+     istenen şey tam olarak budur. */
+  const arEl=document.getElementById('acikRizaConsent');
+  const acikRiza=!!(arEl&&arEl.checked&&acikRizaGerekli(state.pendingType));
+  const rizaZamani=new Date().toISOString();
+  const contactInfo={name,phone,email,city,district,plate,vekalet:'',acikRiza:acikRiza,rizaZamani:rizaZamani};
   storeContactInfo(contactInfo);
   markLeadCaptured();
   closeLeadModal();
@@ -2962,7 +2981,14 @@ function finalizeLead(contactInfo,description){
   /* Modüle özel ek bilgiler (gözetim dosya detayı, çıkış şekli vb.) leads
      tablosunda ayrı sütun olmadığı için açıklamaya ekleniyor — şemaya
      bilinmeyen kolon göndermek INSERT'ün tamamını reddettiriyor. */
-  const aciklamaFull=[description||'',state.pendingExtra||''].filter(Boolean).join(' | ');
+  /* Açık rıza verilmediyse sağlık ayrıntısını saklamıyoruz: özel nitelikli
+     veri, rıza olmadan kaydedilemez. Sonuç yine gösterilir. */
+  const rizaVar=!!contactInfo.acikRiza;
+  let ek=state.pendingExtra||'';
+  if(!rizaVar&&acikRizaGerekli(type))ek='[saglik ayrintisi acik riza olmadigi icin kaydedilmedi]';
+  const rizaNotu='Onay: aydinlatma=evet'+(acikRizaGerekli(type)?(', acik riza(saglik/yurtdisi)='+(rizaVar?'evet':'hayir')):'')
+    +' @ '+(contactInfo.rizaZamani||new Date().toISOString());
+  const aciklamaFull=[description||'',ek,rizaNotu].filter(Boolean).join(' | ');
   const leadData={tarih,saat,ad:contactInfo.name,telefon:contactInfo.phone,email:contactInfo.email,sehir:contactInfo.city,ilce:contactInfo.district||'',plaka:contactInfo.plate||'',tur:type,sonuc:sonucOzeti,vekalet:contactInfo.vekalet,aciklama:aciklamaFull,ref,etiket};
 
   const leads=JSON.parse(localStorage.getItem('muvekkilbilgi_leads')||'[]');
@@ -2996,7 +3022,12 @@ function markLeadCaptured(){sessionStorage.setItem('mb_lead_captured','1');}
 function getStoredContactInfo(){try{return JSON.parse(sessionStorage.getItem('mb_lead_contact')||'null');}catch(e){return null;}}
 function storeContactInfo(info){try{sessionStorage.setItem('mb_lead_contact',JSON.stringify(info));}catch(e){}}
 
-function postToGoogleForms(data){try{const fd=new FormData();fd.append('entry.2092238618',data.name);fd.append('entry.1556369182',data.phone);fd.append('entry.479301265',data.city);fd.append('entry.1841588407',data.vekalet);fd.append('entry.491333203',data.tur);fd.append('entry.1102816692',data.tutar);fetch('https://docs.google.com/forms/d/e/1FAIpQLSfIdcDlLyKtq1_mm6_cVLN0nHMCuRRSIUbUYkHp8uymoPGOUg/formResponse',{method:'POST',mode:'no-cors',body:fd}).catch(()=>{});}catch(e){}}
+/* Google Formuna gonderim kaldirildi.
+   Her basvurunun adi, telefonu ve sehri yurt disindaki ucuncu bir tarafa
+   (Google) gidiyordu. Aydinlatma metninde boyle bir aktarim yazmiyordu ve
+   KVKK m.9 kapsaminda ayri acik riza alinmamisti. Veri zaten kendi
+   veritabanimizda kayitli oldugu icin bu gonderim hem gereksiz hem riskli. */
+function postToGoogleForms(){/* bilincli olarak devre disi */}
 function validateName(name){const p=name.trim().split(/\s+/);return p.length>=2&&p.every(x=>x.length>=2);}
 function validatePhone(phone){return /^(0?5)[0-9]{9}$/.test(phone.replace(/[\s\-().+]/g,''));}
 
@@ -3917,7 +3948,7 @@ function gozBeyannameKaydet(path){
     ad:ci.name,telefon:ci.phone,email:ci.email,sehir:ci.city,ilce:ci.district||'',plaka:'',
     tur:'gozetim',
     sonuc:'Gümrük beyannamesi yüklendi · '+fmt(state.gozResult.fv.tutar)+' potansiyel fazla vergi',
-    vekalet:ci.vekalet,
+    vekalet:ci.vekalet||'',
     aciklama:'BEYANNAME: '+path+' | Skor: '+state.gozResult.sk.skor+'/100 · Eklenen kıymet: '+fmt(state.gozResult.ek)
   };
   try{

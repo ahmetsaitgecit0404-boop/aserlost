@@ -137,10 +137,41 @@ if (!GROQ_API_KEY) {
   process.exit(1);
 }
 
+/* CSP yalnizca HTML icindeki <meta> etiketinde taniliydi; meta etiketi
+   API yanitlarini kapsamiyor ve frame-ancestors gibi direktifleri kabul
+   etmiyor. Basligi sunucudan veriyoruz ki tum yanitlar icin gecerli olsun. */
 app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: {
+    useDefaults: false,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+      fontSrc: ['fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:', 'blob:'],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  },
+  crossOriginEmbedderPolicy: false,
+  referrerPolicy: { policy: 'no-referrer' },
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true }
 }));
+/* Panel ve API yanitlari onbellege alinmasin: paylasilan bir bilgisayarda
+   geri tusuyla muvekkil verilerine donulmesini engelliyor. */
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path === '/yonetim') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+  }
+  res.setHeader('X-Robots-Tag', req.path === '/yonetim' ? 'noindex, nofollow' : 'all');
+  next();
+});
 app.use(cors({
   origin: process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',')
@@ -405,6 +436,72 @@ app.get('/api/admin/beyanname', async (req, res) => {
     res.json({ url: SUPABASE_URL + '/storage/v1' + j.signedURL });
   } catch (e) {
     res.status(500).json({ error: 'Sunucu hatası: ' + e.message });
+  }
+});
+
+/* Tarayıcıdan gelen kayıt istekleri. Tablo ve alan adları beyaz listeyle
+   sınırlı: istemci hangi tabloya ne yazacağını seçemez, yalnızca burada
+   izin verilen alanlar kaydedilir. Bilinmeyen alan gönderilirse Supabase
+   INSERT'ün tamamını reddettiği için sessizce atılıyor. */
+const KAYIT_ALANLARI = {
+  leads:    ['tarih','saat','ad','telefon','email','sehir','ilce','plaka','tur','sonuc','vekalet','aciklama'],
+  contacts: ['tarih','saat','ad','email','telefon','konu','mesaj'],
+  tracking: ['ref','etiket','tip','tarih','saat','modul']
+};
+const kayitLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 12,
+  message: { error: 'Çok fazla kayıt denemesi. Lütfen 1 dakika bekleyin.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+function kayitTemizle(tablo, gelen) {
+  const izin = KAYIT_ALANLARI[tablo];
+  const cikti = {};
+  for (const alan of izin) {
+    let v = gelen[alan];
+    if (v === undefined || v === null) continue;
+    v = String(v);
+    /* Kontrol karakterleri temizleniyor ve alan başına üst sınır var:
+       açıklama alanına kilometrelerce metin basılmasını engelliyor. */
+    v = v.replace(/[\u0000-\u001F\u007F]/g, ' ').trim();
+    if (v === '') continue;
+    cikti[alan] = v.slice(0, alan === 'aciklama' || alan === 'mesaj' ? 4000 : 300);
+  }
+  return cikti;
+}
+
+app.post('/api/kayit/:tablo', kayitLimiter, async (req, res) => {
+  const tablo = req.params.tablo;
+  if (!Object.prototype.hasOwnProperty.call(KAYIT_ALANLARI, tablo)) {
+    return res.status(400).json({ error: 'Geçersiz kayıt türü.' });
+  }
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!svcKey) return res.status(500).json({ error: 'Sunucu yapılandırması eksik.' });
+  const veri = kayitTemizle(tablo, req.body && typeof req.body === 'object' ? req.body : {});
+  if (Object.keys(veri).length === 0) return res.status(400).json({ error: 'Boş kayıt.' });
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${tablo}`, {
+      method: 'POST',
+      headers: {
+        apikey: svcKey,
+        Authorization: `Bearer ${svcKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(veri),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!r.ok) {
+      const t = await r.text();
+      console.error('kayit hatasi', tablo, r.status, t.slice(0, 300));
+      return res.status(502).json({ error: 'Kayıt oluşturulamadı.' });
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('kayit istisnasi', tablo, e.message);
+    res.status(500).json({ error: 'Kayıt sırasında hata oluştu.' });
   }
 });
 

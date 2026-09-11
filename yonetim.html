@@ -1125,11 +1125,18 @@
         ' Beyannameyi indir</button>';
       acts+='</div>';
 
+      /* KVKK denetiminde ilk istenen şey rızanın ispatıdır. Onay kaydı
+         açıklamanın içine yazılıyor; burada ayıklanıp ayrı bir satırda
+         gösteriliyor ki hangi onayın ne zaman verildiği tek bakışta görünsün. */
+      const onayEs=String(l.aciklama||'').match(/Onay: [^|]+/);
+      const onayMetni=onayEs?onayEs[0].trim():'—';
+      const aciklamaSade=String(l.aciklama||'').replace(/\s*\|?\s*Onay: [^|]+/,'').trim();
       const fields=[
         ['Ad Soyad',l.ad],['Telefon',l.telefon],['E-posta',l.email],
         ['Şehir',l.sehir],['İlçe',l.ilce],['Plaka',l.plaka],
-        ['Modül',modLabel(l.tur)],['Sonuç',l.sonuc],['Vekalet',l.vekalet],
-        ['Açıklama',l.aciklama],['Kayıt No',l.id]
+        ['Modül',modLabel(l.tur)],['Sonuç',l.sonuc],
+        ['KVKK onayı',onayMetni],
+        ['Açıklama',aciklamaSade],['Kayıt No',l.id]
       ];
       const kv='<div class="dr-sect"><h4>Başvuru Bilgileri</h4><div class="kv">'+
         fields.map(function(f){
@@ -1318,7 +1325,8 @@
         ['Ad Soyad',l.ad],['Telefon',l.telefon],['E-posta',l.email],
         ['Şehir',l.sehir],['İlçe',l.ilce],['Plaka',l.plaka],
         ['Hesaplama Modülü',modLabel(l.tur)],['Hesaplama Sonucu',l.sonuc],
-        ['Vekalet Durumu',l.vekalet],['Açıklama',l.aciklama],
+        ['KVKK onayı',(String(l.aciklama||'').match(/Onay: [^|]+/)||['—'])[0].trim()],
+        ['Açıklama',String(l.aciklama||'').replace(/\s*\|?\s*Onay: [^|]+/,'').trim()],
         ['Başvuru Tarihi',prDate(l._date)],['Kayıt No',l.id]
       ];
       const kv='<table class="pr-kv">'+fields.map(function(f){

@@ -19,7 +19,7 @@
   <meta name="twitter:image" content="https://muvekkilbilgi.com/favicon.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://muvekkilbilgi.com" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.groq.com https://hvsxeljnyxmhiwgsqhgx.supabase.co; frame-src 'none'; object-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -70,9 +70,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260911" />
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css?v=20260911b" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -733,8 +732,13 @@
         <div class="modal-field"><label for="leadCity">Şehir <small style="font-weight:500;color:var(--text-muted)">(opsiyonel)</small></label><div class="select-wrapper"><select id="leadCity"><option value="">Şehir seçin</option></select><span class="select-arrow">▾</span></div><span class="field-error" id="cityError"></span></div>
         <div class="modal-field"><label for="leadDistrict">İlçe</label><input type="text" id="leadDistrict" placeholder="İlçe seçin (opsiyonel)"/></div>
         <div class="modal-field" id="leadPlateField"><label for="leadPlate">Araç Plakası</label><input type="text" id="leadPlate" placeholder="34 ABC 123 (opsiyonel)"/></div>
-        <div class="modal-field"><label>Bu kaza/olay için bir avukata vekalet verdiniz mi? <small style="font-weight:500;color:var(--text-muted)">(opsiyonel)</small></label><div class="toggle-group" id="vekaletToggle"><button type="button" class="toggle-btn" data-value="Hayır" onclick="selectVekalet(this)">Hayır</button><button type="button" class="toggle-btn" data-value="Evet" onclick="selectVekalet(this)">Evet</button></div><span class="field-error" id="vekaletError"></span></div>
         <div class="modal-field"><label for="leadDescription">Açıklama</label><textarea id="leadDescription" rows="3" placeholder="Eklemek istediğiniz detaylar..."></textarea></div>
+        <div class="modal-field kvkk-field" id="acikRizaField" style="display:none">
+          <label class="kvkk-checkbox"><input type="checkbox" id="acikRizaConsent"/>
+          <span><strong>Açık rıza (isteğe bağlı) — sağlık verisi ve yurt dışı aktarımı</strong><br/>
+          <small>Bu hesaplama <strong>sağlık durumunuza ilişkin bilgiler</strong> (yaralanma, sakatlık oranı, iş göremezlik süresi gibi) içerebilir; bunlar KVKK m.6 uyarınca <strong>özel nitelikli kişisel veri</strong>dir. Ayrıca yapay zekâ analizi ve barındırma için <strong>yurt dışında yerleşik hizmet sağlayıcılar</strong> kullanılmaktadır (KVKK m.9). Bu iki hususa ayrıca ve açıkça rıza veriyorum.<br/>
+          <strong>Bu kutuyu işaretlemeseniz de sonucu görürsünüz</strong>; yalnızca kaydınızda sağlık ayrıntılarına yer verilmez.</small></span></label>
+        </div>
         <div class="modal-field kvkk-field"><label class="kvkk-checkbox"><input type="checkbox" id="kvkkConsent"/> <span><strong>KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.</strong><br/><small>Ad, telefon ve e-posta bilgilerimin; talep ettiğim hesaplamanın yapılması, sonucun gösterilmesi ve başvuru kaydımın oluşturulması amacıyla işlenmesine izin veriyorum. Bu bilgilerin pazarlama amacıyla kullanılmayacağını, tarafıma tanıtım/arama yapılmayacağını ve üçüncü kişilere satılmayacağını, yasal saklama süreleri boyunca saklanacağını biliyorum. Detaylı bilgi için <a href="#" onclick="showKvkkText();return false;">Aydınlatma Metni</a>'ni okuyabilirsiniz.</small></span></label><span class="field-error" id="kvkkError"></span></div>
       </div>
       <button class="btn-show-result" id="btnShowResult" onclick="submitLead()">Sonucu Görüntüle <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -758,7 +762,7 @@
         <li><strong>Kimlik:</strong> ad, soyad</li>
         <li><strong>İletişim:</strong> telefon, e-posta, şehir, ilçe</li>
         <li><strong>Müşteri işlem:</strong> yaptığınız hesaplamalar, girdiğiniz tutarlar, hesaplama sonuçları, açıklama metinleri</li>
-        <li><strong>Hukuki işlem:</strong> avukata vekâlet verip vermediğiniz bilgisi, olay anlatımınız</li>
+        <li><strong>Hukuki işlem:</strong> olay anlatımınız</li>
         <li><strong>Araç ve sigorta:</strong> plaka (isteğe bağlı), araç bilgileri, hasar bilgileri, kaza tespit tutanağı ve ekspertiz raporu gibi yüklediğiniz belgeler</li>
         <li><strong>Görsel:</strong> yüklediğiniz kaza/hasar fotoğrafları</li>
         <li><strong>Finansal:</strong> maaş, gelir, gümrük kıymeti, ödenen vergi gibi hesaplama için girdiğiniz veriler</li>
@@ -824,6 +828,7 @@
       <p><strong>14. Veri Güvenliği</strong><br/>
       Verilerinizin hukuka aykırı işlenmesini ve erişilmesini önlemek amacıyla şifreli bağlantı (HTTPS), yetkilendirilmiş erişim, erişim kayıtlarının tutulması ve yüklenen belgelerin herkese kapalı alanda saklanması gibi teknik ve idari tedbirler uygulanır.</p>
 
+      <p><strong>15. Rızanın Geri Alınması ve Rıza Kaydı</strong><br/>Açık rızaya dayalı işlemeler (sağlık verileri, yurt dışına aktarım, isteğe bağlı belge ve fotoğraf yüklemeleri) bakımından rızanızı <strong>dilediğiniz zaman geri alabilirsiniz</strong>. Geri alma talebinizi info@muvekkilbilgi.com adresine iletmeniz yeterlidir; talebiniz üzerine ilgili veriler silinir. Rızanın geri alınması, geri alma anına kadar yapılmış işlemeleri hukuka aykırı hâle getirmez. Hangi onayları verdiğiniz, onay tarihi ve saatiyle birlikte başvuru kaydınıza işlenir; bu kayıt yalnızca rızanın varlığını ispat amacıyla tutulur.</p>
       <button onclick="document.getElementById('kvkkModal').style.display='none'">Okudum, kapat</button>
     </div>
   </div>
@@ -932,7 +937,7 @@
   <!-- Karşılaştırmalı Hesaplama Panel (injected dynamically after result) -->
   <div id="compareSection" style="display:none"></div>
 
-  <script src="calculator.js?v=20260911"></script>
+  <script src="calculator.js?v=20260911b"></script>
 </body>
 </html>
 
