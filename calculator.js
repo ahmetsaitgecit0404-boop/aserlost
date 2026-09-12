@@ -5558,11 +5558,29 @@ function gvVergi(matrah, yil) {
   }
   return 0;
 }
+const esiState = { a: {}, v: {}, detay: false, sonuc: null };
+function openEvSatisIade() { esiState.a = {}; esiState.v = {}; esiState.detay = false; esiState.sonuc = null; renderEvSatisIade(); }
 
-const esiState = { step: 1, a: {}, v: {} };
-function openEvSatisIade() { esiState.step = 1; esiState.a = {}; esiState.v = {}; renderEvSatisIade(); }
+/* KDV oranları. Konutta kademeli: ilk 150 m²'ye isabet eden kısma indirimli
+   oran, aşan kısma genel oran uygulanır. Ruhsatı 01.04.2022 öncesi olan
+   konutlarda indirimli oran %1'dir. İşyeri ve arsada genel oran. */
+function esiKdvHesapla(satis, tur, netAlan, eskiRuhsat) {
+  if (tur === 'isyeri') return Math.round(satis * 0.20);
+  const dusuk = eskiRuhsat ? 0.01 : 0.10;
+  const na = netAlan || 0;
+  if (!na || na <= 150) return Math.round(satis * dusuk);
+  const pay150 = satis * (150 / na);
+  return Math.round(pay150 * dusuk + (satis - pay150) * 0.20);
+}
+function esiKdvOranMetni(tur, netAlan, eskiRuhsat) {
+  if (tur === 'isyeri') return '%20 (işyeri/arsa, genel oran)';
+  const d = eskiRuhsat ? '%1' : '%10';
+  if (netAlan && netAlan > 150) return 'ilk 150 m² ' + d + ', aşan kısım %20';
+  return d + ' (net alan 150 m² ve altı)';
+}
 
-function esiPick(k, v) { esiState.a[k] = v; renderEvSatisIade(); }
+function esiPick(k, v) { esiState.a[k] = v; esiKaydet(); renderEvSatisIade(); }
+function esiDetayAc() { esiKaydet(); esiState.detay = !esiState.detay; renderEvSatisIade(); }
 function esiOpt(k, v, label, sub) {
   const sel = esiState.a[k] === v ? ' sel' : '';
   return '<button type="button" class="wz-opt' + sel + '" onclick="esiPick(\'' + k + '\',\'' + v + '\')">' +
@@ -5581,291 +5599,195 @@ function esiTarih(key, label, hint) {
     '<div class="input-wrapper"><input type="date" id="esi_' + key + '" value="' + v + '"/></div>' +
     (hint ? '<p class="field-hint">' + hint + '</p>' : '') + '</div>';
 }
+const ESI_SAYI = ['alisBedeli', 'satisBedeli', 'netAlan', 'masraf', 'yiufe', 'kdvGercek', 'geciciGercek', 'gelirVGercek', 'satisSayisi'];
 function esiKaydet() {
-  ['edinimBedeli','satisBedeli','masraf','yiufe','kdv','gecici','gelirV','cezaFaiz','satisSayisiYil','satisSayisi5Yil']
-    .forEach(function (k) { const el = document.getElementById('esi_' + k); if (el && el.value !== '') esiState.v[k] = parseFloat(el.value); });
-  ['edinimTarihi','satisTarihi'].forEach(function (k) { const el = document.getElementById('esi_' + k); if (el && el.value) esiState.v[k] = el.value; });
-}
-
-/* Devamlılık değerlendirmesi. Yargı kararlarında ölçüt şu: bir yılda birden
-   fazla ya da birbirini izleyen yıllarda satış yapılması, kazanç elde etme
-   amacıyla alınıp satılması ve organizasyon kurulması. Puanlama bunları
-   yansıtıyor; kesin hüküm değil, risk göstergesi. */
-function esiTicariRisk() {
-  const a = esiState.a, v = esiState.v;
-  let p = 0; const nedenler = [];
-  const yilIci = v.satisSayisiYil || 0, besYilIci = v.satisSayisi5Yil || 0;
-  if (yilIci >= 2) { p += 35; nedenler.push('Aynı yıl içinde ' + yilIci + ' satış yapılmış — devamlılığın en güçlü göstergesi budur.'); }
-  if (besYilIci >= 3) { p += 25; nedenler.push('Son beş yılda ' + besYilIci + ' satış var; birbirini izleyen yıllardaki satışlar devamlılık karinesi doğurur.'); }
-  if (a.insaat === 'evet') { p += 30; nedenler.push('İnşaat yaptırıp satış, kendi başına ticari organizasyon sayılır.'); }
-  if (a.mukellef === 'evet') { p += 20; nedenler.push('Gayrimenkul alanında mükellefiyet kaydı bulunması ticari nitelik yönünde değerlendirilir.'); }
-  if (a.amac === 'satmak') { p += 20; nedenler.push('Baştan satmak amacıyla alındığının kabulü ticari kazanç yönünde ağır basar.'); }
-  if (a.amac === 'oturmak') { p -= 15; nedenler.push('Konutun oturma amacıyla alınmış olması ticari nitelik aleyhine güçlü bir olgudur.'); }
-  if (a.edinimSekli === 'miras' || a.edinimSekli === 'bagis') { p -= 25; nedenler.push('Miras veya bağış yoluyla edinilen taşınmakta alım-satım iradesi yoktur.'); }
-  if (yilIci <= 1 && besYilIci <= 1) { p -= 20; nedenler.push('Tek satış söz konusu; arızi işlem sayılması gerekir.'); }
-  p = Math.max(0, Math.min(100, p));
-  return { puan: p, nedenler: nedenler, seviye: p >= 60 ? 'yuksek' : (p >= 30 ? 'orta' : 'dusuk') };
+  ESI_SAYI.forEach(function (k) { const el = document.getElementById('esi_' + k); if (el) { esiState.v[k] = el.value === '' ? undefined : parseFloat(el.value); } });
+  ['alisTarihi', 'satisTarihi'].forEach(function (k) { const el = document.getElementById('esi_' + k); if (el) esiState.v[k] = el.value || undefined; });
 }
 
 function esiHesapla() {
   esiKaydet();
   const a = esiState.a, v = esiState.v;
-  const risk = esiTicariRisk();
+  if (!a.tur) { showValidationError('Ne sattığınızı seçin.'); return; }
+  if (!v.satisBedeli) { showValidationError('Satış bedelini girin.'); return; }
+  if (!v.alisTarihi || !v.satisTarihi) { showValidationError('Alış ve satış tarihlerini girin.'); return; }
 
-  const ed = v.edinimTarihi ? new Date(v.edinimTarihi + 'T00:00:00') : null;
-  const sa = v.satisTarihi ? new Date(v.satisTarihi + 'T00:00:00') : null;
-  const satisYili = sa ? sa.getFullYear() : new Date().getFullYear();
+  const al = new Date(v.alisTarihi + 'T00:00:00'), sa = new Date(v.satisTarihi + 'T00:00:00');
+  const satisYili = sa.getFullYear();
   const istisna = DVK_ISTISNA[satisYili] !== undefined ? DVK_ISTISNA[satisYili] : DVK_ISTISNA[2026];
+  const gun = Math.floor((sa - al) / 86400000);
+  const besYilGecti = gun > 1826;
+  const ivazsiz = a.edinim === 'miras';
 
-  /* Kapsam kontrolü: bu iki hâlde değer artış kazancı hiç doğmaz. */
-  const ivazsiz = a.edinimSekli === 'miras' || a.edinimSekli === 'bagis';
-  const gun = (ed && sa) ? Math.floor((sa - ed) / 86400000) : null;
-  const besYilGecti = gun !== null && gun > 1826;
+  const satis = v.satisBedeli, alis = v.alisBedeli || 0, masraf = v.masraf || 0;
 
+  /* Ticari sayılsaydı yersiz olarak doğan iki vergi. Kullanıcı gerçek
+     tutarı biliyorsa onu kullanıyoruz; bilmiyorsa hesaplıyoruz. */
+  const kdvTahmin = esiKdvHesapla(satis, a.tur, v.netAlan, a.eskiRuhsat === 'evet');
+  const kdv = v.kdvGercek !== undefined ? v.kdvGercek : kdvTahmin;
+  const kdvOlculen = v.kdvGercek !== undefined;
+
+  const ticariKazanc = Math.max(0, satis - alis - masraf);
+  const geciciTahmin = Math.round(ticariKazanc * 0.15);   /* GVK mük. m.120: tarifenin ilk dilimi */
+  const gecici = v.geciciGercek !== undefined ? v.geciciGercek : geciciTahmin;
+  const geciciOlculen = v.geciciGercek !== undefined;
+
+  /* Doğru vergilendirme: değer artış kazancı. */
   let kapsamDisi = false, kapsamSebep = '';
-  if (ivazsiz) { kapsamDisi = true; kapsamSebep = 'Taşınmaz ivazsız (miras veya bağış) olarak edinilmiş. GVK mük. m.80/6 ivazsız iktisap edilenleri değer artış kazancı kapsamı dışında bırakır.'; }
-  else if (besYilGecti) { kapsamDisi = true; kapsamSebep = 'Taşınmaz edinimden ' + Math.floor(gun / 365) + ' yıl sonra satılmış. Beş yılı aşan elde tutmada değer artış kazancı doğmaz (GVK mük. m.80/6).'; }
+  if (ivazsiz) { kapsamDisi = true; kapsamSebep = 'Taşınmaz miras yoluyla edinilmiş; ivazsız iktisapta değer artış kazancı doğmaz (GVK mük. m.80/6).'; }
+  else if (besYilGecti) { kapsamDisi = true; kapsamSebep = 'Taşınmaz ' + Math.floor(gun / 365) + ' yıl elde tutulmuş; beş yılı aşan elde tutmada değer artış kazancı doğmaz (GVK mük. m.80/6).'; }
 
-  /* Olması gereken vergi: değer artış kazancı hesabı. */
-  const satis = v.satisBedeli || 0, edinim = v.edinimBedeli || 0, masraf = v.masraf || 0;
-  const yiufe = v.yiufe || 0;
-  const endekslendi = yiufe >= 10;
-  const maliyet = endekslendi ? Math.round(edinim * (1 + yiufe / 100)) : edinim;
-  const kazanc = Math.max(0, satis - maliyet - masraf);
-  const matrah = kapsamDisi ? 0 : Math.max(0, kazanc - istisna);
-  const olmasiGereken = kapsamDisi ? 0 : gvVergi(matrah, satisYili);
+  const yiufe = v.yiufe || 0, endekslendi = yiufe >= 10;
+  const maliyet = endekslendi ? Math.round(alis * (1 + yiufe / 100)) : alis;
+  const dvKazanc = Math.max(0, satis - maliyet - masraf);
+  const matrah = kapsamDisi ? 0 : Math.max(0, dvKazanc - istisna);
+  const dogruVergi = kapsamDisi ? 0 : gvVergi(matrah, satisYili);
 
-  /* Ödenenler ve iade. */
-  const kdv = v.kdv || 0;
-  const geciciHam = v.gecici || 0;
-  const mahsupEdildi = a.gecMahsup === 'evet';
-  const gecici = mahsupEdildi ? 0 : geciciHam;   /* mahsup edildiyse gelir vergisinin içinde, iki kez sayılmaz */
-  const gelirV = v.gelirV || 0;
-  const cezaFaiz = v.cezaFaiz || 0;
+  /* Gelir vergisi farkı yalnızca kullanıcı gerçekte ödediğini girdiyse
+     hesaplanabilir; tahmin etmiyoruz. */
+  const gelirVOdenen = v.gelirVGercek;
+  const gvFark = gelirVOdenen !== undefined ? Math.max(0, gelirVOdenen - dogruVergi) : 0;
+  const gvEksik = gelirVOdenen !== undefined ? Math.max(0, dogruVergi - gelirVOdenen) : 0;
 
-  const gvFark = Math.max(0, gelirV - olmasiGereken);
-  const gvEksik = Math.max(0, olmasiGereken - gelirV);
-  const iade = kdv + gecici + gvFark + cezaFaiz;
-
-  const kalemler = [];
-  if (kdv > 0) kalemler.push(['Ödenen KDV — ticari faaliyet yoksa hiç doğmaz', kdv]);
-  if (gecici > 0) kalemler.push(['Ödenen geçici vergi — değer artış kazancında uygulanmaz', gecici]);
-  if (mahsupEdildi && geciciHam > 0) kalemler.push(['Geçici vergi (yıllık beyanda mahsup edilmiş, ayrıca sayılmadı)', 0]);
-  if (gvFark > 0) kalemler.push(['Gelir vergisi farkı — fazla ödenen kısım', gvFark]);
-  if (cezaFaiz > 0) kalemler.push(['Vergi ziyaı cezası ve gecikme faizi', cezaFaiz]);
+  const iade = kdv + gecici + gvFark;
+  const satisSayisi = v.satisSayisi || 0;
 
   esiState.sonuc = {
-    risk: risk, kapsamDisi: kapsamDisi, kapsamSebep: kapsamSebep,
-    satisYili: satisYili, istisna: istisna, endekslendi: endekslendi,
-    maliyet: maliyet, kazanc: kazanc, matrah: matrah,
-    olmasiGereken: olmasiGereken, gvEksik: gvEksik,
-    kalemler: kalemler, iade: iade, gun: gun
+    kdv: kdv, kdvOlculen: kdvOlculen, kdvOran: esiKdvOranMetni(a.tur, v.netAlan, a.eskiRuhsat === 'evet'),
+    gecici: gecici, geciciOlculen: geciciOlculen, ticariKazanc: ticariKazanc,
+    gvFark: gvFark, gvEksik: gvEksik, gelirVOdenen: gelirVOdenen,
+    dogruVergi: dogruVergi, kapsamDisi: kapsamDisi, kapsamSebep: kapsamSebep,
+    maliyet: maliyet, endekslendi: endekslendi, dvKazanc: dvKazanc, matrah: matrah,
+    istisna: istisna, satisYili: satisYili, iade: iade, satisSayisi: satisSayisi, yil: Math.floor(gun / 365)
   };
 
   state.pendingType = 'evSatisIade';
   state.pendingResult = { total: iade, evSatis: esiState.sonuc };
-  state.pendingExtra = 'Ev satış vergi iadesi · Satış yılı: ' + satisYili +
-    ' · Ticari sayılma riski: %' + risk.puan +
-    ' · Hesaplanan iade: ' + fmt(iade);
+  state.pendingExtra = 'Ev satış vergi iadesi · ' + (a.tur === 'konut' ? 'Konut' : 'İşyeri/arsa') +
+    ' · Satış: ' + fmt(satis) + ' · KDV: ' + fmt(kdv) + ' · Geçici vergi: ' + fmt(gecici) +
+    ' · Toplam iade: ' + fmt(iade);
   const ci = getStoredContactInfo();
   if (ci) finalizeLead(ci, ''); else showLeadModal('evSatisIade');
 }
-function esiSonucGoster() { esiState.step = 5; renderEvSatisIade(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-function esiIleri() {
-  esiKaydet();
-  const s = esiState.step;
-  if (s === 1) {
-    if (!esiState.a.edinimSekli) { showValidationError('Taşınmazı nasıl edindiğinizi seçin.'); return; }
-    if (!esiState.v.edinimTarihi || !esiState.v.satisTarihi) { showValidationError('Edinim ve satış tarihlerini girin.'); return; }
-    if (!esiState.v.satisBedeli) { showValidationError('Satış bedelini girin.'); return; }
-  }
-  if (s === 2 && !esiState.a.amac) { showValidationError('Taşınmazı hangi amaçla aldığınızı seçin.'); return; }
-  if (s === 3 && !esiState.v.kdv && !esiState.v.gecici && !esiState.v.gelirV) {
-    showValidationError('Ödediğiniz vergilerden en az birini girin.'); return;
-  }
-  if (s < 4) { esiState.step++; renderEvSatisIade(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-  esiHesapla();
-}
-function esiGeri() { if (esiState.step > 1) { esiKaydet(); esiState.step--; renderEvSatisIade(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+function esiSonucGoster() { renderEvSatisIade(); const p = document.getElementById('esiSonuc'); if (p) scrollToResult(p); }
 
 function renderEvSatisIade() {
   const w = document.getElementById('evSatisIadeWrapper'); if (!w) return;
-  const a = esiState.a, st = esiState.step;
+  const a = esiState.a, v = esiState.v;
   let h = '<div class="calc-page-header"><div class="step-number-badge">Vergi &amp; Gümrük Hukuku</div>' +
     '<h2>Ev satış vergisi iade tutarı hesaplama</h2>' +
-    '<p>Ticari faaliyetiniz olmadığı hâlde konut satışınız ticari kazanç sayılıp KDV ve geçici vergi ödettirildiyse, ne kadarının iadesini isteyebileceğinizi hesaplayın. Doğru vergilendirme <strong>değer artış kazancı</strong> (GVK mük. m.80) üzerinden yapılır.</p></div>';
+    '<p>Ticari işiniz olmadığı hâlde ev satışınız ticari kazanç sayılıp <strong>KDV ve geçici vergi</strong> ödettirildiyse, ne kadarını geri isteyebileceğinizi hesaplayalım. Doğrusu <strong>değer artış kazancı</strong>dır (GVK mük. m.80) ve orada KDV de geçici vergi de yoktur.</p></div>';
 
-  if (st === 5) { h += esiSonucHtml(); w.innerHTML = h; tilt3dScan(); return; }
-
-  h += '<div class="wz-card"><div class="wz-progress">';
-  for (let i = 1; i <= 4; i++) h += '<span class="' + (i <= st ? 'done' : '') + '"></span>';
+  h += '<div class="wz-card">';
+  h += '<div class="wz-q">Ne sattınız?</div><div class="wz-opts">';
+  h += esiOpt('tur', 'konut', 'Konut (ev, daire)', 'KDV oranı 150 m² sınırına göre değişir');
+  h += esiOpt('tur', 'isyeri', 'İş yeri veya arsa', 'KDV oranı %20');
   h += '</div>';
 
-  if (st === 1) {
-    h += '<div class="wz-step-label">1. adım</div><div class="wz-q">Taşınmaz ve satış bilgileri</div>';
-    h += '<p class="wz-hint">Edinim şekli ve elde tutma süresi, verginin hiç doğup doğmadığını belirliyor.</p><div class="wz-opts">';
-    h += esiOpt('edinimSekli', 'satinalma', 'Satın aldım', 'Bedel ödeyerek edindim');
-    h += esiOpt('edinimSekli', 'miras', 'Miras kaldı', 'İvazsız iktisap');
-    h += esiOpt('edinimSekli', 'bagis', 'Bağış / hibe ile edindim', 'İvazsız iktisap');
-    h += esiOpt('edinimSekli', 'insaat', 'Kendim yaptırdım', 'Arsa alıp inşa ettirdim');
-    h += '</div><div class="form-grid" style="margin-top:18px">';
-    h += esiTarih('edinimTarihi', 'Edinim (tapu) tarihi', 'Tapuda size geçtiği tarih');
-    h += esiTarih('satisTarihi', 'Satış tarihi', 'Tapuda devrettiğiniz tarih');
-    h += esiField('edinimBedeli', 'Edinim bedeli (TL)', 'Örn: 1500000', '₺', 'Miras/bağışta veraset beyanındaki değer');
-    h += esiField('satisBedeli', 'Satış bedeli (TL)', 'Örn: 4000000', '₺', 'Tapuda gösterilen gerçek satış bedeli');
-    h += esiField('masraf', 'Satış giderleri (TL)', 'Örn: 120000', '₺', 'Tapu harcı, emlakçı komisyonu gibi belgelenen giderler');
-    h += esiField('yiufe', 'Yİ-ÜFE artış oranı (%)', 'Örn: 42', '%', 'Edinimden önceki ay ile satıştan önceki ay arasındaki artış. %10\'un altındaysa endeksleme yapılmaz (GVK mük. m.81). Bilmiyorsanız boş bırakın.');
+  h += '<div class="form-grid" style="margin-top:20px">';
+  h += esiTarih('alisTarihi', 'Ne zaman aldınız?', 'Tapunun size geçtiği tarih');
+  h += esiTarih('satisTarihi', 'Ne zaman sattınız?');
+  h += esiField('alisBedeli', 'Kaça aldınız? (TL)', 'Örn: 1500000', '₺');
+  h += esiField('satisBedeli', 'Kaça sattınız? (TL)', 'Örn: 4000000', '₺');
+  h += '</div>';
+
+  /* Zorunlu alanlar dört tane; geri kalan her şey isteğe bağlı ve kapalı
+     geliyor. Formu uzun gören ziyaretçi yarıda bırakıyor. */
+  h += '<button type="button" class="btn-back" style="width:100%;justify-content:center;margin-top:6px;font-size:12.5px" onclick="esiDetayAc()">' +
+    (esiState.detay ? '− Detayları gizle' : '+ Detay ekle (isteğe bağlı — daha kesin sonuç)') + '</button>';
+
+  if (esiState.detay) {
+    h += '<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">';
+    h += '<p class="wz-hint" style="margin-bottom:14px">Bilmediğiniz alanları boş bırakın; hesap yine çalışır.</p>';
+    h += '<div class="wz-opts" style="margin-bottom:16px">';
+    h += esiOpt('edinim', 'satinalma', 'Satın aldım') + esiOpt('edinim', 'miras', 'Miras kaldı', 'Bu hâlde vergi hiç doğmaz');
     h += '</div>';
+    if (a.tur === 'konut') {
+      h += '<div class="wz-opts" style="margin-bottom:16px">';
+      h += esiOpt('eskiRuhsat', 'hayir', 'Yapı ruhsatı 2022 Nisan sonrası', 'veya bilmiyorum') +
+        esiOpt('eskiRuhsat', 'evet', 'Yapı ruhsatı 2022 Nisan öncesi', 'İndirimli oran %1');
+      h += '</div>';
+    }
+    h += '<div class="form-grid">';
+    if (a.tur === 'konut') h += esiField('netAlan', 'Konutun net alanı (m²)', 'Örn: 120', 'm²', '150 m² üstündeyse aşan kısma %20 KDV uygulanır');
+    h += esiField('masraf', 'Satış giderleri (TL)', 'Örn: 120000', '₺', 'Tapu harcı, emlakçı komisyonu');
+    h += esiField('satisSayisi', 'Son 5 yılda kaç taşınmaz sattınız?', 'Örn: 1', 'adet', 'Bu satış dahil');
+    h += esiField('yiufe', 'Yİ-ÜFE artış oranı (%)', 'Bilmiyorsanız boş bırakın', '%', 'Alıştan satışa kadarki artış. %10 altındaysa uygulanmaz (GVK mük. m.81)');
+    h += '</div>';
+    h += '<p style="font-size:13px;font-weight:700;color:var(--text-primary);margin:18px 0 10px">Gerçekte ödediğiniz tutarları biliyorsanız</p>';
+    h += '<div class="form-grid">';
+    h += esiField('kdvGercek', 'Ödenen KDV (TL)', 'Biliyorsanız girin', '₺');
+    h += esiField('geciciGercek', 'Ödenen geçici vergi (TL)', 'Biliyorsanız girin', '₺');
+    h += esiField('gelirVGercek', 'Ödenen gelir vergisi (TL)', 'Biliyorsanız girin', '₺');
+    h += '</div></div>';
   }
 
-  else if (st === 2) {
-    h += '<div class="wz-step-label">2. adım</div><div class="wz-q">Ticari faaliyet var mı?</div>';
-    h += '<p class="wz-hint">Bu bölüm iadenin kaderini belirliyor. İdare, satışı ticari sayarsa KDV ve geçici vergi haklı hâle gelir; ticari değilse ikisi de hiç doğmaz.</p>';
-    h += '<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:6px 0 10px">Taşınmazı hangi amaçla edindiniz?</p><div class="wz-opts">';
-    h += esiOpt('amac', 'oturmak', 'Oturmak için', 'Kendim veya ailem kullandı');
-    h += esiOpt('amac', 'yatirim', 'Birikimimi korumak için', 'Yatırım amaçlı, satış planı yoktu');
-    h += esiOpt('amac', 'satmak', 'Satıp kâr etmek için', 'Baştan satış amacı vardı');
-    h += '</div>';
-    h += '<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Üzerine inşaat yapıp sattınız mı?</p><div class="wz-opts">';
-    h += esiOpt('insaat', 'hayir', 'Hayır') + esiOpt('insaat', 'evet', 'Evet', 'Kat karşılığı dahil');
-    h += '</div>';
-    h += '<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Gayrimenkul alım-satımı için vergi mükellefiyetiniz var mı?</p><div class="wz-opts">';
-    h += esiOpt('mukellef', 'hayir', 'Hayır') + esiOpt('mukellef', 'evet', 'Evet', 'Vergi levhası / faaliyet kaydı var');
-    h += '</div>';
-    h += '<div class="form-grid" style="margin-top:18px">';
-    h += esiField('satisSayisiYil', 'Aynı yıl içinde kaç taşınmaz sattınız?', 'Örn: 1', 'adet', 'Bu satış dahil');
-    h += esiField('satisSayisi5Yil', 'Son beş yılda toplam kaç taşınmaz sattınız?', 'Örn: 2', 'adet');
-    h += '</div>';
-  }
+  h += '<button class="btn-next" onclick="esiHesapla()" style="width:100%;justify-content:center;margin-top:20px">' +
+    'İade tutarımı hesapla <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3l7 7-7 7M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+  h += '</div>';
 
-  else if (st === 3) {
-    h += '<div class="wz-step-label">3. adım</div><div class="wz-q">Ödediğiniz vergiler</div>';
-    h += '<p class="wz-hint">Tahakkuk fişi, ihbarname veya ödeme makbuzlarındaki tutarları girin.</p><div class="form-grid">';
-    h += esiField('kdv', 'Ödenen KDV (TL)', 'Örn: 400000', '₺', 'Ticari faaliyet yoksa bu tutarın tamamı iadeye konudur');
-    h += esiField('gecici', 'Ödenen geçici vergi (TL)', 'Örn: 250000', '₺', 'Değer artış kazancında geçici vergi uygulanmaz');
-    h += esiField('gelirV', 'Ödenen gelir vergisi (TL)', 'Örn: 600000', '₺', 'Yıllık beyanname üzerinden ödenen');
-    h += esiField('cezaFaiz', 'Ödenen ceza ve gecikme faizi (TL)', 'Örn: 300000', '₺', 'Vergi ziyaı cezası, gecikme faizi');
-    h += '</div>';
-    h += '<p style="font-size:14px;font-weight:700;color:var(--text-primary);margin:22px 0 10px">Geçici vergi yıllık beyannamede mahsup edildi mi?</p>';
-    h += '<p class="wz-hint">Mahsup edildiyse gelir vergisinin içinde eridi demektir; iki kez saymamak için ayrıca eklemiyoruz.</p><div class="wz-opts">';
-    h += esiOpt('gecMahsup', 'hayir', 'Hayır / bilmiyorum') + esiOpt('gecMahsup', 'evet', 'Evet, mahsup edildi');
-    h += '</div>';
-  }
-
-  else if (st === 4) {
-    h += '<div class="wz-step-label">4. adım</div><div class="wz-q">Kontrol edin</div>';
-    h += '<p class="wz-hint">Bilgiler doğruysa hesaplayalım. Eksik bıraktığınız alanlar sıfır kabul edilir.</p>';
-    const v = esiState.v;
-    const satir = function (e, d) { return '<div class="isc-breakdown-row"><span>' + e + '</span><span>' + d + '</span></div>'; };
-    h += '<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Alan</span><span>Değer</span></div>';
-    h += satir('Edinim şekli', ({ satinalma: 'Satın alma', miras: 'Miras', bagis: 'Bağış', insaat: 'Kendi inşaatı' })[a.edinimSekli] || '-');
-    h += satir('Edinim → satış', (v.edinimTarihi || '-') + ' → ' + (v.satisTarihi || '-'));
-    h += satir('Satış bedeli', fmt(v.satisBedeli || 0));
-    h += satir('Edinim bedeli', fmt(v.edinimBedeli || 0));
-    h += satir('Ödenen KDV', fmt(v.kdv || 0));
-    h += satir('Ödenen geçici vergi', fmt(v.gecici || 0));
-    h += satir('Ödenen gelir vergisi', fmt(v.gelirV || 0));
-    h += '</div>';
-  }
-
-  h += '<div class="wz-actions">';
-  h += st === 1 ? '<button class="btn-back" onclick="navigate(\'home\')">Vazgeç</button>'
-    : '<button class="btn-back" onclick="esiGeri()"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Geri</button>';
-  h += '<button class="btn-next" onclick="esiIleri()">' + (st === 4 ? 'İade tutarını hesapla' : 'Devam') +
-    ' <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="' + (st === 4 ? 'M10 3l7 7-7 7M3 10h14' : 'M7 4l6 6-6 6') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
-  h += '</div></div>';
+  h += '<div id="esiSonuc" style="margin-top:24px">' + (esiState.sonuc ? esiSonucHtml() : '') + '</div>';
   w.innerHTML = h;
   tilt3dScan();
 }
 
 function esiSonucHtml() {
   const r = esiState.sonuc; if (!r) return '';
-  const risk = r.risk;
-  const riskRenk = risk.seviye === 'yuksek' ? 'kirmizi' : (risk.seviye === 'orta' ? 'sari' : 'yesil');
   let h = '<div class="isc-result-card tani-res">';
 
-  h += '<div class="tani-res-top"><div class="tani-res-lbl">İade değerlendirmesi</div>' +
-    '<h3>' + (risk.seviye === 'yuksek'
-      ? 'Satışlarınız ticari sayılabilir — iade talebi tartışmalı'
-      : 'Ticari faaliyet görünmüyor — KDV ve geçici vergi iadeye konu') + '</h3>' +
-    '<p>' + (risk.seviye === 'yuksek'
-      ? 'Aşağıdaki tutar, ticari nitelik iddiasının aşılması hâlinde talep edilebilecek üst sınırdır. Bu hâlde dosyanın önce devamlılık tartışmasını kazanması gerekir.'
-      : 'Ticari faaliyet yoksa KDV hiç doğmaz (KDVK m.1/1), geçici vergi de uygulanmaz (GVK mük. m.120). Ödenen tutarlar bu ölçüde yersizdir.') + '</p></div>';
-
-  /* Ticari sayılma riski */
-  h += '<div class="tani-sec"><div class="tani-sec-t">Ticari sayılma riski</div>' +
-    '<div class="tani-conf"><div class="tani-conf-bar"><i style="width:' + Math.max(6, risk.puan) + '%"></i></div><span>%' + risk.puan + '</span></div>' +
-    '<ul class="tani-dikkat">';
-  risk.nedenler.forEach(function (n) { h += '<li>' + n + '</li>'; });
-  if (!risk.nedenler.length) h += '<li>Belirgin bir devamlılık göstergesi girilmedi.</li>';
-  h += '</ul></div>';
-
-  /* Büyük rakam */
-  h += '<div class="vi-tutar"><div class="vi-tutar-lbl">Talep edilebilecek tahmini iade</div>' +
+  h += '<div class="vi-tutar" style="margin-bottom:22px"><div class="vi-tutar-lbl">Geri isteyebileceğiniz tahmini tutar</div>' +
     '<div class="vi-tutar-big">' + fmt2(r.iade) + ' TL</div>' +
-    '<div class="vi-tutar-alt">Ödenen tutarlar ile değer artış kazancı esasına göre olması gereken vergi arasındaki fark</div>' +
-    '<div class="vi-tutar-not">Bu tutar girdiğiniz verilere dayanır; idarenin kabul edeceği tutar belgelerinize göre değişir.</div></div>';
+    '<div class="vi-tutar-alt">Ticari faaliyetiniz yoksa bu iki vergi hiç doğmaz</div></div>';
 
-  /* Kalem dökümü */
   h += '<div class="isc-breakdown-table"><div class="isc-breakdown-head"><span>Kalem</span><span>Tutar</span></div>';
-  r.kalemler.forEach(function (k) {
-    h += '<div class="isc-breakdown-row"><span>' + k[0] + '</span><span class="isc-amount">' + fmt(k[1]) + '</span></div>';
-  });
-  h += '<div class="isc-breakdown-row"><span><strong>Toplam iade</strong></span><span class="isc-amount">' + fmt(r.iade) + '</span></div>';
+  h += '<div class="isc-breakdown-row"><span>KDV — ' + r.kdvOran + (r.kdvOlculen ? '' : ' <em style="opacity:.6">(hesaplandı)</em>') + '</span><span class="isc-amount">' + fmt(r.kdv) + '</span></div>';
+  h += '<div class="isc-breakdown-row"><span>Geçici vergi — kazancın %15\'i' + (r.geciciOlculen ? '' : ' <em style="opacity:.6">(hesaplandı)</em>') + '</span><span class="isc-amount">' + fmt(r.gecici) + '</span></div>';
+  if (r.gvFark > 0) h += '<div class="isc-breakdown-row"><span>Gelir vergisinde fazla ödenen kısım</span><span class="isc-amount">' + fmt(r.gvFark) + '</span></div>';
+  h += '<div class="isc-breakdown-row"><span><strong>Toplam</strong></span><span class="isc-amount">' + fmt(r.iade) + '</span></div>';
   h += '</div>';
 
-  /* Olması gereken vergi */
-  h += '<div class="tani-sec" style="margin-top:22px"><div class="tani-sec-t">Doğru vergilendirme nasıl olmalıydı?</div>';
+  h += '<div class="tani-sec" style="margin-top:22px"><div class="tani-sec-t">Peki doğrusu neydi?</div>';
   if (r.kapsamDisi) {
-    h += '<div class="tani-dikkat"><li style="list-style:none"><strong>Hiç vergi doğmuyor.</strong> ' + r.kapsamSebep + '</li></div>';
+    h += '<ul class="tani-dikkat"><li><strong>Hiç vergi ödemeniz gerekmiyordu.</strong> ' + r.kapsamSebep + '</li></ul>';
   } else {
-    h += '<div class="isc-breakdown-table">';
-    h += '<div class="isc-breakdown-row"><span>Endekslenmiş maliyet' + (r.endekslendi ? ' (Yİ-ÜFE uygulandı)' : ' (Yİ-ÜFE %10 altında, endeksleme yok)') + '</span><span>' + fmt(r.maliyet) + '</span></div>';
-    h += '<div class="isc-breakdown-row"><span>Değer artış kazancı</span><span>' + fmt(r.kazanc) + '</span></div>';
-    h += '<div class="isc-breakdown-row"><span>' + r.satisYili + ' yılı istisnası</span><span>-' + fmt(r.istisna) + '</span></div>';
-    h += '<div class="isc-breakdown-row"><span>Vergi matrahı</span><span>' + fmt(r.matrah) + '</span></div>';
-    h += '<div class="isc-breakdown-row"><span><strong>Olması gereken gelir vergisi</strong></span><span class="isc-amount">' + fmt(r.olmasiGereken) + '</span></div>';
-    h += '</div>';
+    h += '<div class="isc-breakdown-table">' +
+      '<div class="isc-breakdown-row"><span>Kazanç' + (r.endekslendi ? ' (Yİ-ÜFE ile endekslenmiş maliyet)' : '') + '</span><span>' + fmt(r.dvKazanc) + '</span></div>' +
+      '<div class="isc-breakdown-row"><span>' + r.satisYili + ' yılı istisnası</span><span>-' + fmt(r.istisna) + '</span></div>' +
+      '<div class="isc-breakdown-row"><span><strong>Ödenmesi gereken gelir vergisi</strong></span><span class="isc-amount">' + fmt(r.dogruVergi) + '</span></div>' +
+      '</div>';
   }
-  if (r.gvEksik > 0) {
-    h += '<div class="tani-dikkat" style="margin-top:12px"><li style="list-style:none">Dikkat: değer artış kazancı esasına göre hesaplanan vergi, ödediğiniz gelir vergisinden <strong>' + fmt(r.gvEksik) + ' TL fazla</strong>. Bu kalemde iade değil <strong>ek ödeme</strong> çıkabilir; KDV ve geçici vergi iadesi bundan bağımsızdır.</li></div>';
-  }
+  if (r.gvEksik > 0) h += '<ul class="tani-dikkat" style="margin-top:12px"><li>Değer artış kazancına göre çıkan vergi, ödediğinizden <strong>' + fmt(r.gvEksik) + ' TL fazla</strong>. Bu kalemde ek ödeme çıkabilir; KDV ve geçici vergi iadesi bundan etkilenmez.</li></ul>';
   h += '</div>';
 
-  /* Dayanak */
-  h += '<div class="tani-sec"><div class="tani-sec-t">Dayanak</div><div class="tani-mev">' +
-    ['GVK mük. m.80/6 — değer artışı kazançları, 5 yıl ve ivazsız iktisap',
-      'GVK mük. m.81 — maliyetin Yİ-ÜFE ile endekslenmesi (%10 şartı)',
-      'GVK m.37/2-4 — devamlı alım satımın ticari kazanç sayılması',
-      'GVK mük. m.120 — geçici vergi yalnızca ticari ve serbest meslek kazancında',
-      'KDVK m.1/1 — KDV yalnızca ticari/mesleki faaliyet çerçevesindeki teslimlerde',
-      'VUK m.116-126 — düzeltme ve iade, 5 yıllık zamanaşımı'
-    ].map(function (m) { return '<span class="tani-mev-c">' + m + '</span>'; }).join('') + '</div></div>';
+  if (r.satisSayisi >= 2) {
+    h += '<ul class="tani-dikkat"><li><strong>Dikkat:</strong> son beş yılda ' + r.satisSayisi + ' satış yapmışsınız. Birbirini izleyen satışlar idarece <strong>devamlılık</strong> sayılıp ticari kazanç kabul edilebilir (GVK m.37/2-4). Bu hâlde iade talebi tartışmalı hâle gelir; dosyanın önce bu tartışmayı kazanması gerekir.</li></ul>';
+  }
 
-  /* Ne yapmalı */
-  h += '<div class="tani-sec"><div class="tani-sec-t">Şimdi ne yapmalısınız?</div><div class="vi-adimlar">';
-  [['Belgeleri toplayın', 'Tapu senetleri, tahakkuk fişi ve ihbarname, ödeme makbuzları, satış sözleşmesi, oturduğunuzu gösteren belgeler (ikametgâh, abonelikler) ve varsa emlakçı faturaları.'],
-  ['Ticari olmadığınızı belgeleyin', 'Dosyanın kilit noktası budur: taşınmazda oturulduğu, satışın zorunluluktan doğduğu (tayin, sağlık, borç), alım-satım organizasyonu bulunmadığı somut delillerle gösterilmelidir.'],
-  ['Düzeltme talebiyle başvurun', 'Bağlı olduğunuz vergi dairesine yazılı düzeltme ve iade dilekçesi verip <strong>tarihli kayıt numarası</strong> alın. Süre: verginin doğduğu yılı izleyen yılbaşından itibaren <strong>5 yıl</strong> (VUK m.126).'],
-  ['İhbarname geldiyse süreye dikkat', 'Tarhiyat ihbarnameyle yapıldıysa <strong>30 gün</strong> içinde vergi mahkemesinde dava açılmalıdır (İYUK m.7). Bu süre hak düşürücüdür; düzeltme talebi bu süreyi durdurmaz.'],
-  ['Ret hâlinde şikayet ve dava', 'Düzeltme reddedilirse Hazine ve Maliye Bakanlığı\'na şikayet (VUK m.124), ardından 30 gün içinde dava. Dilekçede <strong>faizi açıkça talep edin</strong> (VUK m.112/4).']
+  h += '<div class="tani-sec"><div class="tani-sec-t">Ne yapmalısınız?</div><div class="vi-adimlar">';
+  [['Belgeleri toplayın', 'Tapu, tahakkuk fişi ve ihbarname, ödeme makbuzları. Evde oturduğunuzu gösteren belgeler (ikametgâh, elektrik-su abonelikleri) en değerli delillerdir.'],
+  ['Vergi dairesine düzeltme dilekçesi verin', 'Yazılı verip <strong>tarihli kayıt numarası</strong> alın. Süre: verginin doğduğu yılı izleyen yılbaşından itibaren <strong>5 yıl</strong> (VUK m.126).'],
+  ['İhbarname geldiyse 30 günü kaçırmayın', 'Tarhiyat ihbarnameyle yapıldıysa <strong>30 gün</strong> içinde vergi mahkemesinde dava açılmalıdır (İYUK m.7). Bu süre hak düşürücüdür ve düzeltme talebi onu durdurmaz.'],
+  ['Faizi talep etmeyi unutmayın', 'Dilekçede faizi açıkça isteyin; talep edilmeyen faiz kendiliğinden ödenmez (VUK m.112/4).']
   ].forEach(function (x, i) {
     h += '<div class="vi-adim"><span class="vi-adim-n">' + (i + 1) + '</span><div><strong>' + x[0] + '</strong><div class="vi-adim-m">' + x[1] + '</div></div></div>';
   });
   h += '</div></div>';
 
-  h += '<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg>' +
-    '<p>Bu hesap tahminîdir, hukuki görüş değildir. Ticari faaliyet ayrımı somut olayın koşullarına göre yargı tarafından değerlendirilir; sonuç garanti edilmez.</p></div>';
+  h += '<div class="tani-sec"><div class="tani-sec-t">Dayanak</div><div class="tani-mev">' +
+    ['KDVK m.1/1 — KDV yalnızca ticari/mesleki faaliyet çerçevesindeki teslimlerde',
+      'GVK mük. m.120 — geçici vergi yalnızca ticari ve serbest meslek kazancında',
+      'GVK mük. m.80/6 — 5 yıl ve ivazsız iktisap',
+      'GVK mük. m.81 — Yİ-ÜFE endekslemesi (%10 şartı)',
+      'GVK m.37/2-4 — devamlı alım satımın ticari kazanç sayılması',
+      'VUK m.116-126 — düzeltme ve iade'
+    ].map(function (m) { return '<span class="tani-mev-c">' + m + '</span>'; }).join('') + '</div></div>';
 
-  h += '<div class="tani-sec"><div class="tani-sec-t">İlgili araçlar</div><div class="tani-tools">' +
-    ['vergiIade', 'vergiDavasi', 'tapu'].map(function (id, i) { return taniArac(id, i === 0); }).join('') + '</div></div>';
+  h += '<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg>' +
+    '<p>Tutarlar tahminîdir. KDV ve geçici vergiyi girdiğiniz satış bedeli üzerinden hesapladık; gerçek tahakkuk belgelerinizdeki tutar farklı olabilir. Bu hesap hukuki görüş değildir.</p></div>';
 
   h += '<div class="cmp-actions" style="margin-top:14px"><a class="btn-whatsapp cmp-wa-btn" target="_blank" rel="noopener" href="' +
-    whatsappLink('Merhaba, ev satışım ticari kazanç sayılıp KDV ve geçici vergi ödedim. Sitedeki hesaplamaya göre yaklaşık ' + fmt(r.iade) + ' iade talep edilebiliyor. Görüşebilir miyiz?') +
+    whatsappLink('Merhaba, ev satışım ticari kazanç sayılıp KDV ve geçici vergi ödedim. Sitedeki hesaba göre yaklaşık ' + fmt(r.iade) + ' iade talep edilebiliyor. Görüşebilir miyiz?') +
     '"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Dosyamı değerlendirin</a></div>';
-
-  h += '<div class="tani-foot" style="margin-top:18px"><button class="btn-back" onclick="openEvSatisIade()">Yeni hesaplama</button></div>';
   h += '</div>';
   return h;
 }
