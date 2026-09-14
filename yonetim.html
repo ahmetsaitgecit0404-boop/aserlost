@@ -827,6 +827,25 @@
     }
 
     /* ============ render: leads ============ */
+    /* Puan sunucuda hesaplanıyor; burada yalnızca gösteriliyor.
+       Eşikler: 85+ acil, 70+ nitelikli, 50+ incelenebilir, 30+ düşük. */
+    function puanRozet(p){
+      if(p===null||p===undefined||p==="")return "<span class=\"tag\">—</span>";
+      const n=Number(p)||0;
+      const s=n>=85?["acil","#ef4444"]:n>=70?["nitelikli","#f59e0b"]:n>=50?["incelenebilir","#3b82f6"]:n>=30?["düşük","#6b7280"]:["bilgi","#6b7280"];
+      return '<span class="tag" style="border-color:'+s[1]+'55;color:'+s[1]+'"><b>'+n+'</b> · '+s[0]+'</span>';
+    }
+    /* İletişim izni: ofisin arayabileceği kişiyi bir bakışta ayırıyor.
+       İzin yoksa aranacaklar listesine girmemeli. */
+    function izinRozet(l){
+      return l.iletisim_izni===true
+        ? '<span class="tag" style="border-color:#22c55e55;color:#22c55e">izin var</span>'
+        : '<span class="tag" style="border-color:#ef444455;color:#ef4444">izin yok</span>';
+    }
+    function waRozet(l){
+      return l.whatsapp_tiklandi===true
+        ? '<span class="tag" style="border-color:#25d36655;color:#25d366">WhatsApp</span>' : '';
+    }
     function renderLeads(){
       const st={yeni:0,arandi:0,donusum:0,kapandi:0};
       allLeads.forEach(function(l){st[leadStatus(l)]=(st[leadStatus(l)]||0)+1});
@@ -849,7 +868,8 @@
       el.innerHTML='<table><thead><tr>'+
         '<th class="chk-cell"><input type="checkbox" class="chk" id="chkAll"'+(allSel?' checked':'')+' title="Sayfadakileri seç"/></th>'+
         th('Tarih','_date')+th('Ad Soyad','ad')+th('Telefon','telefon')+th('E-posta','email')+
-        th('Şehir','sehir')+th('Modül','tur')+'<th>Sonuç</th><th>Durum</th><th>İşlem</th>'+
+        th('Şehir','sehir')+th('Modül','tur')+th('Başvuru No','basvuru_no')+th('Puan','puan')+
+        '<th>İzin</th><th>Sonuç</th><th>Durum</th><th>İşlem</th>'+
         '</tr></thead><tbody>'+slice.map(function(l){
         const id=String(l.id),isSel=!!selected[id];
         return '<tr class="clickable'+(isSel?' sel-row':'')+'" data-lead="'+esc(l.id)+'">'+
@@ -860,6 +880,9 @@
           '<td class="cell-trunc">'+dash(l.email)+'</td>'+
           '<td>'+dash(l.sehir)+'</td>'+
           '<td><span class="tag">'+esc(modLabel(l.tur))+'</span></td>'+
+          '<td class="cell-mono">'+dash(l.basvuru_no)+'</td>'+
+          '<td>'+puanRozet(l.puan)+'</td>'+
+          '<td>'+izinRozet(l)+waRozet(l)+'</td>'+
           '<td class="cell-trunc">'+dash(l.sonuc)+'</td>'+
           '<td>'+stBadge(leadStatus(l))+'</td>'+
           '<td>'+actionBtns(l)+'</td></tr>';
@@ -1135,7 +1158,17 @@
         ['Ad Soyad',l.ad],['Telefon',l.telefon],['E-posta',l.email],
         ['Şehir',l.sehir],['İlçe',l.ilce],['Plaka',l.plaka],
         ['Modül',modLabel(l.tur)],['Sonuç',l.sonuc],
-        ['KVKK onayı',onayMetni],
+        ['Başvuru No',l.basvuru_no],
+        ['Başvuru puanı',(l.puan===null||l.puan===undefined)?'—':(l.puan+' / 100')],
+        ['Aciliyet',({dusuk:'Düşük',orta:'Orta',yuksek:'Yüksek'})[l.aciliyet]||'—'],
+        ['Uyuşmazlık tutarı',l.tutar?(Number(l.tutar).toLocaleString('tr-TR')+' TL'):'—'],
+        ['İletişim izni',l.iletisim_izni===true?('VAR'+(l.izin_zamani?' · '+fmtDate(new Date(l.izin_zamani)):'')):'YOK — aranmamalı'],
+        ['KVKK metni',l.kvkk_surumu?('sürüm '+l.kvkk_surumu+(l.kvkk_zamani?' · '+fmtDate(new Date(l.kvkk_zamani)):'')):onayMetni],
+        ['Sonuç görüntülendi',l.ts_sonuc_goruldu?fmtDate(new Date(l.ts_sonuc_goruldu)):'hayır'],
+        ['WhatsApp',l.whatsapp_tiklandi===true?('kullanıcı başlattı'+(l.ts_whatsapp?' · '+fmtDate(new Date(l.ts_whatsapp)):'')):'—'],
+        ['Kampanya',[l.utm_source,l.utm_campaign,l.utm_content,l.ref_kod].filter(Boolean).join(' / ')||'—'],
+        ['Belge sayısı',l.belge_sayisi||0],
+        ['Atanan avukat',l.atanan_avukat],
         ['Açıklama',aciklamaSade],['Kayıt No',l.id]
       ];
       const kv='<div class="dr-sect"><h4>Başvuru Bilgileri</h4><div class="kv">'+
