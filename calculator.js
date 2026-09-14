@@ -457,7 +457,7 @@ const ICON_PATHS = {
 
 /* Hangi araç hangi ikonu kullanıyor */
 const MODULE_ICONS = {
-  durumTespiti: 'pusula', vergiIade: 'iade', evSatisIade: 'tapu', vergiTebligat: 'belge',
+  durumTespiti: 'pusula', vergiIade: 'iade', evSatisIade: 'tapu', vergiTebligat: 'belge', gumrukFazla: 'konteyner', tirSofor: 'canta', emlakciKomisyon: 'urun', muteahhitGecikme: 'arazi', sgkEksik: 'belgeOnay',
   kusur: 'kusur', arac: 'arac', hasar: 'hasar',
   mahrumiyet: 'saat', pertBedeli: 'pert', sakatlik: 'sakatlik', yoksun: 'yoksun',
   maddi: 'vergi', kasko: 'yoksun', manevi: 'manevi', gecici: 'saglik',
@@ -505,6 +505,11 @@ const MODULES = [
   {id:'vergiZiyai',title:'Vergi ziyaı cezam ne kadar, indirimi var mı?',icon:'📉',desc:'VUK 344 uyarınca ceza verginin bir katı, VUK 359 fiillerinde üç katıdır; VUK 376 indirimiyle karşılaştırın.',tags:['VUK 344','VUK 376','Gecikme Faizi'],screen:'generic',category:'vergi'},
   {id:'emlakVergisi',title:'Emlak vergim ne kadar?',icon:'🏠',desc:'Emlak vergi değerinizi girin; mesken, iş yeri, arsa ve arazi için yıllık vergi büyükşehir farkıyla listelenir.',tags:['Binde Oran','Büyükşehir','Yıllık'],screen:'generic',category:'vergi'},
   {id:'evSatisIade',title:'Ev satış vergisi iade tutarı hesaplama',icon:'🏡',desc:'Ticari faaliyetiniz olmadığı hâlde konut satışınız ticari kazanç sayılıp KDV ve geçici vergi ödettirildiyse ne kadarını geri isteyebileceğinizi hesaplayın. Doğru vergilendirme değer artış kazancı (GVK mük. m.80) üzerindendir.',tags:['Değer Artış Kazancı','KDV + Geçici Vergi','İade Tutarı'],screen:'evSatisIade',category:'vergi'},
+  {id:'gumrukFazla',title:'Gümrükte fazladan vergi ödedim mi?',icon:'📄',desc:'Fatura bedeliniz ile vergiye esas alınan kıymeti karşılaştıralım; gözetim veya kıymet artırımı nedeniyle fazla ödeme ihtimalinizi ve kalan sürenizi görün.',tags:['Kıymet Farkı','GK m.211','3 Yıllık Süre'],screen:'akis',category:'vergi'},
+  {id:'tirSofor',title:'Tır şoförü olarak bütün alacaklarım ne kadar?',icon:'📄',desc:'Sefer, bekleme, fazla çalışma ve tazminat kalemlerinizi birlikte değerlendirin. Takograf ve sefer kayıtlarının rolü ayrıca açıklanır.',tags:['Kıdem & İhbar','Sefer Primi','Delil Analizi'],screen:'akis',category:'isci'},
+  {id:'emlakciKomisyon',title:'Müşterim beni aradan çıkardı, komisyonumu alabilir miyim?',icon:'📄',desc:'Yetkilendirme sözleşmesi, gösterme belgesi ve satış sürecine göre komisyon alacağı ihtimalinizi ve delil gücünüzü değerlendirin.',tags:['Delil Gücü','Gösterme Belgesi','Komisyon Tutarı'],screen:'akis',category:'diger'},
+  {id:'muteahhitGecikme',title:'Müteahhit evi geç teslim etti, ne kadar talep edebilirim?',icon:'📄',desc:'Sözleşmedeki teslim tarihi ile fiilî durumu karşılaştırın; gecikme süresi, kira kaybı ve cezai şartı birlikte hesaplayın.',tags:['Gecikme Süresi','Kira Kaybı','Cezai Şart'],screen:'akis',category:'diger'},
+  {id:'sgkEksik',title:'SGK primim ve maaşım eksik mi bildirildi?',icon:'📄',desc:'Gerçekte çalıştığınız gün ve aldığınız ücret ile SGK\'ya bildirileni karşılaştırın; eksik gün ve prime esas kazanç farkını görün.',tags:['Eksik Gün','Ücret Farkı','Delil Analizi'],screen:'akis',category:'isci'},
   {id:'vergiTebligat',title:'Vergi tebligatı aldım, ne yapmalıyım?',icon:'📨',desc:'Tebliğ tarihini ve işlem türünü girin; süre, ödeme ve dava ihtimallerini birlikte değerlendirelim. Süresi yaklaşan dosyalar ayrıca uyarılır.',tags:['Süre Analizi','İhbarname','Ödeme Emri'],screen:'akis',category:'vergi'},
   {id:'vergiIade',title:'Vergi iademi nasıl alabilirim?',icon:'💰',desc:'Fazla veya yersiz ödediğiniz vergiyi geri almak için hangi mercie, hangi süre içinde, hangi belgelerle başvuracağınızı adım adım çıkarın. Örnek dilekçe dahil.',tags:['Yol Haritası','Süre Kontrolü','Örnek Dilekçe'],screen:'vergiIade',category:'vergi'},
   {id:'vergiDavasi',title:'Vergi davası açmaya değer mi?',icon:'⚖️',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın.',tags:['Beklenen Değer','Masraf','Karar'],screen:'generic',category:'vergi'},
@@ -847,7 +852,12 @@ function fmt2(n){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0})
 let _navLock=false;
 /* ========== SEO URL ROUTING ========== */
 const ROUTE_MAP={
-  '/vergi-tebligati':{screen:'akis',title:'Vergi Tebligatı Aldım, Ne Yapmalıyım? | Müvekkil Bilgi',desc:'Vergi veya ceza ihbarnamesi, ödeme emri ya da e-haciz aldıysanız süre, ödeme ve dava ihtimallerinizi ön değerlendirin.'},
+  '/gumrukte-fazla-vergi':{screen:'akis',arac:'gumrukFazla',title:'Gümrükte Fazladan Vergi Ödedim mi? | Müvekkil Bilgi',desc:'İthalatta fatura bedeli ile gümrük kıymeti arasındaki farkı karşılaştırın; fazla ödenen verginin iadesi ve kalan süreyi ön değerlendirin.'},
+  '/tir-soforu-alacak-hesaplama':{screen:'akis',arac:'tirSofor',title:'Tır Şoförü Alacak Hesaplama | Müvekkil Bilgi',desc:'Yurt içi ve yurt dışı tır şoförleri için kıdem, ihbar, izin ve fazla çalışma alacaklarını ön değerlendirin.'},
+  '/emlakci-komisyon-alacagi':{screen:'akis',arac:'emlakciKomisyon',title:'Emlakçı Komisyon Alacağı Testi | Müvekkil Bilgi',desc:'Taraflar sizi aradan çıkardıysa komisyon alacağınızı ve delil durumunuzu ön değerlendirin.'},
+  '/muteahhit-gec-teslim-tazminat':{screen:'akis',arac:'muteahhitGecikme',title:'Müteahhit Geç Teslim Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Konutu geç teslim eden müteahhitten talep edebileceğiniz kira kaybı ve cezai şartı hesaplayın.'},
+  '/sgk-eksik-gun-ucret-testi':{screen:'akis',arac:'sgkEksik',title:'SGK Eksik Gün ve Gerçek Ücret Testi | Müvekkil Bilgi',desc:'SGK\'da görünen gün ve ücret ile gerçek durumunuzu karşılaştırın; eksik bildirim ihtimalini ön değerlendirin.'},
+  '/vergi-tebligati':{screen:'akis',arac:'vergiTebligat',title:'Vergi Tebligatı Aldım, Ne Yapmalıyım? | Müvekkil Bilgi',desc:'Vergi veya ceza ihbarnamesi, ödeme emri ya da e-haciz aldıysanız süre, ödeme ve dava ihtimallerinizi ön değerlendirin.'},
   '/ev-satis-vergisi-iade-hesaplama':{screen:'evSatisIade',title:'Ev Satış Vergisi İade Tutarı Hesaplama | Müvekkil Bilgi',desc:'Konut satışı ticari kazanç sayılıp KDV ve geçici vergi ödediyseniz iade tutarınızı hesaplayın. Değer artış kazancı (GVK mük. m.80) esasına göre karşılaştırmalı hesap.'},
   '/durum-tespiti':{screen:'tani',title:'Durum Tespiti — Hangi Hakkım Var? | Müvekkil Bilgi',desc:'Birkaç soruyla durumunuzu tahmin edelim: dosyanızda hangi tazminat kalemleri var, süreniz ne kadar ve hangi hesabı yapmalısınız.'},
   '/vergi-iademi-nasil-alirim':{screen:'vergiIade',title:'Vergi İademi Nasıl Alabilirim? | Müvekkil Bilgi',desc:'Fazla veya yersiz ödenen vergiyi geri almak için başvuru mercii, süre, belgeler ve örnek dilekçe — adım adım yol haritası.'},
@@ -907,6 +917,7 @@ function handleInitialRoute(){
   if(route){
     if(route.title)document.title=route.title;
     if(route.desc)setMetaDesc(route.desc);
+    if(route.arac)akis.kod=route.arac;
     if(route.screen)navigate(route.screen);
     else if(route.generic)openGenericCalc(route.generic);
     return;
@@ -916,7 +927,7 @@ function handleInitialRoute(){
 window.addEventListener('popstate',()=>{
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
   const route=ROUTE_MAP[path];
-  if(route){if(route.title)document.title=route.title;if(route.desc)setMetaDesc(route.desc);if(route.screen)navigate(route.screen);else if(route.generic)openGenericCalc(route.generic);}
+  if(route){if(route.title)document.title=route.title;if(route.desc)setMetaDesc(route.desc);if(route.arac)akis.kod=route.arac;if(route.screen)navigate(route.screen);else if(route.generic)openGenericCalc(route.generic);}
   else navigate('home');
 });
 
@@ -978,7 +989,9 @@ function navigate(screen){
   if(screen==='tani')openTani();
   if(screen==='vergiIade')openVergiIade();
   if(screen==='evSatisIade')openEvSatisIade();
-  if(screen==='akis')akisBaslat(akis.kod||'vergiTebligat');
+  if(screen==='akis'){const _k=akis.kod||'vergiTebligat';akisBaslat(_k);
+    /* Adres çubuğu aracın kendi URL'sini göstersin. */
+    if(AKIS_PATH[_k]){const _r=ROUTE_MAP[AKIS_PATH[_k]]||{};updateRouteUrl(AKIS_PATH[_k],_r.title,_r.desc);}}
   if(screen==='gozetim')openGozetim();
   if(screen==='isHukuku')openIsHukuku();
   setTimeout(()=>{_navLock=false;},D+200);
@@ -1154,7 +1167,11 @@ function moduleAction(m){
   return `openGenericCalc('${m.id}')`;
 }
 /* Aracın kendi adresi: kart yeni sekmede açılırken kullanılıyor. */
+/* Akış motoru araçlarının kendi adresleri; hepsi aynı ekranı kullanıyor
+   ama ayrı URL'de açılıyor. */
+const AKIS_PATH={vergiTebligat:'/vergi-tebligati',gumrukFazla:'/gumrukte-fazla-vergi',tirSofor:'/tir-soforu-alacak-hesaplama',emlakciKomisyon:'/emlakci-komisyon-alacagi',muteahhitGecikme:'/muteahhit-gec-teslim-tazminat',sgkEksik:'/sgk-eksik-gun-ucret-testi'};
 function moduleHref(m){
+  if(AKIS_PATH[m.id])return AKIS_PATH[m.id];
   if(SCREEN_MODULES.indexOf(m.screen)!==-1)return SCREEN_TO_PATH[m.screen]||'/';
   return GENERIC_TO_PATH[m.id]||'/';
 }
@@ -6410,7 +6427,7 @@ akisKaydet({
 
     return {
       baslik: toplam > 0
-        ? 'Tebligatınız ' + fmt(toplam) + ' TL tutarında bir uyuşmazlık içeriyor'
+        ? 'Tebligatınız ' + fmt(toplam) + ' tutarında bir uyuşmazlık içeriyor'
         : 'Tebligatınız için süre ve usul incelemesi gerekiyor',
       ozet: kural.ad + ' · ' + (c.kimFor === 'sirket' ? 'şirket adına' : 'şahıs adına') +
         (c.oncekiBasvuru !== 'hayir' ? ' · devam eden bir başvuru var' : ''),
@@ -6425,7 +6442,432 @@ akisKaydet({
         'İlgili döneme ait beyanname ve defter kayıtları'],
       mevzuat: ['İYUK m.7 — dava açma süresi', 'VUK m.376 — ceza indirimi', 'VUK ek m.7 — uzlaşma', 'VUK m.116-126 — düzeltme'],
       dogrulanmamis: dogrulanmamis,
-      ozetKisa: kural.ad + ' · ' + fmt(toplam) + ' TL' + (kalanGun !== null ? ' · kalan ' + kalanGun + ' gün' : '')
+      ozetKisa: kural.ad + ' · ' + fmt(toplam) + (kalanGun !== null ? ' · kalan ' + kalanGun + ' gün' : '')
+    };
+  }
+});
+
+/* =====================================================================
+   FAZ 2-3 ARAÇLARI — hepsi ortak akış motoru üzerinde
+
+   Ortak ilke: bir sayı ancak KULLANICININ GİRDİĞİ veriden ya da
+   doğrulanmış bir kuraldan çıkıyorsa gösteriliyor. Varsayıma dayanan
+   tutar üretilmiyor; onun yerine "belge incelemesi gerekir" deniyor.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------
+   1) GÜMRÜKTE FAZLA VERGİ
+   --------------------------------------------------------------- */
+akisKaydet({
+  kod: 'gumrukFazla',
+  ad: 'Gümrükte fazladan vergi ödedim mi?',
+  rozet: 'Vergi & Gümrük Hukuku',
+  aciklama: 'Fatura bedeliniz ile vergiye esas alınan kıymeti karşılaştıralım; aradaki fark üzerinden fazladan ödeme ihtimalinizi değerlendirelim.',
+  adimlar: [
+    {
+      id: 'sifat', tip: 'secim', soru: 'Kimin adına soruyorsunuz?', zorunlu: true,
+      secenekler: [{ d: 'ithalatci', a: 'İthalatçı firmayım' }, { d: 'yetkili', a: 'Şirket yetkilisiyim' }, { d: 'musavir', a: 'Gümrük müşaviriyim' }]
+    },
+    { id: 'esya', tip: 'metin', soru: 'Hangi eşyayı ithal ettiniz?', ipucu: 'Örn: tekstil kumaşı, elektrik motoru', zorunlu: true },
+    { id: 'mense', tip: 'metin', soru: 'Menşe ülke neresi?', ipucu: 'Örn: Çin' },
+    { id: 'fatura', tip: 'para', soru: 'Fatura bedeli ne kadardı? (TL karşılığı)', ipucu: 'Örn: 1000000', zorunlu: true, yardim: 'Satıcının kestiği faturadaki tutarın TL karşılığı.' },
+    {
+      id: 'kiymet', tip: 'para', soru: 'Vergiye esas alınan gümrük kıymeti ne kadardı?', ipucu: 'Örn: 1400000', zorunlu: true,
+      yardim: 'Beyannamede vergi hesabına esas alınan kıymet. Faturadan yüksekse aradaki fark önemlidir.'
+    },
+    {
+      id: 'gozetim', tip: 'secim', soru: 'Gözetim veya referans kıymet uygulaması oldu mu?', zorunlu: true,
+      yardim: 'Kıymetiniz idarece yükseltildiyse ya da yurt dışı gider eklemeniz istendiyse "evet" seçin.',
+      secenekler: [{ d: 'evet', a: 'Evet, kıymet yükseltildi' }, { d: 'hayir', a: 'Hayır' }, { d: 'bilmiyorum', a: 'Bilmiyorum' }]
+    },
+    { id: 'odenenVergi', tip: 'para', soru: 'Toplam ne kadar vergi ödediniz?', ipucu: 'Örn: 420000', zorunlu: true, yardim: 'GV + İGV + KDV + ÖTV ve diğer mali yükümlülüklerin toplamı.' },
+    { id: 'odemeTarihi', tip: 'tarih', soru: 'Vergileri ne zaman ödediniz?', zorunlu: true, yardim: 'Geri verme başvurusu süresi bu tarihten işler.' },
+    {
+      id: 'ihtirazi', tip: 'secim', soru: 'Beyannameye ihtirazi kayıt veya çekince koydunuz mu?',
+      secenekler: [{ d: 'evet', a: 'Evet' }, { d: 'hayir', a: 'Hayır' }, { d: 'bilmiyorum', a: 'Bilmiyorum' }]
+    },
+    {
+      id: 'basvuru', tip: 'secim', soru: 'Daha önce itiraz veya dava başvurusu yaptınız mı?', zorunlu: true,
+      secenekler: [{ d: 'hayir', a: 'Hayır' }, { d: 'itiraz', a: 'İtiraz ettim' }, { d: 'dava', a: 'Dava açtım' }]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Eklemek istediğiniz bir şey var mı?', ipucu: 'İsteğe bağlı' }
+  ],
+  hesapla: function (c) {
+    const fark = Math.max(0, (c.kiymet || 0) - (c.fatura || 0));
+    /* Fazla vergi, ödenen verginin kıymete oranı farka uygulanarak
+       tahmin ediliyor. Oranları varsaymıyoruz — kullanıcının kendi
+       ödediği tutardan çıkarıyoruz. */
+    const oran = c.kiymet > 0 ? (c.odenenVergi || 0) / c.kiymet : 0;
+    const fazla = Math.round(fark * oran);
+
+    const uyarilar = [], dogrulanmamis = [];
+    let aciliyet = 'dusuk';
+    if (c.odemeTarihi) {
+      const gecen = Math.floor((Date.now() - new Date(c.odemeTarihi + 'T00:00:00').getTime()) / 86400000);
+      const kalan = 1095 - gecen;   /* GK m.211: ödeme tarihinden itibaren 3 yıl */
+      if (kalan <= 0) { aciliyet = 'yuksek'; uyarilar.push('<strong>Üç yıllık süre görünüşe göre dolmuş.</strong> Ödemeden bu yana ' + gecen + ' gün geçmiş. Geri verme başvurusu için GK m.211 üç yıllık süre öngörür; yine de dosyanızın incelenmesinde yarar var.'); }
+      else if (kalan <= 180) { aciliyet = 'yuksek'; uyarilar.push('<strong>Yaklaşık ' + kalan + ' gününüz kalmış</strong> (GK m.211 — ödeme tarihinden itibaren 3 yıl). Gecikmeden başvurulması gerekir.'); }
+      else { aciliyet = 'orta'; uyarilar.push('Geri verme başvurusu için yaklaşık <strong>' + kalan + ' gününüz</strong> var (GK m.211 — 3 yıl).'); }
+    }
+    if (c.gozetim === 'evet') uyarilar.push('Kıymetin idarece yükseltildiğini belirttiniz. Gözetim uygulaması nedeniyle beyana eklenen yurt dışı gider kalemi, iadesi en çok kabul gören dosya tipidir.');
+    if (c.ihtirazi === 'hayir') uyarilar.push('İhtirazi kayıt konulmadan yapılan beyan, iade talebinde ek tartışma doğurabilir; bu nokta belgelerinizle birlikte değerlendirilmelidir.');
+    if (fark === 0) uyarilar.push('Girdiğiniz fatura bedeli ile gümrük kıymeti arasında fark görünmüyor. Fazla ödeme başka bir sebepten (oran hatası, muafiyet uygulanmaması) doğmuş olabilir; bu ancak beyanname incelenerek anlaşılır.');
+
+    return {
+      baslik: fazla > 0 ? 'Yaklaşık ' + fmt(fazla) + ' fazla ödeme ihtimali görünüyor' : 'Beyanname incelemesi gerekiyor',
+      ozet: 'Fatura ' + fmt(c.fatura || 0) + ' TL · vergiye esas kıymet ' + fmt(c.kiymet || 0) + ' TL' + (fark ? ' · fark ' + fmt(fark) : ''),
+      tutar: fazla, tutarEtiketi: 'Tahmini fazla ödenen vergi',
+      tutarNot: fazla ? ('Kıymet farkı ' + fmt(fark) + ' üzerinden, sizin ödediğiniz vergi oranıyla (%' + (oran * 100).toFixed(1) + ') hesaplandı') : '',
+      aciliyet: aciliyet,
+      haklar: [
+        { b: 'Geri verme (iade) başvurusu', a: 'Beyannamenin tescil edildiği gümrük müdürlüğüne yazılı başvuru yapılır (GK m.211).' },
+        { b: 'İtiraz yolu', a: 'Ret kararına karşı gümrük ve dış ticaret bölge müdürlüğüne itiraz edilir (GK m.242).' },
+        { b: 'Dava', a: 'İtirazın reddi üzerine vergi mahkemesinde iptal davası açılabilir.' }
+      ],
+      uyarilar: uyarilar,
+      belgeler: ['Gümrük beyannamesi ve ekleri', 'Satıcı faturası, navlun ve sigorta belgeleri',
+        'Vergilerin ödendiğini gösteren makbuz', 'Varsa gözetim nedeniyle eklenen yurt dışı gider satırı', 'Varsa ihtirazi kayıt dilekçesi'],
+      mevzuat: ['GK m.211 — geri verme veya kaldırma', 'GK m.24 — gümrük kıymeti', 'GK m.242 — itiraz', 'İthalatta Gözetim Uygulaması Tebliğleri'],
+      dogrulanmamis: dogrulanmamis,
+      ozetKisa: 'Gümrük fazla vergi · fark ' + fmt(fark) + ' · tahmini iade ' + fmt(fazla)
+    };
+  }
+});
+
+/* ---------------------------------------------------------------
+   2) TIR ŞOFÖRÜ ALACAK HESABI
+   Fazla mesai burada BİLEREK tutara çevrilmiyor: yurt dışı seferlerde
+   çalışma süresinin nasıl hesaplanacağı içtihada bağlı ve takograf
+   kayıtlarının incelenmesini gerektirir. Uydurma bir saat sayısından
+   tutar üretmek yanıltıcı olurdu.
+   --------------------------------------------------------------- */
+akisKaydet({
+  kod: 'tirSofor',
+  ad: 'Tır şoförü olarak bütün alacaklarım ne kadar?',
+  rozet: 'İş Hukuku',
+  aciklama: 'Sefer, bekleme, fazla çalışma ve tazminat kalemlerinizi birlikte değerlendirelim.',
+  adimlar: [
+    {
+      id: 'guzergah', tip: 'secim', soru: 'Nerede çalışıyordunuz?', zorunlu: true,
+      secenekler: [{ d: 'yurtdisi', a: 'Yurt dışı seferleri' }, { d: 'yurtici', a: 'Yurt içi seferleri' }, { d: 'karma', a: 'İkisi de' }]
+    },
+    { id: 'giris', tip: 'tarih', soru: 'İşe giriş tarihiniz?', zorunlu: true },
+    { id: 'cikis', tip: 'tarih', soru: 'İşten çıkış tarihiniz?', zorunlu: true, yardim: 'Hâlâ çalışıyorsanız bugünün tarihini girin.' },
+    {
+      id: 'cikisSekli', tip: 'secim', soru: 'İşten nasıl ayrıldınız?', zorunlu: true,
+      secenekler: [
+        { d: 'cikarildi', a: 'İşveren çıkardı' },
+        { d: 'hakli', a: 'Ben ayrıldım — haklı sebeple', alt: 'Ücret ödenmedi, sigorta eksik, mobbing vb.' },
+        { d: 'istifa', a: 'Ben ayrıldım — kendi isteğimle' },
+        { d: 'devam', a: 'Hâlâ çalışıyorum' }
+      ]
+    },
+    { id: 'bankaUcret', tip: 'para', soru: 'Bankaya yatan aylık ücretiniz ne kadardı?', ipucu: 'Örn: 30000', zorunlu: true },
+    { id: 'eldenUcret', tip: 'para', soru: 'Elden ödenen aylık tutar var mıydı?', ipucu: 'Yoksa boş bırakın', yardim: 'Bordroda görünmeyen, elden verilen kısım.' },
+    { id: 'seferPrimi', tip: 'para', soru: 'Aylık ortalama sefer primi / harcırah ne kadardı?', ipucu: 'Örn: 15000' },
+    { id: 'seferSayisi', tip: 'sayi', soru: 'Ayda ortalama kaç sefer yapıyordunuz?', birim: 'sefer', ipucu: 'Örn: 4' },
+    { id: 'gunlukSaat', tip: 'sayi', soru: 'Günde ortalama kaç saat çalışıyordunuz?', birim: 'saat', ipucu: 'Örn: 12', enCok: 24 },
+    { id: 'haftalikGun', tip: 'sayi', soru: 'Haftada kaç gün çalışıyordunuz?', birim: 'gün', ipucu: 'Örn: 6', enCok: 7 },
+    { id: 'izinGun', tip: 'sayi', soru: 'Kullanmadığınız yıllık izin kaç gün?', birim: 'gün', ipucu: 'Örn: 30' },
+    {
+      id: 'deliller', tip: 'secim', coklu: true, soru: 'Hangi belgeler elinizde var?',
+      yardim: 'Birden fazla seçebilirsiniz. Bu araçta en belirleyici şey delildir.',
+      secenekler: [
+        { d: 'takograf', a: 'Takograf kaydı' }, { d: 'pasaport', a: 'Pasaport giriş-çıkış kaydı' },
+        { d: 'sefer', a: 'Sefer listesi / irsaliye' }, { d: 'whatsapp', a: 'WhatsApp yazışmaları' },
+        { d: 'bordro', a: 'Bordro ve banka kaydı' }, { d: 'sgk', a: 'SGK hizmet dökümü' }
+      ]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Eklemek istediğiniz bir şey var mı?', ipucu: 'İsteğe bağlı' }
+  ],
+  hesapla: function (c) {
+    const gun = Math.max(0, Math.floor((new Date(c.cikis + 'T00:00:00') - new Date(c.giris + 'T00:00:00')) / 86400000));
+    const yil = gun / 365;
+    const giydirilmis = (c.bankaUcret || 0) + (c.eldenUcret || 0) + (c.seferPrimi || 0);
+    const haklar = [], uyarilar = [], dogrulanmamis = [];
+    let tutar = 0;
+
+    const kidemVar = yil >= 1 && (c.cikisSekli === 'cikarildi' || c.cikisSekli === 'hakli');
+    if (kidemVar) {
+      const tavan = Math.min(giydirilmis, KIDEM_TAVAN_2026);
+      const kidem = Math.round(tavan * yil);
+      tutar += kidem;
+      haklar.push({ b: 'Kıdem tazminatı — yaklaşık ' + fmt(kidem), a: 'Her tam yıl için 30 günlük giydirilmiş ücret. Elden ödeme ve sefer primi giydirilmiş ücrete dahil edilebilirse tutar yükselir; bu, banka kayıtları ve tanıkla ispatlanır.' });
+      dogrulanmamis.push('Kıdem tavanı (' + fmt(KIDEM_TAVAN_2026) + ' TL) her altı ayda bir değişir; güncel değer teyit edilmelidir.');
+    } else if (c.cikisSekli === 'istifa') {
+      uyarilar.push('Kendi isteğinizle istifa ettiğiniz için <strong>kıdem ve ihbar tazminatı doğmaz</strong>. Ancak izin ve ücret alacaklarınız bundan etkilenmez.');
+    } else if (yil < 1) {
+      uyarilar.push('Çalışma süreniz bir yılın altında göründüğü için kıdem tazminatı şartı sağlanmıyor.');
+    }
+
+    if (c.cikisSekli === 'cikarildi' && gun > 0) {
+      const hafta = yil >= 3 ? 8 : yil >= 1.5 ? 6 : yil >= 0.5 ? 4 : 2;
+      const ihbar = Math.round(giydirilmis / 30 * hafta * 7);
+      tutar += ihbar;
+      haklar.push({ b: 'İhbar tazminatı — yaklaşık ' + fmt(ihbar), a: hafta + ' haftalık ihbar öneli üzerinden. Fesih işverenden geldiği için bu kalem doğar.' });
+    }
+
+    if (c.izinGun > 0) {
+      const izin = Math.round(giydirilmis / 30 * c.izinGun);
+      tutar += izin;
+      haklar.push({ b: 'Kullanılmayan yıllık izin — yaklaşık ' + fmt(izin), a: c.izinGun + ' gün üzerinden. Ayrılma şekli bu alacağı etkilemez.' });
+    }
+
+    /* Fazla çalışma BİLEREK tutara çevrilmiyor. */
+    const haftalikSaat = (c.gunlukSaat || 0) * (c.haftalikGun || 0);
+    if (haftalikSaat > 45) {
+      haklar.push({
+        b: 'Fazla çalışma — belge incelemesi gerekiyor',
+        a: 'Beyanınıza göre haftalık çalışma süreniz yaklaşık ' + haftalikSaat + ' saat, yani yasal 45 saatin üzerinde. Ancak <strong>yurt dışı seferlerinde çalışma süresinin nasıl hesaplanacağı, araçta ve sınırda geçen sürenin ne kadarının çalışma sayılacağı takograf ve sefer kayıtlarının incelenmesini gerektirir.</strong> Bu yüzden burada bir tutar hesaplanmadı.'
+      });
+      dogrulanmamis.push('Yurt dışı seferlerinde fazla çalışma ve bekleme süresinin hesabı — içtihada bağlı, hukukçu değerlendirmesi gerekir.');
+    }
+    if (c.seferPrimi > 0) {
+      dogrulanmamis.push('Sefer primi ve harcırahın ücret sayılıp sayılmayacağı — ödemenin süreklilik ve gerçek masraf karşılığı olup olmadığına göre değişir.');
+    }
+
+    const d = c.deliller || [];
+    const delilSeviye = d.length >= 4 ? 'güçlü' : d.length >= 2 ? 'orta' : 'zayıf';
+    uyarilar.push('Delil durumunuz <strong>' + delilSeviye + '</strong> görünüyor (' + d.length + ' belge türü). Tır şoförü dosyalarında sonucu belirleyen şey takograf, pasaport ve sefer kayıtlarıdır.');
+    uyarilar.push('Dava açmadan önce <strong>arabuluculuk zorunludur</strong> (7036 s. K. m.3). İşçilik alacaklarında zamanaşımı 5 yıldır.');
+
+    return {
+      baslik: tutar > 0 ? 'Hesaplanabilen kalemler yaklaşık ' + fmt(tutar) : 'Alacaklarınız için belge incelemesi gerekiyor',
+      ozet: Math.floor(yil) + ' yıl ' + Math.round((yil % 1) * 12) + ' ay çalışma · ' + (c.guzergah === 'yurtdisi' ? 'yurt dışı' : c.guzergah === 'yurtici' ? 'yurt içi' : 'karma') + ' sefer',
+      tutar: tutar, tutarEtiketi: 'Hesaplanabilen alacaklar toplamı',
+      tutarNot: 'Fazla çalışma, hafta tatili ve resmî tatil alacakları bu tutara DAHİL DEĞİLDİR; onlar kayıt incelemesi gerektirir.',
+      aciliyet: tutar > 500000 ? 'orta' : 'dusuk',
+      haklar: haklar, uyarilar: uyarilar,
+      belgeler: ['Takograf kayıtları', 'Pasaport giriş-çıkış kayıtları', 'Sefer listesi ve irsaliyeler',
+        'Bordro, banka hesap dökümü', 'SGK hizmet dökümü ve prime esas kazanç listesi', 'İşyeriyle yazışmalar'],
+      mevzuat: ['4857 m.41 — fazla çalışma', '4857 m.46-47 — hafta tatili ve genel tatil', '1475 m.14 — kıdem', '4857 m.17 — ihbar', '7036 m.3 — arabuluculuk'],
+      dogrulanmamis: dogrulanmamis,
+      ozetKisa: 'Tır şoförü · ' + Math.floor(yil) + ' yıl · hesaplanan ' + fmt(tutar)
+    };
+  }
+});
+
+/* ---------------------------------------------------------------
+   3) EMLAKÇI KOMİSYON ALACAĞI
+   Komisyon oranı varsayılmıyor; yalnızca kullanıcının kendi
+   kararlaştırdığını söylediği oran kullanılıyor.
+   --------------------------------------------------------------- */
+akisKaydet({
+  kod: 'emlakciKomisyon',
+  ad: 'Müşterim beni aradan çıkardı, komisyonumu alabilir miyim?',
+  rozet: 'Diğer Hukuk Alanları',
+  aciklama: 'Sözleşme, gösterme belgesi ve satış sürecine göre alacak ihtimalinizi değerlendirelim.',
+  adimlar: [
+    {
+      id: 'islem', tip: 'secim', soru: 'İşlem satış mı, kiralama mı?', zorunlu: true,
+      secenekler: [{ d: 'satis', a: 'Satış' }, { d: 'kira', a: 'Kiralama' }]
+    },
+    {
+      id: 'yetki', tip: 'secim', soru: 'Yazılı yetkilendirme sözleşmeniz var mı?', zorunlu: true,
+      yardim: 'Bu dosyalarda en belirleyici belge budur.',
+      secenekler: [{ d: 'var', a: 'Evet, imzalı sözleşme var' }, { d: 'yok', a: 'Hayır' }, { d: 'sozlu', a: 'Sözlü anlaşmıştık' }]
+    },
+    {
+      id: 'gosterme', tip: 'secim', soru: 'Taşınmaz gösterme belgesi imzalandı mı?', zorunlu: true,
+      secenekler: [{ d: 'var', a: 'Evet, imzalı' }, { d: 'yok', a: 'Hayır' }]
+    },
+    {
+      id: 'tanistirma', tip: 'secim', soru: 'Alıcı ile satıcı sizin aracılığınızla mı tanıştı?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet, ben tanıştırdım' }, { d: 'hayir', a: 'Hayır' }, { d: 'kismen', a: 'Kısmen / tartışmalı' }]
+    },
+    {
+      id: 'dogrudan', tip: 'secim', soru: 'Taraflar sonradan sizi devre dışı bırakıp doğrudan mı işlem yaptı?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet' }, { d: 'hayir', a: 'Hayır' }]
+    },
+    {
+      id: 'gerceklesti', tip: 'secim', soru: 'İşlem gerçekleşti mi?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet, tapu devri / kira sözleşmesi yapıldı' }, { d: 'hayir', a: 'Hayır' }]
+    },
+    { id: 'bedel', tip: 'para', soru: 'İşlem bedeli ne kadardı?', ipucu: 'Örn: 5000000', zorunlu: true },
+    { id: 'oran', tip: 'sayi', soru: 'Kararlaştırdığınız komisyon oranı yüzde kaçtı?', birim: '%', ipucu: 'Örn: 2', enCok: 20, yardim: 'Sözleşmede yazan oran. Tutar olarak kararlaştırdıysanız bir sonraki adımda yazabilirsiniz.' },
+    { id: 'tutarSabit', tip: 'para', soru: 'Ya da maktu bir tutar mı kararlaştırdınız?', ipucu: 'Oran girdiyseniz boş bırakın' },
+    {
+      id: 'kayit', tip: 'secim', coklu: true, soru: 'Elinizde hangi kayıtlar var?',
+      secenekler: [
+        { d: 'mesaj', a: 'Mesaj / WhatsApp yazışması' }, { d: 'eposta', a: 'E-posta' },
+        { d: 'ilan', a: 'İlan kaydı' }, { d: 'arama', a: 'Arama kayıtları' }, { d: 'tanik', a: 'Tanık' }
+      ]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Olayı kısaca anlatır mısınız?', ipucu: 'İsteğe bağlı' }
+  ],
+  hesapla: function (c) {
+    const komisyon = c.tutarSabit ? c.tutarSabit : (c.oran ? Math.round((c.bedel || 0) * c.oran / 100) : 0);
+    let delilPuan = 0;
+    if (c.yetki === 'var') delilPuan += 40; else if (c.yetki === 'sozlu') delilPuan += 10;
+    if (c.gosterme === 'var') delilPuan += 30;
+    if (c.tanistirma === 'evet') delilPuan += 20; else if (c.tanistirma === 'kismen') delilPuan += 8;
+    delilPuan += Math.min(10, (c.kayit || []).length * 3);
+    const seviye = delilPuan >= 70 ? 'güçlü' : delilPuan >= 40 ? 'orta' : 'zayıf';
+
+    const uyarilar = [], haklar = [];
+    if (c.yetki === 'var' && c.gosterme === 'var') haklar.push({ b: 'Yazılı delil güçlü', a: 'Hem yetkilendirme sözleşmesi hem gösterme belgesi var; aracılık bağınızın ispatı bakımından en elverişli durumdasınız.' });
+    if (c.yetki !== 'var') uyarilar.push('<strong>Yazılı yetkilendirme sözleşmesi yok.</strong> Bu, komisyon alacağının en zayıf noktasıdır; mesaj, ilan ve tanık gibi diğer delillerle desteklenmesi gerekir.');
+    if (c.gosterme !== 'var') uyarilar.push('Gösterme belgesi bulunmaması, tarafları sizin tanıştırdığınızın ispatını zorlaştırır.');
+    if (c.dogrudan === 'evet') haklar.push({ b: 'Aradan çıkarma iddiası', a: 'Tarafların sizi devre dışı bırakarak doğrudan işlem yapması hâlinde, aracılık faaliyetinizin sonuca etkisi ispatlanabilirse komisyon talep edilebilir.' });
+    if (c.gerceklesti === 'hayir') uyarilar.push('İşlem henüz gerçekleşmediği için komisyon alacağının doğup doğmadığı tartışmalıdır; kural olarak komisyon, sözleşme kurulduğunda hak edilir.');
+    uyarilar.push('Ticari nitelikteki uyuşmazlıklarda dava öncesi <strong>arabuluculuk zorunludur</strong>.');
+
+    return {
+      baslik: komisyon > 0 ? 'Talep edilebilecek komisyon yaklaşık ' + fmt(komisyon) : 'Komisyon tutarı için sözleşmenizdeki oran gerekiyor',
+      ozet: 'Delil durumu: ' + seviye + ' · ' + (c.islem === 'satis' ? 'satış' : 'kiralama') + ' işlemi',
+      tutar: komisyon, tutarEtiketi: 'Kararlaştırdığınız orana göre komisyon',
+      tutarNot: c.oran ? ('İşlem bedeli ' + fmt(c.bedel || 0) + ' TL × %' + c.oran) : (c.tutarSabit ? 'Maktu olarak kararlaştırılan tutar' : ''),
+      aciliyet: 'dusuk',
+      haklar: haklar, uyarilar: uyarilar,
+      belgeler: ['Yetkilendirme sözleşmesi', 'Taşınmaz gösterme belgesi', 'Mesaj ve e-posta yazışmaları',
+        'İlan kayıtları', 'Tapu kaydı veya kira sözleşmesi', 'Varsa düzenlenen fatura'],
+      mevzuat: ['TBK m.520-525 — simsarlık sözleşmesi', 'Taşınmaz Ticareti Hakkında Yönetmelik'],
+      dogrulanmamis: ['Komisyon oranının üst sınırı ve gösterme belgesi olmadan talep şansı — güncel yönetmelik ve içtihat yönünden teyit gerekir.'],
+      ozetKisa: 'Emlakçı komisyonu · ' + fmt(komisyon) + ' · delil ' + seviye
+    };
+  }
+});
+
+/* ---------------------------------------------------------------
+   4) MÜTEAHHİT GECİKME VE KİRA KAYBI
+   --------------------------------------------------------------- */
+akisKaydet({
+  kod: 'muteahhitGecikme',
+  ad: 'Müteahhit evi geç teslim etti, ne kadar talep edebilirim?',
+  rozet: 'Diğer Hukuk Alanları',
+  aciklama: 'Sözleşmedeki teslim tarihi ile fiilî durumu karşılaştıralım; gecikme süresi ve kira kaybınızı hesaplayalım.',
+  adimlar: [
+    {
+      id: 'sozlesmeTuru', tip: 'secim', soru: 'Sözleşmeniz hangi türde?', zorunlu: true,
+      secenekler: [
+        { d: 'satis', a: 'Konut satış sözleşmesi', alt: 'Müteahhitten satın aldım' },
+        { d: 'katKarsiligi', a: 'Kat karşılığı inşaat sözleşmesi', alt: 'Arsamı verdim' },
+        { d: 'onOdemeli', a: 'Ön ödemeli konut satışı' }
+      ]
+    },
+    { id: 'sozlesmeTarihi', tip: 'tarih', soru: 'Sözleşme tarihi nedir?', zorunlu: true },
+    { id: 'vaatTeslim', tip: 'tarih', soru: 'Sözleşmede yazan teslim tarihi nedir?', zorunlu: true, gelecekOlabilir: true },
+    {
+      id: 'teslimDurumu', tip: 'secim', soru: 'Taşınmaz teslim edildi mi?', zorunlu: true,
+      secenekler: [{ d: 'edildi', a: 'Evet, geç de olsa teslim edildi' }, { d: 'edilmedi', a: 'Hayır, hâlâ teslim edilmedi' }]
+    },
+    { id: 'fiiliTeslim', tip: 'tarih', soru: 'Fiilî teslim tarihi nedir?', kosul: function (c) { return c.teslimDurumu === 'edildi'; }, zorunlu: true },
+    { id: 'kira', tip: 'para', soru: 'Taşınmazın aylık kira değeri yaklaşık ne kadar?', ipucu: 'Örn: 25000', zorunlu: true, yardim: 'Benzer taşınmazların bulunduğunuz yerdeki aylık kirası.' },
+    { id: 'odenen', tip: 'para', soru: 'Müteahhide toplam ne kadar ödediniz?', ipucu: 'Örn: 3000000' },
+    { id: 'cezaiSart', tip: 'para', soru: 'Sözleşmede cezai şart varsa tutarı ne kadar?', ipucu: 'Yoksa boş bırakın' },
+    {
+      id: 'tapu', tip: 'secim', soru: 'Tapu devri yapıldı mı?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet' }, { d: 'hayir', a: 'Hayır' }]
+    },
+    {
+      id: 'eksik', tip: 'secim', soru: 'Eksik veya ayıplı iş var mı?',
+      secenekler: [{ d: 'var', a: 'Evet, var' }, { d: 'yok', a: 'Hayır' }, { d: 'iskan', a: 'İskan (yapı kullanma izni) alınmadı' }]
+    },
+    {
+      id: 'ihtar', tip: 'secim', soru: 'Müteahhide ihtarname gönderdiniz mi?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet' }, { d: 'hayir', a: 'Hayır' }]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Eklemek istediğiniz bir şey var mı?', ipucu: 'İsteğe bağlı' }
+  ],
+  hesapla: function (c) {
+    const vaat = new Date(c.vaatTeslim + 'T00:00:00');
+    const bitis = c.teslimDurumu === 'edildi' ? new Date(c.fiiliTeslim + 'T00:00:00') : new Date();
+    const gecikmeGun = Math.max(0, Math.floor((bitis - vaat) / 86400000));
+    const gecikmeAy = Math.floor(gecikmeGun / 30);
+    const kiraKaybi = Math.round(gecikmeAy * (c.kira || 0));
+    const cezai = c.cezaiSart || 0;
+    const toplam = kiraKaybi + cezai;
+
+    const uyarilar = [], haklar = [];
+    if (gecikmeGun === 0) uyarilar.push('Girdiğiniz tarihlere göre henüz gecikme oluşmamış görünüyor.');
+    else haklar.push({ b: 'Kira kaybı (yoksun kalınan kullanım) — yaklaşık ' + fmt(kiraKaybi), a: gecikmeAy + ' aylık gecikme × ' + fmt(c.kira || 0) + ' TL aylık kira. Emsal kira değeri bilirkişi incelemesiyle belirlenir.' });
+    if (cezai > 0) haklar.push({ b: 'Cezai şart — ' + fmt(cezai), a: 'Sözleşmede kararlaştırılan cezai şart. Fahiş bulunması hâlinde hâkim tarafından indirilebilir (TBK m.182).' });
+    if (c.teslimDurumu === 'edilmedi') { uyarilar.push('<strong>Taşınmaz hâlâ teslim edilmemiş.</strong> Gecikme sürdüğü için zarar da büyümeye devam ediyor; gecikmeden adım atılması önerilir.'); }
+    if (c.ihtar === 'hayir') uyarilar.push('Müteahhide <strong>ihtarname gönderilmemiş</strong>. Temerrüdün kurulması ve zararın belgelenmesi bakımından ihtar önemlidir; bu eksiklik öncelikle giderilmelidir.');
+    if (c.tapu === 'hayir') uyarilar.push('Tapu devri yapılmamış. Bu durumda yalnızca gecikme değil, <strong>tapu iptali ve tescil</strong> talebi de gündeme gelebilir.');
+    if (c.eksik === 'iskan') uyarilar.push('İskan (yapı kullanma izni) alınmaması başlı başına ayıp sayılabilir ve teslimin tamamlanmadığı yönünde değerlendirilebilir.');
+    uyarilar.push('Müteahhit şirketin <strong>konkordato veya iflas durumu ayrıca kontrol edilmelidir</strong>; alacağın tahsil kabiliyetini doğrudan etkiler.');
+
+    return {
+      baslik: toplam > 0 ? 'Talep edilebilecek tutar yaklaşık ' + fmt(toplam) : 'Sözleşme ve teslim durumunun incelenmesi gerekiyor',
+      ozet: gecikmeGun > 0 ? (gecikmeAy + ' ay ' + (gecikmeGun % 30) + ' gün gecikme') : 'Gecikme hesaplanmadı',
+      tutar: toplam, tutarEtiketi: 'Tahmini uyuşmazlık değeri',
+      tutarNot: (kiraKaybi ? 'Kira kaybı ' + fmt(kiraKaybi) : '') + (cezai ? ' + cezai şart ' + fmt(cezai) : ''),
+      aciliyet: c.teslimDurumu === 'edilmedi' ? 'orta' : 'dusuk',
+      haklar: haklar, uyarilar: uyarilar,
+      belgeler: ['Sözleşmenin aslı ve ekleri', 'Ödeme belgeleri ve dekontlar', 'Varsa ihtarname ve tebliğ belgesi',
+        'Tapu kaydı', 'Eksik/ayıplı işlere ilişkin fotoğraf ve rapor', 'İskan (yapı kullanma izni) durumu'],
+      mevzuat: ['TBK m.112-126 — borcun ifa edilmemesi ve temerrüt', 'TBK m.182 — cezai şart', 'TKHK m.40-46 — ön ödemeli konut satışı'],
+      dogrulanmamis: ['Kira kaybının hangi esasa göre hesaplanacağı (emsal kira, kullanım bedeli) — somut olayda bilirkişi değerlendirmesi gerekir.'],
+      ozetKisa: 'Müteahhit gecikme · ' + gecikmeAy + ' ay · ' + fmt(toplam)
+    };
+  }
+});
+
+/* ---------------------------------------------------------------
+   5) SGK EKSİK GÜN VE GERÇEK ÜCRET
+   --------------------------------------------------------------- */
+akisKaydet({
+  kod: 'sgkEksik',
+  ad: 'SGK primim ve maaşım eksik mi bildirildi?',
+  rozet: 'İş Hukuku',
+  aciklama: 'Gerçekte çalıştığınız gün ve aldığınız ücret ile SGK\'ya bildirileni karşılaştıralım.',
+  adimlar: [
+    { id: 'giris', tip: 'tarih', soru: 'İşe giriş tarihiniz?', zorunlu: true },
+    {
+      id: 'devam', tip: 'secim', soru: 'Hâlâ çalışıyor musunuz?', zorunlu: true,
+      secenekler: [{ d: 'evet', a: 'Evet, çalışıyorum' }, { d: 'hayir', a: 'Hayır, ayrıldım' }]
+    },
+    { id: 'cikis', tip: 'tarih', soru: 'İşten çıkış tarihiniz?', kosul: function (c) { return c.devam === 'hayir'; }, zorunlu: true },
+    { id: 'gercekGun', tip: 'sayi', soru: 'Gerçekte toplam kaç gün çalıştınız?', birim: 'gün', ipucu: 'Örn: 720', zorunlu: true },
+    { id: 'sgkGun', tip: 'sayi', soru: 'SGK\'da kaç gün görünüyor?', birim: 'gün', ipucu: 'Örn: 540', zorunlu: true, yardim: 'e-Devlet > SGK Tescil ve Hizmet Dökümü\'nden bakabilirsiniz.' },
+    { id: 'gercekUcret', tip: 'para', soru: 'Gerçekte aldığınız aylık ücret ne kadardı?', ipucu: 'Örn: 40000', zorunlu: true, yardim: 'Elden ödenen kısım dahil toplam.' },
+    { id: 'sgkUcret', tip: 'para', soru: 'SGK\'ya bildirilen aylık ücret ne kadar?', ipucu: 'Örn: 26000', zorunlu: true },
+    {
+      id: 'meslekKodu', tip: 'secim', soru: 'SGK\'daki meslek kodunuz yaptığınız işle uyuşuyor mu?',
+      secenekler: [{ d: 'uyusuyor', a: 'Evet, uyuşuyor' }, { d: 'uyusmuyor', a: 'Hayır, farklı' }, { d: 'bilmiyorum', a: 'Bilmiyorum' }]
+    },
+    {
+      id: 'deliller', tip: 'secim', coklu: true, soru: 'Hangi belgeler elinizde var?',
+      secenekler: [
+        { d: 'banka', a: 'Banka hesap dökümü' }, { d: 'bordro', a: 'Bordro' },
+        { d: 'yazisma', a: 'Yazışma / mesaj' }, { d: 'tanik', a: 'Tanık' },
+        { d: 'edevlet', a: 'e-Devlet hizmet dökümü' }, { d: 'kartli', a: 'Giriş-çıkış / puantaj kaydı' }
+      ]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Eklemek istediğiniz bir şey var mı?', ipucu: 'İsteğe bağlı' }
+  ],
+  hesapla: function (c) {
+    const eksikGun = Math.max(0, (c.gercekGun || 0) - (c.sgkGun || 0));
+    const ucretFarkiAylik = Math.max(0, (c.gercekUcret || 0) - (c.sgkUcret || 0));
+    const ay = (c.gercekGun || 0) / 30;
+    const toplamFark = Math.round(ucretFarkiAylik * ay);
+
+    const haklar = [], uyarilar = [], dogrulanmamis = [];
+    if (eksikGun > 0) haklar.push({ b: 'Eksik gün bildirimi — ' + eksikGun + ' gün', a: 'Gerçekte çalıştığınız süre ile SGK kaydı arasında ' + eksikGun + ' günlük fark var. Hizmet tespiti davasıyla bu günlerin kazandırılması talep edilebilir; emeklilik hesabınızı doğrudan etkiler.' });
+    if (ucretFarkiAylik > 0) haklar.push({ b: 'Prime esas kazanç farkı — aylık ' + fmt(ucretFarkiAylik), a: 'Ücretiniz düşük bildirilmiş görünüyor. Toplam fark yaklaşık ' + fmt(toplamFark) + '; bu, hem emeklilik aylığınızı hem kıdem/ihbar hesabınızı etkiler.' });
+    if (c.meslekKodu === 'uyusmuyor') haklar.push({ b: 'Meslek kodu uyuşmazlığı', a: 'Yanlış meslek kodu, fiilî hizmet süresi zammı gibi haklardan yararlanmanızı engelleyebilir; düzeltilmesi istenebilir.' });
+    if (eksikGun === 0 && ucretFarkiAylik === 0) uyarilar.push('Girdiğiniz bilgilere göre kayıtlar arasında fark görünmüyor.');
+
+    const d = c.deliller || [];
+    const seviye = d.length >= 4 ? 'güçlü' : d.length >= 2 ? 'orta' : 'zayıf';
+    uyarilar.push('Delil durumunuz <strong>' + seviye + '</strong> (' + d.length + ' belge türü). Bu dosyalarda banka kayıtları ve tanık beyanı belirleyicidir; imzaladığınız bordronun gerçeği yansıtmadığını ispat yükü ağırdır.');
+    if (c.devam === 'evet') uyarilar.push('Hâlâ çalıştığınız için talebinizi iş ilişkisi sürerken ileri sürmenin sonuçlarını (fesih riski, haklı fesih imkânı) birlikte değerlendirmek gerekir.');
+    uyarilar.push('<strong>Süre yönünden gecikmeden inceleme önerilir.</strong> Hizmet tespiti davasında süre sınırı bulunduğundan, fiilen çalışılan yılların kaybedilmemesi için gecikilmemelidir.');
+    dogrulanmamis.push('Hizmet tespiti davasında hak düşürücü sürenin somut olayda nasıl işleyeceği — hukukçu değerlendirmesi gerekir.');
+
+    return {
+      baslik: (eksikGun > 0 || ucretFarkiAylik > 0) ? 'Kayıtlarınızda eksik bildirim görünüyor' : 'Kayıtlarınızın incelenmesi gerekiyor',
+      ozet: (eksikGun > 0 ? eksikGun + ' gün eksik' : 'gün farkı yok') + ' · ' + (ucretFarkiAylik > 0 ? 'aylık ' + fmt(ucretFarkiAylik) + ' ücret farkı' : 'ücret farkı yok'),
+      tutar: toplamFark, tutarEtiketi: 'Tahmini toplam ücret farkı',
+      tutarNot: ucretFarkiAylik ? ('Aylık ' + fmt(ucretFarkiAylik) + ' × yaklaşık ' + Math.round(ay) + ' ay') : '',
+      aciliyet: (eksikGun > 180 || toplamFark > 200000) ? 'orta' : 'dusuk',
+      haklar: haklar, uyarilar: uyarilar,
+      belgeler: ['e-Devlet SGK hizmet dökümü ve prime esas kazanç listesi', 'Banka hesap dökümü (ücret yatışları)',
+        'Bordrolar', 'İşyeri giriş-çıkış veya puantaj kayıtları', 'Yazışmalar', 'Aynı dönemde çalışan tanıklar'],
+      mevzuat: ['5510 s. K. m.86 — hizmetlerin bildirimi', '4857 m.32 — ücret', 'İş K. Ek m.3 — zamanaşımı'],
+      dogrulanmamis: dogrulanmamis,
+      ozetKisa: 'SGK eksik bildirim · ' + eksikGun + ' gün · ' + fmt(toplamFark)
     };
   }
 });
