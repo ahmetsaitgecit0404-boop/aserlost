@@ -5938,7 +5938,19 @@ async function basvuruOlustur(contactInfo, description, sonucOzeti) {
       olayGonder(contactInfo.iletisimIzni ? 'contact_permission_granted' : 'contact_permission_declined');
     }
   } catch (e) {
-    console.warn('başvuru kaydedilemedi, sonuç yine gösteriliyor');
+    /* Başvuru ucu çökerse kaydı büsbütün kaybetmeyelim: eski kayıt yoluna
+       düşüyoruz. Başvuru numarası olmaz ama ad, telefon ve sonuç durur —
+       kaybolan başvuru, numarasız başvurudan kötüdür. */
+    console.warn('başvuru ucu yanıt vermedi, yedek kayıt yoluna düşülüyor');
+    try{
+      await fetch('/api/kayit/leads',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          tarih:new Date().toLocaleDateString('tr-TR'),saat:new Date().toLocaleTimeString('tr-TR'),
+          ad:govde.ad,telefon:govde.telefon,email:govde.email,sehir:govde.sehir,ilce:govde.ilce,
+          plaka:govde.plaka,tur:govde.arac_kodu,sonuc:govde.sonuc_ozeti,
+          aciklama:(govde.aciklama||'')+' | YEDEK KAYIT (basvuru ucu yanit vermedi)'
+        })});
+    }catch(e2){ console.warn('yedek kayıt da başarısız'); }
   }
 }
 /* Başvuru numarası ve WhatsApp kutusu, o an görünen sonuç kartının içine
