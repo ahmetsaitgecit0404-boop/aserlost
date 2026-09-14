@@ -457,7 +457,7 @@ const ICON_PATHS = {
 
 /* Hangi araç hangi ikonu kullanıyor */
 const MODULE_ICONS = {
-  durumTespiti: 'pusula', vergiIade: 'iade', evSatisIade: 'tapu',
+  durumTespiti: 'pusula', vergiIade: 'iade', evSatisIade: 'tapu', vergiTebligat: 'belge',
   kusur: 'kusur', arac: 'arac', hasar: 'hasar',
   mahrumiyet: 'saat', pertBedeli: 'pert', sakatlik: 'sakatlik', yoksun: 'yoksun',
   maddi: 'vergi', kasko: 'yoksun', manevi: 'manevi', gecici: 'saglik',
@@ -505,6 +505,7 @@ const MODULES = [
   {id:'vergiZiyai',title:'Vergi ziyaı cezam ne kadar, indirimi var mı?',icon:'📉',desc:'VUK 344 uyarınca ceza verginin bir katı, VUK 359 fiillerinde üç katıdır; VUK 376 indirimiyle karşılaştırın.',tags:['VUK 344','VUK 376','Gecikme Faizi'],screen:'generic',category:'vergi'},
   {id:'emlakVergisi',title:'Emlak vergim ne kadar?',icon:'🏠',desc:'Emlak vergi değerinizi girin; mesken, iş yeri, arsa ve arazi için yıllık vergi büyükşehir farkıyla listelenir.',tags:['Binde Oran','Büyükşehir','Yıllık'],screen:'generic',category:'vergi'},
   {id:'evSatisIade',title:'Ev satış vergisi iade tutarı hesaplama',icon:'🏡',desc:'Ticari faaliyetiniz olmadığı hâlde konut satışınız ticari kazanç sayılıp KDV ve geçici vergi ödettirildiyse ne kadarını geri isteyebileceğinizi hesaplayın. Doğru vergilendirme değer artış kazancı (GVK mük. m.80) üzerindendir.',tags:['Değer Artış Kazancı','KDV + Geçici Vergi','İade Tutarı'],screen:'evSatisIade',category:'vergi'},
+  {id:'vergiTebligat',title:'Vergi tebligatı aldım, ne yapmalıyım?',icon:'📨',desc:'Tebliğ tarihini ve işlem türünü girin; süre, ödeme ve dava ihtimallerini birlikte değerlendirelim. Süresi yaklaşan dosyalar ayrıca uyarılır.',tags:['Süre Analizi','İhbarname','Ödeme Emri'],screen:'akis',category:'vergi'},
   {id:'vergiIade',title:'Vergi iademi nasıl alabilirim?',icon:'💰',desc:'Fazla veya yersiz ödediğiniz vergiyi geri almak için hangi mercie, hangi süre içinde, hangi belgelerle başvuracağınızı adım adım çıkarın. Örnek dilekçe dahil.',tags:['Yol Haritası','Süre Kontrolü','Örnek Dilekçe'],screen:'vergiIade',category:'vergi'},
   {id:'vergiDavasi',title:'Vergi davası açmaya değer mi?',icon:'⚖️',desc:'İndirimli ödeme ile dava senaryosunu kazanma ihtimalinize göre karşılaştırın.',tags:['Beklenen Değer','Masraf','Karar'],screen:'generic',category:'vergi'},
   // ===== İŞ HUKUKU — tek soru-cevap akışı =====
@@ -846,6 +847,7 @@ function fmt2(n){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0})
 let _navLock=false;
 /* ========== SEO URL ROUTING ========== */
 const ROUTE_MAP={
+  '/vergi-tebligati':{screen:'akis',title:'Vergi Tebligatı Aldım, Ne Yapmalıyım? | Müvekkil Bilgi',desc:'Vergi veya ceza ihbarnamesi, ödeme emri ya da e-haciz aldıysanız süre, ödeme ve dava ihtimallerinizi ön değerlendirin.'},
   '/ev-satis-vergisi-iade-hesaplama':{screen:'evSatisIade',title:'Ev Satış Vergisi İade Tutarı Hesaplama | Müvekkil Bilgi',desc:'Konut satışı ticari kazanç sayılıp KDV ve geçici vergi ödediyseniz iade tutarınızı hesaplayın. Değer artış kazancı (GVK mük. m.80) esasına göre karşılaştırmalı hesap.'},
   '/durum-tespiti':{screen:'tani',title:'Durum Tespiti — Hangi Hakkım Var? | Müvekkil Bilgi',desc:'Birkaç soruyla durumunuzu tahmin edelim: dosyanızda hangi tazminat kalemleri var, süreniz ne kadar ve hangi hesabı yapmalısınız.'},
   '/vergi-iademi-nasil-alirim':{screen:'vergiIade',title:'Vergi İademi Nasıl Alabilirim? | Müvekkil Bilgi',desc:'Fazla veya yersiz ödenen vergiyi geri almak için başvuru mercii, süre, belgeler ve örnek dilekçe — adım adım yol haritası.'},
@@ -885,7 +887,7 @@ const ROUTE_MAP={
   '/tuketici-haklari-tazminati':{generic:'tuketici',title:'Tüketici Hakları Tazminatı Hesaplama | Müvekkil Bilgi',desc:'Ayıplı mal veya hizmet nedeniyle tüketici mahkemesi taleplerinizi hesaplayın.'},
   '/tapu-harci-hesaplama':{generic:'tapu',title:'Tapu Harcı ve Vergi Hesaplama | Müvekkil Bilgi',desc:'Gayrimenkul alım-satımında tapu harcı, KDV ve vergi yükümlülüklerinizi hesaplayın.'}
 };
-const SCREEN_TO_PATH={tani:'/durum-tespiti',evSatisIade:'/ev-satis-vergisi-iade-hesaplama',vergiIade:'/vergi-iademi-nasil-alirim',isHukuku:'/is-hukuku-hesaplama',gozetim:'/gozetim-fazla-vergi-iadesi',arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
+const SCREEN_TO_PATH={tani:'/durum-tespiti',akis:'/vergi-tebligati',evSatisIade:'/ev-satis-vergisi-iade-hesaplama',vergiIade:'/vergi-iademi-nasil-alirim',isHukuku:'/is-hukuku-hesaplama',gozetim:'/gozetim-fazla-vergi-iadesi',arac:'/deger-kaybi-hesaplama',iscilik:'/kidem-tazminati-hesaplama',kusur:'/kusur-orani-tespiti',fesih:'/hakli-fesih-kidem-tazminati-testi',iseIade:'/ise-iade-davasi-sartlari'};
 const GENERIC_TO_PATH={ithalatVergi:'/ithalat-vergileri-hesaplama',gumrukCeza:'/gumruk-para-cezasi-itiraz',vergiZiyai:'/vergi-ziyai-cezasi-hesaplama',emlakVergisi:'/emlak-vergisi-hesaplama',vergiDavasi:'/vergi-davasi-degerlendirme',isKazasi:'/is-kazasi-tazminati',mahrumiyet:'/arac-mahrumiyet-bedeli',miras:'/miras-payi-hesaplama',hasar:'/arac-hasar-bedeli-hesaplama',pertBedeli:'/pert-arac-bedeli-hesaplama',sakatlik:'/surekli-sakatlik-tazminati-hesaplama',yoksun:'/destekten-yoksun-kalma-tazminati',maddi:'/maddi-tazminat-hesaplama',kasko:'/kasko-hasar-tazminati-hesaplama',manevi:'/manevi-tazminat-hesaplama',gecici:'/gecici-is-goremezlik-hesaplama',kalici:'/kalici-is-goremezlik-hesaplama',trafikCezasi:'/trafik-cezasi-itiraz-hesaplama',iseIadeTazminat:'/ise-iade-tazminati-hesaplama',isgucu:'/is-gucu-kaybi-hesaplama',bakiyeSure:'/bakiye-sure-ucreti-tazminati',bosanma:'/bosanma-tazminati-mal-paylasimi',kamulastirma:'/kamulastirmasiz-el-atma-tazminati',nafaka:'/nafaka-hesaplama',tuketici:'/tuketici-haklari-tazminati',tapu:'/tapu-harci-hesaplama'};
 function setMetaDesc(desc){
   if(!desc)return;
@@ -976,6 +978,7 @@ function navigate(screen){
   if(screen==='tani')openTani();
   if(screen==='vergiIade')openVergiIade();
   if(screen==='evSatisIade')openEvSatisIade();
+  if(screen==='akis')akisBaslat(akis.kod||'vergiTebligat');
   if(screen==='gozetim')openGozetim();
   if(screen==='isHukuku')openIsHukuku();
   setTimeout(()=>{_navLock=false;},D+200);
@@ -1145,7 +1148,7 @@ const MODULE_CATS={
   vergi:{title:'Vergi & Gümrük Hukuku',icon:'🧾',accent:'#3B82F6',desc:'Gözetim uygulaması kaynaklı fazla ödenen vergilerin iadesi'},
   diger:{title:'Diğer Hukuk Alanları',icon:'📋',accent:'#C5A880',desc:'Boşanma, miras, kamulaştırma, tüketici ve tapu işlemleri'}
 };
-const SCREEN_MODULES=['tani','vergiIade','evSatisIade','kusur','fesih','iseIade','arac','iscilik','gozetim','isHukuku'];
+const SCREEN_MODULES=['tani','vergiIade','evSatisIade','akis','kusur','fesih','iseIade','arac','iscilik','gozetim','isHukuku'];
 function moduleAction(m){
   if(SCREEN_MODULES.indexOf(m.screen)!==-1)return `navigate('${m.screen}')`;
   return `openGenericCalc('${m.id}')`;
@@ -2984,6 +2987,7 @@ function finalizeLead(contactInfo,description){
   else if(type==='iseIade')sonucOzeti='İşe İade Uygunluk Analizi: '+(result.iseIade?.sartlariTasiyorMu?'Şartlar Uygun':'Belirsiz/Uygun Değil')+' (Güven %'+(parseInt(result.iseIade?.guvenSkoru)||0)+')';
   else if(type==='gozetim')sonucOzeti='Gözetim Fazla Vergi: eklenen kıymet '+new Intl.NumberFormat('tr-TR').format(result.gozetim?.ek||0)+' TL, potansiyel fazla vergi '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL (skor '+(result.gozetim?.sk?.skor||0)+'/100)';
   else if(type==='durumTespiti')sonucOzeti='Durum Tespiti: '+((TANI_MAP[result.tani]||{}).ad||'-');
+  else if(AKIS_ARAC[type])sonucOzeti=(AKIS_ARAC[type].ad||type)+': '+((result.ozetKisa)||(result.ozet)||'');
   else if(type==='evSatisIade')sonucOzeti='Ev Satış Vergi İadesi: '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL (ticari sayılma riski %'+((result.evSatis&&result.evSatis.risk&&result.evSatis.risk.puan)||0)+')';
   else if(type==='vergiIade')sonucOzeti='Vergi İadesi Yol Haritası: '+((VI_TUR[result.vergi]||{}).ad||'-')+(result.total?' · '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL':'');
   else if(type==='isHukukuSihirbaz')sonucOzeti='İş Hukuku Alacağı: '+new Intl.NumberFormat('tr-TR').format(result.total)+' TL';
@@ -3024,6 +3028,7 @@ function finalizeLead(contactInfo,description){
   else if(type==='kusur'){const rr=document.getElementById('kusurResult');if(rr)rr.style.display='block';showKusurResult(result.kusur,result._parties);}
   else if(type==='gozetim')showGozetimResult();
   else if(type==='durumTespiti')taniSonucGoster();
+  else if(AKIS_ARAC[type])akisSonucGoster();
   else if(type==='evSatisIade')esiSonucGoster();
   else if(type==='vergiIade')viSonucGoster();
   else if(type==='isHukukuSihirbaz')showIsHukukuResult();
@@ -5976,3 +5981,451 @@ function basvuruYerlestir(){
   const son=document.createElement('div');son.innerHTML=basvuruWaHtml();
   if(son.firstChild)ic.appendChild(son.firstChild);
 }
+
+/* =====================================================================
+   ORTAK AKIŞ MOTORU
+
+   Yeni araçlar artık ekran çizmiyor; yalnızca SORU LİSTESİ tanımlıyor.
+   Motor; tek soruluk ekranları, ilerleme çubuğunu, geri dönüşü, koşullu
+   soru atlamayı, doğrulamayı, taslak saklamayı ve sonuç öncesi iletişim
+   kapısını üstleniyor.
+
+   Tasarım kararları:
+   - Ekranda tek soru: uzun form gören ziyaretçi yarıda bırakıyor.
+   - İlerleme çubuğu yalnızca GÖRÜNECEK adımları sayıyor; koşulla atlanan
+     adımlar "3/8" içinde görünmüyor, yoksa ilerleme yalan söylüyor.
+   - Taslak sessionStorage'da: sayfa yenilenirse cevaplar kaybolmuyor.
+     localStorage değil — cihazı paylaşan başkası cevapları görmemeli.
+   - İletişim bilgisi en sona bırakılıyor; hukuki sorular önce bitiyor.
+   ===================================================================== */
+
+const AKIS_ARAC = {};              /* araç tanımları buraya kaydolur */
+function akisKaydet(tanim) { AKIS_ARAC[tanim.kod] = tanim; }
+
+const akis = { kod: null, adimIx: 0, cevap: {}, sonuc: null, hata: '' };
+
+function akisTaslakAnahtar(kod) { return 'mb_taslak_' + kod; }
+function akisTaslakYaz() {
+  try { sessionStorage.setItem(akisTaslakAnahtar(akis.kod), JSON.stringify({ c: akis.cevap, i: akis.adimIx })); } catch (e) { }
+}
+function akisTaslakOku(kod) {
+  try {
+    const t = JSON.parse(sessionStorage.getItem(akisTaslakAnahtar(kod)) || 'null');
+    return t && t.c ? t : null;
+  } catch (e) { return null; }
+}
+function akisTaslakSil() { try { sessionStorage.removeItem(akisTaslakAnahtar(akis.kod)); } catch (e) { } }
+
+/* Görünecek adımlar: koşulu sağlamayanlar listeden düşüyor. */
+function akisAdimlar() {
+  const t = AKIS_ARAC[akis.kod]; if (!t) return [];
+  return t.adimlar.filter(function (a) { return !a.kosul || a.kosul(akis.cevap); });
+}
+function akisAdim() { return akisAdimlar()[akis.adimIx] || null; }
+
+function akisBaslat(kod, tazeBasla) {
+  const t = AKIS_ARAC[kod]; if (!t) return;
+  akis.kod = kod; akis.sonuc = null; akis.hata = '';
+  const taslak = tazeBasla ? null : akisTaslakOku(kod);
+  akis.cevap = taslak ? taslak.c : {};
+  akis.adimIx = taslak ? Math.min(taslak.i, akisAdimlar().length - 1) : 0;
+  basvuru.aracKodu = kod;
+  basvuruZaman('ts_form_baslangic');
+  olayGonder('form_start', { arac: kod });
+  akisCiz();
+}
+
+/* ---------- doğrulama ---------- */
+function akisDegerAl(a) {
+  const el = document.getElementById('ak_' + a.id);
+  if (!el) return akis.cevap[a.id];
+  if (a.tip === 'para' || a.tip === 'sayi') {
+    const ham = el.value.replace(/[.\s]/g, '').replace(',', '.');
+    return ham === '' ? undefined : parseFloat(ham);
+  }
+  return el.value === '' ? undefined : el.value;
+}
+function akisDogrula(a, v) {
+  if (a.zorunlu && (v === undefined || v === '' || v === null)) return a.hataMetni || 'Bu alan gerekli.';
+  if (v === undefined || v === '') return '';
+  if (a.tip === 'para' || a.tip === 'sayi') {
+    if (isNaN(v)) return 'Sayı girin.';
+    if (v < 0) return 'Negatif değer olamaz.';
+    if (a.enAz !== undefined && v < a.enAz) return 'En az ' + a.enAz + ' olmalı.';
+    if (a.enCok !== undefined && v > a.enCok) return 'Çok büyük bir değer girdiniz.';
+  }
+  if (a.tip === 'tarih') {
+    const d = new Date(v + 'T00:00:00');
+    if (isNaN(d.getTime())) return 'Geçerli bir tarih girin.';
+    /* Gelecek ve mantıksız tarihler engelleniyor. */
+    if (!a.gelecekOlabilir && d.getTime() > Date.now() + 86400000) return 'Gelecek bir tarih girilemez.';
+    if (d.getFullYear() < 1950) return 'Tarih çok eski görünüyor.';
+  }
+  if (a.dogrula) return a.dogrula(v, akis.cevap) || '';
+  return '';
+}
+
+function akisIleri() {
+  const a = akisAdim(); if (!a) return;
+  if (a.tip !== 'bilgi') {
+    const v = akisDegerAl(a);
+    const hata = akisDogrula(a, v);
+    if (hata) { akis.hata = hata; akisCiz(); return; }
+    akis.cevap[a.id] = v;
+  }
+  akis.hata = '';
+  olayGonder('question_answered', { meta: { adim: a.id } });
+  const toplam = akisAdimlar().length;
+  if (akis.adimIx < toplam - 1) {
+    akis.adimIx++; akisTaslakYaz(); akisCiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    akisBitir();
+  }
+}
+function akisGeri() {
+  if (akis.adimIx === 0) { navigate('home'); return; }
+  const a = akisAdim();
+  if (a && a.tip !== 'bilgi') { const v = akisDegerAl(a); if (v !== undefined) akis.cevap[a.id] = v; }
+  akis.adimIx--; akis.hata = ''; akisTaslakYaz();
+  olayGonder('form_step_back');
+  akisCiz(); window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+/* Seçim kartına tıklamak hem cevabı yazıyor hem bir sonraki soruya
+   geçiriyor: mobilde fazladan "devam" dokunuşu yormasın diye. */
+function akisSec(id, deger) {
+  akis.cevap[id] = deger; akis.hata = ''; akisTaslakYaz();
+  const a = akisAdim();
+  if (a && a.tip === 'secim' && !a.coklu) { setTimeout(akisIleri, 140); }
+  else akisCiz();
+}
+function akisCoklu(id, deger) {
+  const mevcut = akis.cevap[id] || [];
+  const i = mevcut.indexOf(deger);
+  if (i === -1) mevcut.push(deger); else mevcut.splice(i, 1);
+  akis.cevap[id] = mevcut; akisTaslakYaz(); akisCiz();
+}
+
+/* Hukuki sorular bitti; sonuç hesaplanıyor ama HENÜZ gösterilmiyor. */
+function akisBitir() {
+  const t = AKIS_ARAC[akis.kod];
+  basvuruZaman('ts_sorular_bitti');
+  olayGonder('legal_questions_completed');
+  try { akis.sonuc = t.hesapla(akis.cevap); }
+  catch (e) { console.error(e); akis.hata = 'Hesaplama yapılamadı.'; akisCiz(); return; }
+
+  state.pendingType = akis.kod;
+  state.pendingResult = Object.assign({ total: akis.sonuc.tutar || 0 }, akis.sonuc);
+  state.pendingAciliyet = akis.sonuc.aciliyet || 'dusuk';
+  state.pendingExtra = (t.ad || akis.kod) + ' · ' + (akis.sonuc.ozet || '');
+  const ci = getStoredContactInfo();
+  if (ci) finalizeLead(ci, ''); else showLeadModal(akis.kod);
+}
+/* finalizeLead sonucu gösterirken buraya döner. */
+function akisSonucGoster() {
+  akisTaslakSil();
+  akisCiz();
+  const p = document.getElementById('akisSonuc');
+  if (p) scrollToResult(p);
+}
+
+/* ---------- görünüm ---------- */
+function akisParaBicim(v) {
+  if (v === undefined || v === '' || v === null) return '';
+  return new Intl.NumberFormat('tr-TR').format(v);
+}
+function akisAlanHtml(a) {
+  const v = akis.cevap[a.id];
+  const ort = 'id="ak_' + a.id + '" class="ak-giris"';
+  if (a.tip === 'secim') {
+    const sec = a.coklu ? (v || []) : v;
+    return '<div class="ak-secimler">' + a.secenekler.map(function (s) {
+      const isaretli = a.coklu ? (sec.indexOf(s.d) !== -1) : (sec === s.d);
+      const fn = a.coklu ? ('akisCoklu(\'' + a.id + '\',\'' + s.d + '\')') : ('akisSec(\'' + a.id + '\',\'' + s.d + '\')');
+      return '<button type="button" class="ak-secim' + (isaretli ? ' sec' : '') + '" onclick="' + fn + '">' +
+        '<span class="ak-secim-kutu"></span><span class="ak-secim-yazi"><strong>' + s.a + '</strong>' +
+        (s.alt ? '<small>' + s.alt + '</small>' : '') + '</span></button>';
+    }).join('') + '</div>';
+  }
+  if (a.tip === 'para') return '<div class="ak-para"><span>₺</span><input ' + ort + ' type="text" inputmode="numeric" value="' + (v !== undefined ? akisParaBicim(v) : '') + '" placeholder="' + (a.ipucu || '0') + '" oninput="akisParaYaz(this)"/></div>';
+  if (a.tip === 'sayi') return '<div class="ak-para"><span>' + (a.birim || '#') + '</span><input ' + ort + ' type="number" inputmode="numeric" min="0" value="' + (v !== undefined ? v : '') + '" placeholder="' + (a.ipucu || '') + '"/></div>';
+  if (a.tip === 'tarih') return '<input ' + ort + ' type="date" value="' + (v || '') + '" max="' + (a.gelecekOlabilir ? '' : new Date().toISOString().slice(0, 10)) + '"/>';
+  if (a.tip === 'uzunMetin') return '<textarea ' + ort + ' rows="4" placeholder="' + (a.ipucu || '') + '">' + (v || '') + '</textarea>';
+  if (a.tip === 'metin') return '<input ' + ort + ' type="text" value="' + (v || '') + '" placeholder="' + (a.ipucu || '') + '"/>';
+  return '';
+}
+/* Para alanı yazarken binlik ayraç: rakamlar okunur kalıyor. */
+function akisParaYaz(el) {
+  const ham = el.value.replace(/[^\d]/g, '');
+  el.value = ham === '' ? '' : new Intl.NumberFormat('tr-TR').format(parseInt(ham, 10));
+}
+
+function akisCiz() {
+  const w = document.getElementById('akisWrapper'); if (!w) return;
+  const t = AKIS_ARAC[akis.kod]; if (!t) return;
+
+  let h = '<div class="calc-page-header"><div class="step-number-badge">' + (t.rozet || 'Ön Değerlendirme') + '</div>' +
+    '<h2>' + t.ad + '</h2><p>' + (t.aciklama || '') + '</p></div>';
+
+  if (akis.sonuc) { h += '<div id="akisSonuc">' + akisSonucHtml(t) + '</div>'; w.innerHTML = h; tilt3dScan(); return; }
+
+  const adimlar = akisAdimlar(), a = adimlar[akis.adimIx];
+  if (!a) { w.innerHTML = h; return; }
+  const no = akis.adimIx + 1, toplam = adimlar.length;
+
+  h += '<div class="wz-card ak-kart">';
+  h += '<div class="ak-ust"><span class="ak-sayac">' + no + ' / ' + toplam + '</span>' +
+    '<span class="ak-cubuk"><i style="width:' + Math.round(no / toplam * 100) + '%"></i></span></div>';
+  h += '<div class="ak-soru">' + a.soru + '</div>';
+  if (a.yardim) h += '<p class="ak-yardim">' + a.yardim + '</p>';
+  h += '<div class="ak-alan">' + akisAlanHtml(a) + '</div>';
+  if (akis.hata) h += '<p class="ak-hata">' + akis.hata + '</p>';
+
+  const son = akis.adimIx === toplam - 1;
+  h += '<div class="ak-butonlar">';
+  h += '<button class="btn-back" onclick="akisGeri()">' + (akis.adimIx === 0 ? 'Vazgeç' : 'Geri') + '</button>';
+  /* Tek seçimli sorularda karta dokunmak zaten ilerletiyor; buton yalnızca
+     diğer alan tiplerinde gösteriliyor. */
+  if (!(a.tip === 'secim' && !a.coklu)) {
+    h += '<button class="btn-next" onclick="akisIleri()">' + (son ? 'Sonucu hazırla' : 'Devam') +
+      ' <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="' + (son ? 'M10 3l7 7-7 7M3 10h14' : 'M7 4l6 6-6 6') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>';
+  } else if (a.coklu || akis.cevap[a.id] !== undefined) {
+    h += '<button class="btn-next" onclick="akisIleri()">' + (son ? 'Sonucu hazırla' : 'Devam') + '</button>';
+  }
+  h += '</div></div>';
+  w.innerHTML = h;
+  tilt3dScan();
+}
+
+function akisSonucHtml(t) {
+  const s = akis.sonuc;
+  let h = '<div class="isc-result-card tani-res">';
+  h += '<div class="tani-res-top"><div class="tani-res-lbl">Ön Değerlendirme Sonucunuz</div>' +
+    '<h3>' + s.baslik + '</h3>' + (s.ozet ? '<p>' + s.ozet + '</p>' : '') + '</div>';
+
+  if (s.tutar) {
+    h += '<div class="vi-tutar"><div class="vi-tutar-lbl">' + (s.tutarEtiketi || 'Tahmini tutar') + '</div>' +
+      '<div class="vi-tutar-big">' + fmt2(s.tutar) + ' TL</div>' +
+      (s.tutarNot ? '<div class="vi-tutar-alt">' + s.tutarNot + '</div>' : '') + '</div>';
+  }
+  if (s.haklar && s.haklar.length) {
+    h += '<div class="tani-sec"><div class="tani-sec-t">Tespit edilen muhtemel haklar</div><div class="tani-haklar">';
+    s.haklar.forEach(function (x) {
+      h += '<div class="tani-hak"><span class="tani-hak-ok"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4 9.5l3.5 3.5L14 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<div><strong>' + x.b + '</strong><p>' + x.a + '</p></div></div>';
+    });
+    h += '</div></div>';
+  }
+  if (s.uyarilar && s.uyarilar.length) {
+    h += '<div class="tani-sec"><div class="tani-sec-t">Süre ve dikkat</div><ul class="tani-dikkat">' +
+      s.uyarilar.map(function (u) { return '<li>' + u + '</li>'; }).join('') + '</ul></div>';
+  }
+  if (s.belgeler && s.belgeler.length) {
+    h += '<div class="tani-sec"><div class="tani-sec-t">İncelenmesi gereken belgeler</div><ul class="tani-dikkat" style="background:none">' +
+      s.belgeler.map(function (b) { return '<li style="background:var(--bg-elevated);border-color:var(--border)">' + b + '</li>'; }).join('') + '</ul></div>';
+  }
+  if (s.mevzuat && s.mevzuat.length) {
+    h += '<div class="tani-sec"><div class="tani-sec-t">Dayanak</div><div class="tani-mev">' +
+      s.mevzuat.map(function (m) { return '<span class="tani-mev-c">' + m + '</span>'; }).join('') + '</div></div>';
+  }
+  if (s.dogrulanmamis && s.dogrulanmamis.length) {
+    h += '<div class="ak-dogrulanmamis"><strong>Hukukçu doğrulaması bekliyor</strong>' +
+      '<p>Aşağıdaki değerler henüz bir hukukçu tarafından teyit edilmedi; sonuç bu yönüyle kesin değildir.</p><ul>' +
+      s.dogrulanmamis.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+  }
+
+  h += '<div class="result-notice"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#C5A880" stroke-width="1.5"/><path d="M9 5v5M9 12v1" stroke="#C5A880" stroke-width="2" stroke-linecap="round"/></svg>' +
+    '<p>Verilen bilgilere göre yapılmış <strong>otomatik ön değerlendirme</strong>dir; hukuki görüş değildir ve sonuç garantisi vermez. Belge incelemesi gerekir.</p></div>';
+
+  h += '<div class="tani-foot" style="margin-top:18px"><button class="btn-back" onclick="akisBaslat(\'' + akis.kod + '\',true)">Yeniden başla</button></div>';
+  h += '</div>';
+  return h;
+}
+
+
+/* =====================================================================
+   ARAÇ: VERGİ TEBLİGATI RİSK ANALİZİ
+
+   Süreler tek yerde ve her birinin yanında DOĞRULANDI bayrağı var.
+   Doğrulanmamış olanlar kullanıcıya "hukukçu doğrulaması bekliyor"
+   uyarısıyla gösteriliyor; uydurulmuş bir gün sayısına dayanarak
+   "süreniz doldu" demek, hak kaybına yol açabilecek bir hatadır.
+
+   Bu değerler sonradan kurallar tablosundan yönetilecek (Faz 4).
+   ===================================================================== */
+const VERGI_SURE = {
+  ihbarname: {
+    gun: 30, ad: 'Vergi/ceza ihbarnamesi',
+    kaynak: 'İYUK m.7 — vergi mahkemelerinde dava açma süresi 30 gündür',
+    dogrulandi: true
+  },
+  odemeEmri: {
+    gun: null, ad: 'Ödeme emri',
+    kaynak: 'AATUHK m.58 — ödeme emrine karşı dava süresi',
+    dogrulandi: false,
+    not: 'Ödeme emrine itiraz süresi mevzuatta değişikliğe uğradı; gün sayısı teyit edilmeden gösterilmiyor.'
+  },
+  inceleme: {
+    gun: null, ad: 'Vergi inceleme raporu',
+    kaynak: 'Rapor tek başına dava konusu olmaz; tarhiyat ihbarnameyle yapılır',
+    dogrulandi: false
+  },
+  duzeltme: {
+    gun: null, ad: 'Düzeltme/şikâyet cevabı',
+    kaynak: 'VUK m.124 ve İYUK m.11',
+    dogrulandi: false
+  },
+  uzlasma: {
+    gun: null, ad: 'Uzlaşma işlemi',
+    kaynak: 'VUK ek m.7 — uzlaşma talebi dava süresini durdurur',
+    dogrulandi: false
+  },
+  ehaciz: {
+    gun: null, ad: 'E-haciz',
+    kaynak: 'AATUHK — haciz işlemine karşı başvuru',
+    dogrulandi: false
+  },
+  diger: { gun: null, ad: 'Diğer', kaynak: '', dogrulandi: false }
+};
+
+akisKaydet({
+  kod: 'vergiTebligat',
+  ad: 'Vergi tebligatı aldım, ne yapmalıyım?',
+  rozet: 'Vergi & Gümrük Hukuku',
+  aciklama: 'Tebliğ tarihini ve işlem türünü girin; süre, ödeme ve dava ihtimallerini birlikte değerlendirelim.',
+  adimlar: [
+    {
+      id: 'kimFor', tip: 'secim', soru: 'Tebligat kime geldi?',
+      zorunlu: true, secenekler: [
+        { d: 'gercek', a: 'Şahsıma geldi', alt: 'Gerçek kişi' },
+        { d: 'sirket', a: 'Şirketime geldi', alt: 'Tüzel kişi' }
+      ]
+    },
+    {
+      id: 'tur', tip: 'secim', soru: 'Elinize hangi belge geçti?',
+      yardim: 'Belgenin üst kısmında türü yazar. Emin değilseniz en yakın olanı seçin.',
+      zorunlu: true, secenekler: [
+        { d: 'ihbarname', a: 'Vergi / ceza ihbarnamesi', alt: 'Tarhiyat bildirimi' },
+        { d: 'odemeEmri', a: 'Ödeme emri', alt: 'Tahsilat aşaması' },
+        { d: 'inceleme', a: 'Vergi inceleme raporu' },
+        { d: 'duzeltme', a: 'Düzeltme / şikâyet cevabı' },
+        { d: 'uzlasma', a: 'Uzlaşma işlemi' },
+        { d: 'ehaciz', a: 'E-haciz bildirimi' },
+        { d: 'diger', a: 'Diğer / emin değilim' }
+      ]
+    },
+    {
+      id: 'tebligTarihi', tip: 'tarih', zorunlu: true,
+      soru: 'Tebliğ tarihi nedir?',
+      yardim: 'Belgenin size ulaştığı tarih. Süreler bu tarihten işlemeye başlar.'
+    },
+    {
+      id: 'vergiTuru', tip: 'secim', soru: 'Hangi vergiyle ilgili?',
+      secenekler: [
+        { d: 'gelir', a: 'Gelir / kurumlar vergisi' },
+        { d: 'kdv', a: 'KDV' },
+        { d: 'emlak', a: 'Emlak vergisi / MTV' },
+        { d: 'gumruk', a: 'Gümrük vergileri' },
+        { d: 'diger', a: 'Diğer / bilmiyorum' }
+      ]
+    },
+    { id: 'vergiTutar', tip: 'para', soru: 'Asıl vergi tutarı ne kadar?', ipucu: 'Örn: 250000', yardim: 'Belgede "vergi aslı" olarak geçen tutar. Bilmiyorsanız boş bırakın.' },
+    { id: 'cezaTutar', tip: 'para', soru: 'Ceza tutarı ne kadar?', ipucu: 'Örn: 250000', yardim: 'Vergi ziyaı veya usulsüzlük cezası. Yoksa boş bırakın.' },
+    { id: 'faizTutar', tip: 'para', soru: 'Gecikme faizi / zammı ne kadar?', ipucu: 'Örn: 90000' },
+    {
+      id: 'odendiMi', tip: 'secim', soru: 'Ödeme yaptınız mı?',
+      zorunlu: true, secenekler: [
+        { d: 'hayir', a: 'Hayır, ödemedim' },
+        { d: 'kismi', a: 'Kısmen ödedim' },
+        { d: 'evet', a: 'Tamamını ödedim' }
+      ]
+    },
+    {
+      id: 'ihtirazi', tip: 'secim', soru: 'Ödemeyi ihtirazi kayıtla mı yaptınız?',
+      kosul: function (c) { return c.odendiMi === 'evet' || c.odendiMi === 'kismi'; },
+      yardim: 'İhtirazi kayıt, "ödüyorum ama itiraz hakkımı saklı tutuyorum" demektir ve dava hakkını korur.',
+      secenekler: [
+        { d: 'evet', a: 'Evet, ihtirazi kayıt koydum' },
+        { d: 'hayir', a: 'Hayır' },
+        { d: 'bilmiyorum', a: 'Bilmiyorum' }
+      ]
+    },
+    {
+      id: 'oncekiBasvuru', tip: 'secim', soru: 'Daha önce itiraz, uzlaşma veya dava başvurusu yaptınız mı?',
+      zorunlu: true, secenekler: [
+        { d: 'hayir', a: 'Hayır, ilk kez' },
+        { d: 'uzlasma', a: 'Uzlaşma talebinde bulundum' },
+        { d: 'duzeltme', a: 'Düzeltme talebi verdim' },
+        { d: 'dava', a: 'Dava açtım' }
+      ]
+    },
+    {
+      id: 'belge', tip: 'secim', soru: 'Belgeler elinizde mi?',
+      zorunlu: true, secenekler: [
+        { d: 'var', a: 'Evet, elimde' },
+        { d: 'kismi', a: 'Bir kısmı var' },
+        { d: 'yok', a: 'Hayır' }
+      ]
+    },
+    { id: 'aciklama', tip: 'uzunMetin', soru: 'Kısaca ne olduğunu anlatır mısınız?', ipucu: 'İsteğe bağlı. Olayı kendi cümlelerinizle yazın.' }
+  ],
+
+  hesapla: function (c) {
+    const kural = VERGI_SURE[c.tur] || VERGI_SURE.diger;
+    const vergi = c.vergiTutar || 0, ceza = c.cezaTutar || 0, faiz = c.faizTutar || 0;
+    const toplam = vergi + ceza + faiz;
+
+    const uyarilar = [], dogrulanmamis = [], haklar = [];
+    let aciliyet = 'dusuk', kalanGun = null;
+
+    if (kural.dogrulandi && kural.gun && c.tebligTarihi) {
+      const gecen = Math.floor((Date.now() - new Date(c.tebligTarihi + 'T00:00:00').getTime()) / 86400000);
+      kalanGun = kural.gun - gecen;
+      if (kalanGun <= 0) {
+        aciliyet = 'yuksek';
+        uyarilar.push('<strong>Süre görünüşe göre dolmuş.</strong> Tebliğden bu yana ' + gecen + ' gün geçmiş; ' + kural.ad.toLowerCase() + ' için ' + kural.gun + ' günlük süre öngörülür (' + kural.kaynak + '). Yine de sürenin durduğu veya yeniden işlediği hâller olabilir — kapıyı kapatmadan bir avukata sorun.');
+      } else if (kalanGun <= 10) {
+        aciliyet = 'yuksek';
+        uyarilar.push('<strong>Yaklaşık ' + kalanGun +
+          ' gününüz kalmış.</strong> Bu süre hak düşürücüdür; gecikmeden belge incelemesi yapılması gerekir.');
+      } else {
+        aciliyet = 'orta';
+        uyarilar.push('Yaklaşık <strong>' + kalanGun + ' gününüz</strong> var (' + kural.kaynak + '). Süreyi takviminize işleyin.');
+      }
+    } else {
+      aciliyet = 'orta';
+      uyarilar.push('<strong>Süre yönünden gecikmeden belge incelemesi gerekir.</strong> ' +
+        (kural.not || 'Bu işlem türünde süre, belgenin içeriğine ve işlemin aşamasına göre değişir; kesin gün sayısı belge görülmeden söylenemez.'));
+      dogrulanmamis.push(kural.ad + ' için süre: ' + (kural.kaynak || 'dayanak teyidi bekleniyor'));
+    }
+
+    if (c.oncekiBasvuru === 'uzlasma') uyarilar.push('Uzlaşma talebi dava açma süresini etkiler (VUK ek m.7). Uzlaşmanın sonucuna göre kalan süre yeniden hesaplanır — bu, dosyanızda ayrıca incelenmelidir.');
+    if (c.oncekiBasvuru === 'dava') uyarilar.push('Halihazırda açılmış bir davanız var; bu durumda ikinci bir başvuru yerine mevcut dosyanın durumu değerlendirilmelidir.');
+    if (c.odendiMi !== 'hayir' && c.ihtirazi === 'hayir') uyarilar.push('Ödeme <strong>ihtirazi kayıt konulmadan</strong> yapılmışsa dava hakkı tartışmalı hâle gelebilir. Bu nokta dosyanızda öncelikle incelenmelidir.');
+    if (c.odendiMi !== 'hayir' && c.ihtirazi === 'evet') haklar.push({ b: 'İhtirazi kayıtla ödeme', a: 'Ödemeyi ihtirazi kayıtla yaptığınız için dava yolunun korunmuş olma ihtimali var.' });
+
+    haklar.push({ b: 'Belge ve usul denetimi', a: 'Tebligatın usulüne uygunluğu, tarhiyatın dayanağı ve hesaplama yöntemi incelenebilir.' });
+    if (ceza > 0) haklar.push({ b: 'Cezada indirim ihtimali', a: 'Dava açılmaması hâlinde VUK m.376 kapsamında cezada indirim gündeme gelebilir; hangi yolun daha az maliyetli olduğu sayıyla karşılaştırılmalıdır.' });
+    if (c.tur === 'ihbarname') haklar.push({ b: 'Uzlaşma seçeneği', a: 'Tarhiyat sonrası uzlaşma ile vergi ve cezada indirim sağlanabilir; uzlaşma ile dava birbirini dışlar.' });
+
+    return {
+      baslik: toplam > 0
+        ? 'Tebligatınız ' + fmt(toplam) + ' TL tutarında bir uyuşmazlık içeriyor'
+        : 'Tebligatınız için süre ve usul incelemesi gerekiyor',
+      ozet: kural.ad + ' · ' + (c.kimFor === 'sirket' ? 'şirket adına' : 'şahıs adına') +
+        (c.oncekiBasvuru !== 'hayir' ? ' · devam eden bir başvuru var' : ''),
+      tutar: toplam || 0,
+      tutarEtiketi: 'Toplam uyuşmazlık tutarı',
+      tutarNot: toplam ? ('Vergi ' + fmt(vergi) + ' + ceza ' + fmt(ceza) + ' + faiz ' + fmt(faiz)) : '',
+      aciliyet: aciliyet,
+      haklar: haklar,
+      uyarilar: uyarilar,
+      belgeler: ['Tebligat zarfı ve tebliğ alındısı (tebliğ tarihini ispatlar)', 'İhbarname veya ödeme emrinin kendisi',
+        'Varsa vergi inceleme raporu ve tutanaklar', 'Ödeme yaptıysanız makbuz ve ihtirazi kayıt dilekçesi',
+        'İlgili döneme ait beyanname ve defter kayıtları'],
+      mevzuat: ['İYUK m.7 — dava açma süresi', 'VUK m.376 — ceza indirimi', 'VUK ek m.7 — uzlaşma', 'VUK m.116-126 — düzeltme'],
+      dogrulanmamis: dogrulanmamis,
+      ozetKisa: kural.ad + ' · ' + fmt(toplam) + ' TL' + (kalanGun !== null ? ' · kalan ' + kalanGun + ' gün' : '')
+    };
+  }
+});
