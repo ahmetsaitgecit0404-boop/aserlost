@@ -1099,6 +1099,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   initYears();initBrands();initCarParts();initSlider();initCities();initWorkDuration();injectSvgDefs();renderModuleCards();renderFaq();renderBlogPosts();renderTestimonials();handleInitialRoute();
   setTimeout(initLazySections,100);
   revealInit();
+  ayarYukle();
   tilt3dScan();
 });
 
@@ -2902,6 +2903,10 @@ function showLeadModal(type){
   /* Açık rıza her açılışta sıfırlanır: önceki hesaplamadan devreden bir
      onay, yeni ve farklı bir işleme rıza sayılamaz. */
   const ar=document.getElementById('acikRizaConsent');if(ar)ar.checked=false;
+  /* İletişim izni her açılışta kapalı başlar: önceki başvurudan devreden
+     bir onay, yeni bir işleme izin sayılamaz. */
+  const iz=document.getElementById('iletisimIzni');if(iz)iz.checked=false;
+  basvuruZaman('ts_iletisim_ekrani');olayGonder('contact_gate_view',{arac:type});
   const arf=document.getElementById('acikRizaField');if(arf)arf.style.display=acikRizaGerekli(type)?'':'none';
   const city=document.getElementById('leadCity');if(city)city.value='';
   ['nameError','phoneError','emailError','cityError','kvkkError'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
@@ -2936,7 +2941,9 @@ function submitLead(){
   let valid=true;
   const nOk=validateName(name);const ne=document.getElementById('nameError');if(ne)ne.textContent=nOk?'':'Lütfen adınızı ve soyadınızı tam girin.';if(!nOk)valid=false;
   const pOk=!!phone&&validatePhone(phone);const pe=document.getElementById('phoneError');if(pe)pe.textContent=pOk?'':'Lütfen geçerli bir telefon numarası girin.';if(!pOk)valid=false;
-  const eOk=!!email&&validateEmail(email);const ee=document.getElementById('emailError');if(ee)ee.textContent=eOk?'':'Lütfen geçerli bir e-posta adresi girin.';if(!eOk)valid=false;
+  /* E-posta isteğe bağlı: zorunlu alan sayısı arttıkça form terk ediliyor.
+     Girildiyse biçimi doğrulanıyor, boşsa geçiliyor. */
+  const eOk=!email||validateEmail(email);const ee=document.getElementById('emailError');if(ee)ee.textContent=eOk?'':'E-posta adresi geçersiz görünüyor.';if(!eOk)valid=false;
   /* Şehir bilinçli olarak zorunlu değil: sonucu görmek
      için doldurulması gereken alan sayısı arttıkça ziyaretçi formu yarıda
      bırakıyor. Kimliğe dair asgari bilgi (ad, telefon, e-posta) ve KVKK
@@ -2950,7 +2957,9 @@ function submitLead(){
   const arEl=document.getElementById('acikRizaConsent');
   const acikRiza=!!(arEl&&arEl.checked&&acikRizaGerekli(state.pendingType));
   const rizaZamani=new Date().toISOString();
-  const contactInfo={name,phone,email,city,district,plate,vekalet:'',acikRiza:acikRiza,rizaZamani:rizaZamani};
+  const izEl=document.getElementById('iletisimIzni');
+  const contactInfo={name,phone,email,city,district,plate,vekalet:'',acikRiza:acikRiza,rizaZamani:rizaZamani,
+    iletisimIzni:!!(izEl&&izEl.checked)};
   storeContactInfo(contactInfo);
   markLeadCaptured();
   closeLeadModal();
@@ -3002,8 +3011,10 @@ function finalizeLead(contactInfo,description){
   // Supabase'deki leads tablosunda ref/etiket sütunları yok — gönderilirse INSERT tamamen
   // reddediliyor (400) ve sbInsert bunu sessizce yutuyordu, yani hiçbir başvuru kaydedilmiyordu.
   // ref/etiket zaten ayrıca 'tracking' tablosunda tutuluyor, leads insert'ünden çıkarıyoruz.
-  const {ref:_ref,etiket:_etiket,...leadDataForDb}=leadData;
-  sbInsert('leads',leadDataForDb);
+  /* Kayıt artık başvuru katmanından geçiyor: başvuru numarası üretiliyor,
+     izinler ve zaman damgaları aynı satıra yazılıyor, puan sunucuda
+     hesaplanıyor. Eski doğrudan insert kaldırıldı. */
+  basvuruOlustur(contactInfo,description,sonucOzeti).then(basvuruYerlestir);
   trackFormComplete(ref,etiket,type);
   postToGoogleForms({name:contactInfo.name,phone:contactInfo.phone,city:contactInfo.city,vekalet:contactInfo.vekalet,tur:type,tutar:sonucOzeti,tarih,saat});
   if(type==='arac')showAracResult();
@@ -3017,6 +3028,7 @@ function finalizeLead(contactInfo,description){
   else if(type==='vergiIade')viSonucGoster();
   else if(type==='isHukukuSihirbaz')showIsHukukuResult();
   else showGenericResult();
+  olayGonder('preliminary_result_view');
   state.pendingExtra='';
 }
 
@@ -5790,4 +5802,165 @@ function esiSonucHtml() {
     '"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Dosyamı değerlendirin</a></div>';
   h += '</div>';
   return h;
+}
+
+/* =====================================================================
+   BAŞVURU KATMANI (istemci)
+
+   Sonuç kullanıcıya gösterilmeden ÖNCE başvuru sunucuya kaydediliyor ve
+   bir başvuru numarası alınıyor. Ziyaretçi sonucu görmeden ayrılsa bile
+   kayıt duruyor.
+
+   WhatsApp mesajına yalnızca ARAÇ ADI ve BAŞVURU NUMARASI giriyor.
+   Ad, telefon, adres, form cevapları, tutarlar ve belge bağlantıları
+   bilerek dışarıda bırakılıyor — mesaj kullanıcının cihazındaki WhatsApp
+   üzerinden gidiyor ve içeriği kayıt altına alınamaz.
+   ===================================================================== */
+
+const basvuru = { no: null, aracKodu: null, ts: {} };
+let _ayar = { whatsapp: '905510126904', kvkk_surumu: '' };
+
+/* WhatsApp numarası artık koda gömülü değil, sunucudan geliyor. */
+async function ayarYukle() {
+  try {
+    const r = await fetch('/api/ayar');
+    if (r.ok) _ayar = await r.json();
+  } catch (e) { /* varsayılan kalsın */ }
+}
+
+function basvuruZaman(ad) { if (!basvuru.ts[ad]) basvuru.ts[ad] = new Date().toISOString(); }
+
+/* Analytics: kişisel veri GÖNDERİLMEZ. Ad, telefon, e-posta, açıklama,
+   belge ve hukuki cevapların içeriği buradan geçmez. */
+function olayGonder(olay, ek) {
+  try {
+    const g = {
+      olay: olay,
+      arac_kodu: (ek && ek.arac) || basvuru.aracKodu || state.pendingType || null,
+      basvuru_no: basvuru.no,
+      utm_source: getUrlParam('utm_source'), utm_campaign: getUrlParam('utm_campaign'),
+      utm_content: getUrlParam('utm_content'), ref: getUrlParam('ref'),
+      meta: (ek && ek.meta) || null
+    };
+    fetch('/api/olay', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(g), keepalive: true
+    }).catch(function () { });
+  } catch (e) { }
+}
+
+/* Araç kodundan kullanıcıya görünen ad — WhatsApp mesajında kullanılıyor. */
+function aracAdi(kod) {
+  const m = MODULES.filter(function (x) { return x.id === kod; })[0];
+  if (m) return m.title.replace(/\n/g, ' ').replace(/\?$/, '');
+  return 'ön değerlendirme';
+}
+
+/* Araca özel WhatsApp mesajları; yoksa genel şablon. */
+const WA_MESAJ = {
+  vergiIade: 'vergi iadesi ön değerlendirmesini tamamladım',
+  evSatisIade: 'gayrimenkul satış vergisi testini tamamladım',
+  gozetim: 'gümrükte fazla vergi ön değerlendirmesini tamamladım',
+  kusur: 'trafik kazası kusur analizini tamamladım',
+  arac: 'trafik kazası araç değer kaybı hesabımı tamamladım',
+  iscilik: 'işçilik alacaklarımı hesapladım',
+  isHukukuSihirbaz: 'işçilik alacaklarımı hesapladım',
+  fesih: 'haklı fesih ön değerlendirmesini tamamladım',
+  iseIade: 'işe iade ön değerlendirmesini tamamladım',
+  durumTespiti: 'durum tespitini tamamladım'
+};
+function basvuruWaLink() {
+  const kod = basvuru.aracKodu || state.pendingType;
+  const govde = WA_MESAJ[kod] || (aracAdi(kod) + ' ön değerlendirmesini tamamladım');
+  const mesaj = 'Merhaba, MüvekkilBilgi.com üzerinden ' + govde +
+    '. Başvuru numaram: ' + (basvuru.no || '-') +
+    '. Sonucumun ve varsa belgelerimin avukat tarafından ön değerlendirilmesini istiyorum.';
+  return 'https://wa.me/' + _ayar.whatsapp + '?text=' + encodeURIComponent(mesaj);
+}
+function basvuruWaTikla() {
+  olayGonder('whatsapp_cta_click');
+  window.open(basvuruWaLink(), '_blank', 'noopener');
+}
+
+/* Sonuç ekranının başına giren blok: başvuru numarası. */
+function basvuruNoHtml() {
+  if (!basvuru.no) return '';
+  return '<div class="bsv-no"><span class="bsv-no-lbl">Başvuru numaranız</span>' +
+    '<span class="bsv-no-kod">' + basvuru.no + '</span>' +
+    '<span class="bsv-no-not">Bu numarayı saklayın; avukat ön değerlendirmesi bu numara üzerinden yapılır.</span></div>';
+}
+
+/* Sonuç ekranının sonuna giren WhatsApp alanı. */
+function basvuruWaHtml() {
+  if (!basvuru.no) return '';
+  olayGonder('whatsapp_cta_view');
+  return '<div class="bsv-wa">' +
+    '<h4>Sonucunuzun avukat tarafından ön değerlendirilmesini ister misiniz?</h4>' +
+    '<p>Formdaki cevaplarınız ve hesaplama sonucunuz başvuru numaranızla kaydedildi. Durumunuzun belge ve süre yönünden incelenmesi için WhatsApp üzerinden ön değerlendirme talebi oluşturabilirsiniz.</p>' +
+    '<button type="button" class="btn-whatsapp bsv-wa-btn" onclick="basvuruWaTikla()">' +
+    '<svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>' +
+    'WhatsApp\'tan Ön Değerlendirme İste</button>' +
+    '<button type="button" class="bsv-wa-ikincil" onclick="document.querySelector(\'.bsv-wa\').classList.add(\'sade\')">Şimdilik sadece sonucumu görüntüle</button>' +
+    '</div>';
+}
+
+/* Başvuruyu sunucuya kaydeder ve numarayı alır. Ağ hatasında sonuç yine
+   gösteriliyor: kullanıcı kendi hatası olmayan bir aksaklık yüzünden
+   emeğini kaybetmemeli. */
+async function basvuruOlustur(contactInfo, description, sonucOzeti) {
+  const tur = state.pendingType;
+  basvuru.aracKodu = tur;
+  basvuruZaman('ts_iletisim_girildi');
+  const govde = {
+    ad: contactInfo.name, telefon: contactInfo.phone, email: contactInfo.email,
+    sehir: contactInfo.city, ilce: contactInfo.district, plaka: contactInfo.plate,
+    arac_kodu: tur, sonuc_ozeti: sonucOzeti,
+    aciklama: [description || '', state.pendingExtra || ''].filter(Boolean).join(' | '),
+    tutar: (state.pendingResult && state.pendingResult.total) || null,
+    aciliyet: state.pendingAciliyet || 'dusuk',
+    iletisim_izni: !!contactInfo.iletisimIzni,
+    utm_source: getUrlParam('utm_source'), utm_medium: getUrlParam('utm_medium'),
+    utm_campaign: getUrlParam('utm_campaign'), utm_content: getUrlParam('utm_content'),
+    ref: getUrlParam('ref'), meslek: getUrlParam('meslek'), konu: getUrlParam('konu'),
+    ts_form_baslangic: basvuru.ts.ts_form_baslangic || null,
+    ts_sorular_bitti: basvuru.ts.ts_sorular_bitti || null,
+    ts_iletisim_ekrani: basvuru.ts.ts_iletisim_ekrani || null
+  };
+  try {
+    const r = await fetch('/api/basvuru', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(govde)
+    });
+    const j = await r.json();
+    if (j && j.basvuru_no) {
+      basvuru.no = j.basvuru_no;
+      if (j.whatsapp) _ayar.whatsapp = j.whatsapp;
+      olayGonder('application_created');
+      olayGonder(contactInfo.iletisimIzni ? 'contact_permission_granted' : 'contact_permission_declined');
+    }
+  } catch (e) {
+    console.warn('başvuru kaydedilemedi, sonuç yine gösteriliyor');
+  }
+}
+/* Başvuru numarası ve WhatsApp kutusu, o an görünen sonuç kartının içine
+   yerleştiriliyor. Sonuç ekranları araçtan araca farklı olduğu için sabit
+   bir yer yerine ekranda görünen sonucu buluyoruz. */
+const SONUC_KAPSAYICI=['#trfResultPanel','#iscResultPanel','#genericResultPanel',
+  '#kusurResult','#fesihResult','#iseIadeResult','#esiSonuc',
+  '#screen-arac .form-step.active','#gozetimWrapper','#isHukukuWrapper',
+  '#taniWrapper','#vergiIadeWrapper','#evSatisIadeWrapper'];
+function basvuruYerlestir(){
+  if(!basvuru.no)return;
+  let hedef=null;
+  for(const sec of SONUC_KAPSAYICI){
+    const el=document.querySelector(sec);
+    if(el&&el.offsetParent!==null&&el.textContent.trim().length>40){hedef=el;break;}
+  }
+  if(!hedef)return;
+  /* Kart zaten yerleştirilmişse tekrarlama. */
+  if(hedef.querySelector('.bsv-no'))return;
+  const bas=document.createElement('div');bas.innerHTML=basvuruNoHtml();
+  const ic=hedef.querySelector('.isc-result-card')||hedef.firstElementChild||hedef;
+  ic.insertBefore(bas.firstChild,ic.firstChild);
+  const son=document.createElement('div');son.innerHTML=basvuruWaHtml();
+  if(son.firstChild)ic.appendChild(son.firstChild);
 }

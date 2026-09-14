@@ -70,7 +70,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260912b" />
+  <link rel="stylesheet" href="style.css?v=20260914" />
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -248,7 +248,7 @@
                   <div class="select-wrapper"><select id="contactSubject"><option value="">Seçiniz</option><option>Tazminat Hesaplama</option><option>Sigorta İşlemleri</option><option>Hukuki Danışmanlık</option><option>Diğer</option></select><span class="select-arrow">▾</span></div>
                 </div>
                 <div class="form-group full-width"><label for="contactMessage">Mesajınız *</label><textarea id="contactMessage" rows="4" placeholder="Mesajınızı yazın..." required></textarea></div>
-                <div class="form-group full-width"><label class="kvkk-checkbox" style="gap:8px;display:flex;align-items:flex-start"><input type="checkbox" id="contactKvkk" style="width:18px;height:18px;margin-top:2px;accent-color:var(--primary);flex-shrink:0"/> <span style="font-size:12px;line-height:1.5;color:var(--text-secondary)"><strong>KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.</strong><br/><small>Kişisel verilerimin yukarıda belirtilen amaçlarla işlenmesine izin veriyorum.</small></span></label><span class="field-error" id="contactKvkkError"></span></div>
+                <div class="form-group full-width"><label class="kvkk-checkbox" style="gap:8px;display:flex;align-items:flex-start"><input type="checkbox" id="contactKvkk" style="width:18px;height:18px;margin-top:2px;accent-color:var(--primary);flex-shrink:0"/> <span style="font-size:12px;line-height:1.5;color:var(--text-secondary)"><strong>Aydınlatma Metni'ni okudum.</strong><br/><small>Kişisel verilerimin yukarıda belirtilen amaçlarla işlenmesine izin veriyorum.</small></span></label><span class="field-error" id="contactKvkkError"></span></div>
               </div>
               <button type="submit" class="btn-next" style="width:100%;justify-content:center;">Gönder</button>
             </form>
@@ -735,7 +735,7 @@
       <div class="modal-form-fields">
         <div class="modal-field"><label for="leadName">Ad Soyad *</label><input type="text" id="leadName" placeholder="Adınız Soyadınız" autocomplete="name"/><span class="field-error" id="nameError"></span></div>
         <div class="modal-field"><label for="leadPhone">Telefon Numarası *</label><input type="tel" id="leadPhone" placeholder="05xx xxx xx xx" autocomplete="tel"/><span class="field-error" id="phoneError"></span></div>
-        <div class="modal-field"><label for="leadEmail">E-posta *</label><input type="email" id="leadEmail" placeholder="ornek@email.com"/><span class="field-error" id="emailError"></span></div>
+        <div class="modal-field"><label for="leadEmail">E-posta <small style="font-weight:500;color:var(--text-muted)">(isteğe bağlı)</small></label><input type="email" id="leadEmail" placeholder="ornek@email.com"/><span class="field-error" id="emailError"></span></div>
         <div class="modal-field"><label for="leadCity">Şehir <small style="font-weight:500;color:var(--text-muted)">(opsiyonel)</small></label><div class="select-wrapper"><select id="leadCity"><option value="">Şehir seçin</option></select><span class="select-arrow">▾</span></div><span class="field-error" id="cityError"></span></div>
         <div class="modal-field"><label for="leadDistrict">İlçe</label><input type="text" id="leadDistrict" placeholder="İlçe seçin (opsiyonel)"/></div>
         <div class="modal-field" id="leadPlateField"><label for="leadPlate">Araç Plakası</label><input type="text" id="leadPlate" placeholder="34 ABC 123 (opsiyonel)"/></div>
@@ -746,7 +746,11 @@
           <small>Bu hesaplama <strong>sağlık durumunuza ilişkin bilgiler</strong> (yaralanma, sakatlık oranı, iş göremezlik süresi gibi) içerebilir; bunlar KVKK m.6 uyarınca <strong>özel nitelikli kişisel veri</strong>dir. Ayrıca yapay zekâ analizi ve barındırma için <strong>yurt dışında yerleşik hizmet sağlayıcılar</strong> kullanılmaktadır (KVKK m.9). Bu iki hususa ayrıca ve açıkça rıza veriyorum.<br/>
           <strong>Bu kutuyu işaretlemeseniz de sonucu görürsünüz</strong>; yalnızca kaydınızda sağlık ayrıntılarına yer verilmez.</small></span></label>
         </div>
-        <div class="modal-field kvkk-field"><label class="kvkk-checkbox"><input type="checkbox" id="kvkkConsent"/> <span><strong>KVKK Aydınlatma Metni'ni okudum, kabul ediyorum.</strong><br/><small>Ad, telefon ve e-posta bilgilerimin; talep ettiğim hesaplamanın yapılması, sonucun gösterilmesi ve başvuru kaydımın oluşturulması amacıyla işlenmesine izin veriyorum. Bu bilgilerin pazarlama amacıyla kullanılmayacağını, tarafıma tanıtım/arama yapılmayacağını ve üçüncü kişilere satılmayacağını, yasal saklama süreleri boyunca saklanacağını biliyorum. Detaylı bilgi için <a href="#" onclick="showKvkkText();return false;">Aydınlatma Metni</a>'ni okuyabilirsiniz.</small></span></label><span class="field-error" id="kvkkError"></span></div>
+        <div class="modal-field kvkk-field"><label class="kvkk-checkbox"><input type="checkbox" id="iletisimIzni"/>
+          <span><strong>Benimle iletişime geçilmesini istiyorum (isteğe bağlı)</strong><br/>
+          <small>Ön değerlendirme sonucum hakkında benimle telefon veya WhatsApp üzerinden iletişim kurulmasını istiyorum. <strong>İşaretlemeseniz de sonucunuzu görürsünüz</strong>; bu kutuyu işaretlemezseniz tarafınıza ulaşılmaz.</small></span></label>
+        </div>
+        <div class="modal-field kvkk-field"><label class="kvkk-checkbox"><input type="checkbox" id="kvkkConsent"/> <span><strong>Aydınlatma Metni'ni okudum.</strong><br/><small>Kişisel verilerimin hukuki ön değerlendirmenin oluşturulması, sonucumun gösterilmesi ve başvuru kaydımın oluşturulması kapsamında işlenmesine ilişkin Aydınlatma Metni'ni okudum. Bu bilgilerin pazarlama amacıyla kullanılmayacağını, tarafıma tanıtım/arama yapılmayacağını ve üçüncü kişilere satılmayacağını, yasal saklama süreleri boyunca saklanacağını biliyorum. Detaylı bilgi için <a href="#" onclick="showKvkkText();return false;">Aydınlatma Metni</a>'ni okuyabilirsiniz.</small></span></label><span class="field-error" id="kvkkError"></span></div>
       </div>
       <button class="btn-show-result" id="btnShowResult" onclick="submitLead()">Sonucu Görüntüle <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 9h8M9 5l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <p class="modal-privacy-note">Bilgileriniz gizli tutulur ve üçüncü şahıslarla paylaşılmaz.</p>
@@ -944,7 +948,7 @@
   <!-- Karşılaştırmalı Hesaplama Panel (injected dynamically after result) -->
   <div id="compareSection" style="display:none"></div>
 
-  <script src="calculator.js?v=20260912b"></script>
+  <script src="calculator.js?v=20260914"></script>
 </body>
 </html>
 

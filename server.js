@@ -505,7 +505,225 @@ app.post('/api/kayit/:tablo', kayitLimiter, async (req, res) => {
   }
 });
 
+/* =====================================================================
+   BAŞVURU KATMANI
+
+   Tek bir başvuru kaydı: hukuki cevaplar, hesaplanan sonuç, iletişim
+   bilgisi, izinler, kaynak ve dönüşüm zaman damgaları aynı satırda
+   birleşiyor. WhatsApp'a geçiş yeni kayıt açmıyor, mevcut kaydı
+   güncelliyor.
+
+   Puanlama BİLEREK sunucuda: istemciden gelen bir puana güvenilmez.
+   ===================================================================== */
+
+const WHATSAPP_NUM = process.env.WHATSAPP_NUM || '905510126904';
+const KVKK_SURUM = process.env.KVKK_SURUM || '2026-09-14';
+
+/* Puan eşikleri ve ağırlıkları ortam değişkeninden değiştirilebilsin
+   diye tek yerde. Panelden yönetim Faz 4'te gelecek. */
+const PUAN = {
+  sureRiskiYuksek: 25, tebligTarihiVar: 10, devamEdenIslem: 5,
+  tutar100k: 5, tutar500k: 15, tutar2m: 25, tutar2mUstu: 35,
+  belgeYuklendi: 15, belgeVarDenildi: 8,
+  iletisimBilgisi: 10, sonucGoruldu: 5, whatsappTiklandi: 20,
+  whatsappKullaniciBaslatti: 15, avukatTalebi: 15, iletisimIzni: 10,
+  yuksekDegerliAlan: 10, karsiTarafBilgisi: 5, yeterliAciklama: 5
+};
+const PUAN_SEVIYE = [
+  [85, 'acil'], [70, 'nitelikli'], [50, 'incelenebilir'], [30, 'dusuk'], [0, 'bilgilendirme']
+];
+const YUKSEK_DEGERLI_ALANLAR = ['vergiTebligat', 'gumrukFazla', 'gayrimenkulRisk', 'evSatisIade', 'gozetim', 'muteahhit'];
+
+function puanHesapla(k) {
+  let p = 0;
+  if (k.aciliyet === 'yuksek') p += PUAN.sureRiskiYuksek;
+  if (k.teblig_tarihi_var) p += PUAN.tebligTarihiVar;
+  if (k.devam_eden_islem) p += PUAN.devamEdenIslem;
+
+  const t = Number(k.tutar) || 0;
+  if (t > 2000000) p += PUAN.tutar2mUstu;
+  else if (t > 500000) p += PUAN.tutar2m;
+  else if (t > 100000) p += PUAN.tutar500k;
+  else if (t > 0) p += PUAN.tutar100k;
+
+  if ((Number(k.belge_sayisi) || 0) > 0) p += PUAN.belgeYuklendi;
+  else if (k.belge_var_denildi) p += PUAN.belgeVarDenildi;
+
+  if (k.ad && k.telefon) p += PUAN.iletisimBilgisi;
+  if (k.ts_sonuc_goruldu) p += PUAN.sonucGoruldu;
+  if (k.whatsapp_tiklandi) p += PUAN.whatsappTiklandi;
+  if (k.whatsapp_kullanici_baslatti) p += PUAN.whatsappKullaniciBaslatti;
+  if (k.iletisim_izni) p += PUAN.iletisimIzni;
+
+  if (YUKSEK_DEGERLI_ALANLAR.indexOf(k.arac_kodu) !== -1 && t > 100000) p += PUAN.yuksekDegerliAlan;
+  if (k.karsi_taraf_bilgisi) p += PUAN.karsiTarafBilgisi;
+  if ((k.aciklama || '').trim().length >= 80) p += PUAN.yeterliAciklama;
+
+  p = Math.max(0, Math.min(100, p));
+  const seviye = (PUAN_SEVIYE.find(function (s) { return p >= s[0]; }) || ['', 'bilgilendirme'])[1];
+  return { puan: p, seviye: seviye };
+}
+
+/* Telefon: 05xxxxxxxxx biçiminde saklanır. Ülke kodu, boşluk ve
+   ayraçlar temizlenir ki mükerrer başvuru tespiti çalışsın. */
+function telefonNormalize(ham) {
+  let t = String(ham || '').replace(/[^\d]/g, '');
+  if (t.startsWith('90') && t.length === 12) t = t.slice(2);
+  if (t.startsWith('0')) t = t.slice(1);
+  if (t.length !== 10 || t[0] !== '5') return null;
+  return '0' + t;
+}
+
+async function sbIstek(yol, secenek) {
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!svcKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY tanımlı değil');
+  const r = await fetch(SUPABASE_URL + yol, Object.assign({
+    headers: {
+      apikey: svcKey,
+      Authorization: 'Bearer ' + svcKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    },
+    signal: AbortSignal.timeout(15000)
+  }, secenek || {}));
+  const metin = await r.text();
+  if (!r.ok) throw new Error('Supabase ' + r.status + ': ' + metin.slice(0, 200));
+  return metin ? JSON.parse(metin) : null;
+}
+
+const basvuruLimiter = rateLimit({
+  windowMs: 60 * 1000, max: 10,
+  message: { error: 'Çok fazla başvuru denemesi. Lütfen 1 dakika bekleyin.' },
+  standardHeaders: true, legacyHeaders: false
+});
+const olayLimiter = rateLimit({
+  windowMs: 60 * 1000, max: 60,
+  message: { error: 'Çok fazla istek.' },
+  standardHeaders: true, legacyHeaders: false
+});
+
+/* Başvuruyu oluşturur. Sonuç kullanıcıya gösterilmeden ÖNCE çağrılır;
+   böylece ziyaretçi sonucu görmeden ayrılsa bile kayıt durur. */
+app.post('/api/basvuru', basvuruLimiter, async (req, res) => {
+  try {
+    const b = req.body && typeof req.body === 'object' ? req.body : {};
+    const ad = String(b.ad || '').trim().slice(0, 120);
+    const telefon = telefonNormalize(b.telefon);
+    if (ad.length < 3) return res.status(400).json({ error: 'Ad soyad geçersiz.' });
+    if (!telefon) return res.status(400).json({ error: 'Telefon numarası geçersiz.' });
+
+    const no = await sbIstek('/rest/v1/rpc/basvuru_no_uret', { method: 'POST', body: '{}' });
+    const basvuruNo = typeof no === 'string' ? no : String(no);
+
+    const simdi = new Date().toISOString();
+    const temiz = function (v, n) { return v === undefined || v === null ? null : String(v).replace(/[ -]/g, ' ').trim().slice(0, n || 300); };
+
+    const kayit = {
+      basvuru_no: basvuruNo,
+      tarih: new Date().toLocaleDateString('tr-TR'),
+      saat: new Date().toLocaleTimeString('tr-TR'),
+      ad: ad, telefon: telefon,
+      email: temiz(b.email, 160), sehir: temiz(b.sehir), ilce: temiz(b.ilce), plaka: temiz(b.plaka, 20),
+      tur: temiz(b.arac_kodu, 60), arac_kodu: temiz(b.arac_kodu, 60),
+      sonuc: temiz(b.sonuc_ozeti, 300),
+      aciklama: temiz(b.aciklama, 4000),
+      cevaplar: b.cevaplar && typeof b.cevaplar === 'object' ? b.cevaplar : null,
+      sonuc_json: b.sonuc_json && typeof b.sonuc_json === 'object' ? b.sonuc_json : null,
+      kural_surumu: temiz(b.kural_surumu, 60),
+      tutar: Number(b.tutar) || null,
+      aciliyet: ['dusuk', 'orta', 'yuksek'].indexOf(b.aciliyet) !== -1 ? b.aciliyet : 'dusuk',
+      belge_sayisi: Number(b.belge_sayisi) || 0,
+      durum: 'yeni',
+      iletisim_izni: b.iletisim_izni === true,
+      izin_zamani: b.iletisim_izni === true ? simdi : null,
+      izin_metin_surumu: b.iletisim_izni === true ? KVKK_SURUM : null,
+      kvkk_surumu: KVKK_SURUM,
+      kvkk_zamani: simdi,
+      utm_source: temiz(b.utm_source, 80), utm_medium: temiz(b.utm_medium, 80),
+      utm_campaign: temiz(b.utm_campaign, 80), utm_content: temiz(b.utm_content, 80),
+      ref_kod: temiz(b.ref, 80), meslek: temiz(b.meslek, 80), konu: temiz(b.konu, 80),
+      ts_form_baslangic: b.ts_form_baslangic || null,
+      ts_sorular_bitti: b.ts_sorular_bitti || null,
+      ts_iletisim_ekrani: b.ts_iletisim_ekrani || null,
+      ts_iletisim_girildi: simdi,
+      guncelleme: simdi
+    };
+    const skor = puanHesapla(Object.assign({}, kayit, {
+      teblig_tarihi_var: !!b.teblig_tarihi_var,
+      devam_eden_islem: !!b.devam_eden_islem,
+      belge_var_denildi: !!b.belge_var_denildi,
+      karsi_taraf_bilgisi: !!b.karsi_taraf_bilgisi
+    }));
+    kayit.puan = skor.puan;
+
+    await sbIstek('/rest/v1/leads', { method: 'POST', body: JSON.stringify(kayit) });
+    res.json({ ok: true, basvuru_no: basvuruNo, whatsapp: WHATSAPP_NUM });
+  } catch (e) {
+    console.error('basvuru hatasi:', e.message);
+    res.status(500).json({ error: 'Başvuru kaydedilemedi.' });
+  }
+});
+
+/* Olay kaydı + başvurunun zaman damgalarının güncellenmesi.
+   Kişisel veri ALMAZ: yalnızca olay adı, araç kodu, başvuru numarası
+   ve kampanya bilgisi. */
+const OLAY_ZAMAN = {
+  preliminary_result_view: 'ts_sonuc_goruldu',
+  whatsapp_cta_click: 'ts_whatsapp',
+  pdf_download: 'ts_pdf'
+};
+const GECERLI_OLAYLAR = ['tool_view', 'form_start', 'question_answered', 'form_step_back',
+  'form_abandon', 'legal_questions_completed', 'contact_gate_view', 'contact_gate_completed',
+  'contact_gate_abandoned', 'application_created', 'preliminary_result_view',
+  'whatsapp_cta_view', 'whatsapp_cta_click', 'document_uploaded', 'pdf_download',
+  'contact_permission_granted', 'contact_permission_declined', 'application_completed'];
+
+app.post('/api/olay', olayLimiter, async (req, res) => {
+  try {
+    const b = req.body && typeof req.body === 'object' ? req.body : {};
+    const olay = String(b.olay || '');
+    if (GECERLI_OLAYLAR.indexOf(olay) === -1) return res.status(400).json({ error: 'Geçersiz olay.' });
+    const kes = function (v, n) { return v === undefined || v === null ? null : String(v).replace(/[ -]/g, ' ').trim().slice(0, n || 80); };
+    const basvuruNo = kes(b.basvuru_no, 30);
+
+    await sbIstek('/rest/v1/olaylar', {
+      method: 'POST', headers: undefined, body: JSON.stringify({
+        olay: olay, arac_kodu: kes(b.arac_kodu, 60), basvuru_no: basvuruNo,
+        utm_source: kes(b.utm_source), utm_campaign: kes(b.utm_campaign),
+        utm_content: kes(b.utm_content), ref_kod: kes(b.ref),
+        meta: b.meta && typeof b.meta === 'object' ? b.meta : null
+      })
+    }).catch(function (e) { console.error('olay yazilamadi:', e.message); });
+
+    /* Başvuruya bağlı olaylar kaydın kendisini de günceller. */
+    if (basvuruNo && (OLAY_ZAMAN[olay] || olay === 'whatsapp_cta_click')) {
+      const yama = { guncelleme: new Date().toISOString() };
+      if (OLAY_ZAMAN[olay]) yama[OLAY_ZAMAN[olay]] = new Date().toISOString();
+      if (olay === 'whatsapp_cta_click') {
+        yama.whatsapp_tiklandi = true;
+        yama.whatsapp_kullanici_baslatti = true;
+        yama.durum = 'whatsapp_gorusmesi_basladi';
+      } else if (olay === 'preliminary_result_view') {
+        yama.durum = 'sonuc_goruldu';
+      }
+      await sbIstek('/rest/v1/leads?basvuru_no=eq.' + encodeURIComponent(basvuruNo),
+        { method: 'PATCH', body: JSON.stringify(yama) })
+        .catch(function (e) { console.error('basvuru guncellenemedi:', e.message); });
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('olay hatasi:', e.message);
+    res.status(500).json({ error: 'Kaydedilemedi.' });
+  }
+});
+
+/* İstemci WhatsApp numarasını koda gömmek yerine buradan alır. */
+app.get('/api/ayar', (req, res) => {
+  res.json({ whatsapp: WHATSAPP_NUM, kvkk_surumu: KVKK_SURUM });
+});
+
 app.get('/api/health', (req, res) => {
+
   res.json({ status: 'ok', keySet: !!GROQ_API_KEY, totp: !!process.env.ADMIN_TOTP_SECRET });
 });
 
